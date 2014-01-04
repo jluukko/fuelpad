@@ -1,0 +1,54 @@
+Source: fuelpad2
+Section: user/utilities
+Priority: optional
+Maintainer: Julius Luukko <julius.luukko@quicknet.inet.fi>
+Build-Depends: debhelper (>= 5), libqt4-dev
+Standards-Version: 3.7.3
+Homepage: http://fuelpad.garage.maemo.org
+
+Package: fuelpad2
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Car fuel consumption tracking tool
+ Fuelpad is a tool to record your car fuel and other expenses. It
+ calculates many kinds of statistics for your data including the fuel
+ consumption for each entry, the overall distance, average fuel
+ consumption and total cost. It can track the expenses of several cars.
+ It also has a reminder system for regular maintenance recording.
+XB-Maemo-Display-Name: fuelpad2
+XB-Maemo-Icon-26:
+ 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
+ O3dd7OTvAAAAAElFTkSuQmCC

@@ -1,0 +1,59 @@
+fuelpad2 (0.0.10) unstable; urgency=low
+
+  * Corrected reading the right car data
+
+ -- Julius Luukko <julle.luukko@quicknet.inet.fi>  Sat,  5 Apr 2012 14:40:00 +0300
+
+fuelpad2 (0.0.9) unstable; urgency=low
+
+  * Unit settings implemented
+
+ -- Julius Luukko <julle.luukko@quicknet.inet.fi>  Sat,  5 Apr 2012 13:35:00 +0300
+
+fuelpad2 (0.0.8) unstable; urgency=low
+
+  * Imported view features from QmlApplicationViewer
+
+ -- Julius Luukko <julle.luukko@quicknet.inet.fi>  Thu,  3 Apr 2012 21:09:00 +0300
+
+fuelpad2 (0.0.7) unstable; urgency=low
+
+  * Iterating towards working version
+
+ -- Julius Luukko <julle.luukko@quicknet.inet.fi>  Wed,  2 Apr 2012 17:43:00 +0300
+
+fuelpad2 (0.0.6) unstable; urgency=low
+
+  * Desperate changes
+
+ -- Julius Luukko <julle.luukko@quicknet.inet.fi>  Tue,  1 Apr 2012 22:58:00 +0300
+
+fuelpad2 (0.0.5) unstable; urgency=low
+
+  * Trying to show the right toolbar
+
+ -- Julius Luukko <julle.luukko@quicknet.inet.fi>  Tue,  1 Apr 2012 21:20:00 +0300
+
+fuelpad2 (0.0.4) unstable; urgency=low
+
+  * Listviews improved
+
+ -- Julius Luukko <julle.luukko@quicknet.inet.fi>  Tue,  1 Apr 2012 19:33:00 +0300
+
+fuelpad2 (0.0.3) unstable; urgency=low
+
+  * Launcher icon included
+
+ -- Julius Luukko <julle.luukko@quicknet.inet.fi>  Tue,  1 Apr 2012 16:35:00 +0300
+
+fuelpad2 (0.0.2) unstable; urgency=low
+
+  * Some improvements after device testing
+
+ -- Julius Luukko <julle.luukko@quicknet.inet.fi>  Tue,  1 Apr 2012 15:32:00 +0300
+
+fuelpad2 (0.0.1) unstable; urgency=low
+
+  * Initial Private Release.
+
+ -- Julius Luukko <julle.luukko@quicknet.inet.fi>  Tue,  1 Apr 2012 00:40:00 +0300
