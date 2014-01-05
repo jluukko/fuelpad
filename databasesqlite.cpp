@@ -144,7 +144,6 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtDeleteEventwithRecordid = new QSqlQuery;
     ppStmtUpdateEvent = new QSqlQuery;
 
-    ppStmtSaveRecord = new QSqlQuery;
     ppStmtGetYears = new QSqlQuery;
     ppStmtDriver = new QSqlQuery;
     ppStmtCar = new QSqlQuery;
@@ -313,7 +312,6 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtDeleteEventwithRecordid;
     delete ppStmtUpdateEvent;
 
-    delete ppStmtSaveRecord;
     delete ppStmtGetYears;
     delete ppStmtDriver;
     delete ppStmtCar;

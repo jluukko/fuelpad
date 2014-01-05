@@ -119,7 +119,6 @@ private:
     QSqlQuery *ppStmtDeleteEventwithRecordid;
     QSqlQuery *ppStmtUpdateEvent;
 
-    QSqlQuery *ppStmtSaveRecord;
     QSqlQuery *ppStmtGetYears;
     QSqlQuery *ppStmtDriver;
     QSqlQuery *ppStmtMonthlyData;
