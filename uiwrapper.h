@@ -59,6 +59,10 @@ public:
 
     Q_INVOKABLE double getLastYearKm(int carid);
 
+    Q_INVOKABLE void addDriver(QString fullname, QString nickname);
+
+    Q_INVOKABLE void addCar(QString mark, QString model, QString year, QString regist, QString notes, quint8 fueltype);
+
     Q_INVOKABLE void setSortColumn(int col, Qt::SortOrder order);
 
     Q_INVOKABLE void setCurrentCar(int carid);

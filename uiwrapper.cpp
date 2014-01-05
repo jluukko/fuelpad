@@ -556,6 +556,20 @@ double UiWrapper::getLastYearKm(int carid=-1)
     return totalKm.lastyear;
 }
 
+void UiWrapper::addDriver(QString fullname, QString nickname)
+{
+    qDebug("%s called!\n",__PRETTY_FUNCTION__);
+
+    dataBase->addDriver(fullname.toStdString(), nickname.toStdString());
+}
+
+void UiWrapper::addCar(QString mark, QString model, QString year, QString regist, QString notes, quint8 fueltype)
+{
+    qDebug("%s called!\n",__PRETTY_FUNCTION__);
+
+    dataBase->addCar(mark.toStdString(), model.toStdString(), year.toStdString(), regist.toStdString(), notes.toStdString(), fueltype);
+}
+
 void UiWrapper::setSortColumn(int col, Qt::SortOrder order = Qt::AscendingOrder)
 {
     sortModel->beginResetModel();
