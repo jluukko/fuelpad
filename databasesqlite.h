@@ -74,8 +74,14 @@ public:
     // Add a new driver
     bool addDriver(string fullname, string nickname);
 
+    // Update driver data
+    bool updateDriver(qlonglong id, string fullname, string nickname);
+
     // Add a new car
     bool addCar(string mark, string model, string year, string regist, string notes, quint8 fueltype);
+
+    // Update car data
+    bool updateCar(qlonglong id, string mark, string model, string year, string regist, string notes, quint8 fueltype);
 
     vector<CarData> getCarData(void);
     vector<DriverData> getDriverData(void);
@@ -116,11 +122,11 @@ private:
     QSqlQuery *ppStmtGetKmLastMonth;
     QSqlQuery *ppStmtAddDriver;
     QSqlQuery *ppStmtAddCar;
+    QSqlQuery *ppStmtUpdateDriver;
+    QSqlQuery *ppStmtUpdateCar;
 
     // Statements without a ready implementation
     QSqlQuery *ppStmtCurCar;
-    QSqlQuery *ppStmtUpdateDriver;
-    QSqlQuery *ppStmtUpdateCar;
     QSqlQuery *ppStmtExport;
     QSqlQuery *ppStmtExportCar;
     QSqlQuery *ppStmtGetReport;

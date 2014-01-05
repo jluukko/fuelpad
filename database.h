@@ -88,8 +88,14 @@ public:
     // Add a new driver
     virtual bool addDriver(string fullname, string nickname) =0;
 
+    // Update driver data
+    virtual bool updateDriver(qlonglong id, string fullname, string nickname) =0;
+
     // Add a new car
     virtual bool addCar(string mark, string model, string year, string regist, string notes, quint8 fueltype) =0;
+
+    // Update car data
+    virtual bool updateCar(qlonglong id, string mark, string model, string year, string regist, string notes, quint8 fueltype) =0;
 
     virtual vector<CarData> getCarData(void) =0;
     virtual vector<DriverData> getDriverData(void) =0;

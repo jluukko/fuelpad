@@ -134,11 +134,11 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtGetKmLastYear = new QSqlQuery;
     ppStmtAddDriver = new QSqlQuery;
     ppStmtAddCar = new QSqlQuery;
+    ppStmtUpdateDriver = new QSqlQuery;
+    ppStmtUpdateCar = new QSqlQuery;
 
     // Statements without a ready implementation
     ppStmtCurCar = new QSqlQuery;
-    ppStmtUpdateDriver = new QSqlQuery;
-    ppStmtUpdateCar = new QSqlQuery;
     ppStmtExport = new QSqlQuery;
     ppStmtExportCar = new QSqlQuery;
     ppStmtGetReport = new QSqlQuery;
@@ -289,11 +289,25 @@ bool DatabaseSqlite::prepare_queries(void)
             ppStmtAddDriver->prepare("INSERT INTO driver(fullname,nickname) VALUES(:fullname,:nickname);");
 
     //--------------------------------------------------------------------------
+    // Update driver data
+    //--------------------------------------------------------------------------
+    retVal = retVal |
+            ppStmtUpdateDriver->prepare("UPDATE driver "
+                                        "SET fullname=:fullname, nickname=:nickname WHERE id=:id;");
+
+    //--------------------------------------------------------------------------
     // Add a new car
     //--------------------------------------------------------------------------
     retVal = retVal |
             ppStmtAddCar->prepare("INSERT INTO car(mark,model,year,register,notes,fueltype) "
                                   "VALUES(:mark,:model,:year,:register,:notes,:fueltype);");
+
+    //--------------------------------------------------------------------------
+    // Update car data
+    //--------------------------------------------------------------------------
+    retVal = retVal |
+            ppStmtUpdateCar->prepare("UPDATE car "
+                                     "SET mark=:mark, model=:model, year=:year, register=:register, notes=:notes, fueltype=:fueltype WHERE id=:id;");
 
 
     return retVal;
@@ -318,10 +332,10 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtGetKmLastYear;
     delete ppStmtAddDriver;
     delete ppStmtAddCar;
-
-    delete ppStmtCurCar;
     delete ppStmtUpdateDriver;
     delete ppStmtUpdateCar;
+
+    delete ppStmtCurCar;
     delete ppStmtExport;
     delete ppStmtExportCar;
     delete ppStmtGetReport;
@@ -1002,6 +1016,8 @@ bool DatabaseSqlite::getMonthlyData(int year, UnitSystem unit, vector<int> &mont
 //--------------------------------------------------------------------------
 bool DatabaseSqlite::addDriver(string fullname, string nickname)
 {
+    bool retVal = false;
+
     ppStmtAddDriver->bindValue(":fullname",QString::fromUtf8(fullname.c_str()));
     ppStmtAddDriver->bindValue(":nickname",QString::fromUtf8(nickname.c_str()));
 
@@ -1009,10 +1025,37 @@ bool DatabaseSqlite::addDriver(string fullname, string nickname)
     if (ppStmtAddDriver->exec()) {
         // @todo do we need to ppStmtAddDriver->next()
         qDebug("Adding a driver was succesful");
+        retVal = true;
     }
     else {
         qDebug("Adding a driver was not succesful");
     }
+
+    return retVal;
+}
+
+//--------------------------------------------------------------------------
+// Update driver data
+//--------------------------------------------------------------------------
+bool DatabaseSqlite::updateDriver(qlonglong id, string fullname, string nickname)
+{
+    bool retVal = false;
+
+    ppStmtUpdateDriver->bindValue(":id",id);
+    ppStmtUpdateDriver->bindValue(":fullname",QString::fromUtf8(fullname.c_str()));
+    ppStmtUpdateDriver->bindValue(":nickname",QString::fromUtf8(nickname.c_str()));
+
+    // Finally, do the update
+    if (ppStmtUpdateDriver->exec()) {
+        // @todo do we need to ppStmtUpdateDriver->next()
+        qDebug("Updating a driver was succesful");
+        retVal = true;
+    }
+    else {
+        qDebug("Updating a driver was not succesful");
+    }
+
+    return retVal;
 }
 
 //--------------------------------------------------------------------------
@@ -1020,6 +1063,8 @@ bool DatabaseSqlite::addDriver(string fullname, string nickname)
 //--------------------------------------------------------------------------
 bool DatabaseSqlite::addCar(string mark, string model, string year, string regist, string notes, quint8 fueltype)
 {
+    bool retVal = false;
+
     ppStmtAddCar->bindValue(":mark",QString::fromUtf8(mark.c_str()));
     ppStmtAddCar->bindValue(":model",QString::fromUtf8(model.c_str()));
     ppStmtAddCar->bindValue(":year",QString::fromUtf8(year.c_str()));
@@ -1030,11 +1075,42 @@ bool DatabaseSqlite::addCar(string mark, string model, string year, string regis
     // Finally, do the update
     if (ppStmtAddCar->exec()) {
         // @todo do we need to ppStmtAddCar->next()
-        qDebug("Adding a driver was succesful");
+        qDebug("Adding a car was succesful");
+        retVal = true;
     }
     else {
-        qDebug("Adding a driver was not succesful");
+        qDebug("Adding a car was not succesful");
     }
+
+    return retVal;
+}
+
+//--------------------------------------------------------------------------
+// Update car data
+//--------------------------------------------------------------------------
+bool DatabaseSqlite::updateCar(qlonglong id, string mark, string model, string year, string regist, string notes, quint8 fueltype)
+{
+    bool retVal = false;
+
+    ppStmtUpdateCar->bindValue(":id",id);
+    ppStmtUpdateCar->bindValue(":mark",QString::fromUtf8(mark.c_str()));
+    ppStmtUpdateCar->bindValue(":model",QString::fromUtf8(model.c_str()));
+    ppStmtUpdateCar->bindValue(":year",QString::fromUtf8(year.c_str()));
+    ppStmtUpdateCar->bindValue(":register",QString::fromUtf8(regist.c_str()));
+    ppStmtUpdateCar->bindValue(":notes",QString::fromUtf8(notes.c_str()));
+    ppStmtUpdateCar->bindValue(":fueltype",fueltype);
+
+    // Finally, do the update
+    if (ppStmtUpdateCar->exec()) {
+        // @todo do we need to ppStmtUpdateCar->next()
+        qDebug("Updating a car was succesful");
+        retVal = true;
+    }
+    else {
+        qDebug("Updating a car was not succesful");
+    }
+
+    return retVal;
 }
 
 //--------------------------------------------------------------------------
