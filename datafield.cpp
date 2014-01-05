@@ -35,7 +35,7 @@ QVariant Datafield::getValue(void)
     return value;
 }
 
-// @todo Kesken
+// @todo Not finished
 void Datafield::setValueUserUnit(QVariant val, enum fieldtype t)
 {
     type = t;
@@ -112,9 +112,9 @@ QVariant Datafield::getValueUserUnit(void)
         retVal = value;
         retVal.setValue(retVal.toDouble()*unit.getVolumeConversionFactor());
         break;
-        // todo: kesken
+        // todo: not finished
     case CO2EMISSION:
-        retVal = value; // @todo Laskenta puuttuu
+        retVal = value; // @todo Calculation missing
         break;
     case NOTE:
         retVal = value;
