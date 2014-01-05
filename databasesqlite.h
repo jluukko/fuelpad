@@ -92,21 +92,31 @@ private:
     QSqlDatabase db;
 
     // Prepared SQL queries
-    QSqlQuery *ppStmtOneDriver;
-    QSqlQuery *ppStmtCurCar;
+
+    // Statements with a ready implementation
+    QSqlQuery *ppStmtRecords;
+    QSqlQuery *ppStmtOneRecord;
     QSqlQuery *ppStmtOneCar;
+    QSqlQuery *ppStmtMonthlyData;
+    QSqlQuery *ppStmtCar;
+    QSqlQuery *ppStmtOneDriver;
+    QSqlQuery *ppStmtDriver;
+    QSqlQuery *ppStmtNextFull;
+    QSqlQuery *ppStmtPrevFull;
+    QSqlQuery *ppStmtAddRecord;
+    QSqlQuery *ppStmtUpdateRecord;
+    QSqlQuery *ppStmtDeleteRecord;
+    QSqlQuery *ppStmtGetKmOverall;
+    QSqlQuery *ppStmtGetKmLastMonth;
+
+    // Statements without a ready implementation
+    QSqlQuery *ppStmtCurCar;
     QSqlQuery *ppStmtAddDriver;
     QSqlQuery *ppStmtUpdateDriver;
     QSqlQuery *ppStmtAddCar;
     QSqlQuery *ppStmtUpdateCar;
-    QSqlQuery *ppStmtOneRecord;
-    QSqlQuery *ppStmtRecords;
     QSqlQuery *ppStmtExport;
     QSqlQuery *ppStmtExportCar;
-    QSqlQuery *ppStmtNextFull;
-    QSqlQuery *ppStmtPrevFull;
-    QSqlQuery *ppStmtDeleteRecord;
-    QSqlQuery *ppStmtUpdateRecord;
     QSqlQuery *ppStmtGetReport;
     QSqlQuery *ppStmtAddAlarmtype;
     QSqlQuery *ppStmtGetAlarmtype;
@@ -120,10 +130,6 @@ private:
     QSqlQuery *ppStmtUpdateEvent;
 
     QSqlQuery *ppStmtGetYears;
-    QSqlQuery *ppStmtDriver;
-    QSqlQuery *ppStmtMonthlyData;
-    QSqlQuery *ppStmtCar;
-    QSqlQuery *ppStmtAddRecord;
     QSqlQuery *ppStmtAddLog;
     QSqlQuery *ppStmtDeleteTrip;
     QSqlQuery *ppStmtUpdateTrip;
@@ -135,8 +141,6 @@ private:
     QSqlQuery *ppStmtUpdateLocation;
     QSqlQuery *ppStmtDeleteLocation;
 
-    QSqlQuery *ppStmtGetKmOverall;
-    QSqlQuery *ppStmtGetKmLastMonth;
     QSqlQuery *ppStmtGetKmLastYear;
 
 };

@@ -116,22 +116,31 @@ bool DatabaseSqlite::prepare_queries(void)
 {
     bool retVal;
 
-    ppStmtOneDriver = new QSqlQuery;
-    ppStmtCurCar = new QSqlQuery;
+    // Statements with a ready implementation
+    ppStmtRecords = new QSqlQuery;
+    ppStmtOneRecord = new QSqlQuery;
     ppStmtOneCar = new QSqlQuery;
+    ppStmtMonthlyData = new QSqlQuery;
+    ppStmtCar = new QSqlQuery;
+    ppStmtOneDriver = new QSqlQuery;
+    ppStmtDriver = new QSqlQuery;
+    ppStmtNextFull = new QSqlQuery;
+    ppStmtPrevFull = new QSqlQuery;
+    ppStmtAddRecord = new QSqlQuery;
+    ppStmtUpdateRecord = new QSqlQuery;
+    ppStmtDeleteRecord = new QSqlQuery;
+    ppStmtGetKmOverall = new QSqlQuery;
+    ppStmtGetKmLastMonth = new QSqlQuery;
+    ppStmtGetKmLastYear = new QSqlQuery;
+
+    // Statements without a ready implementation
+    ppStmtCurCar = new QSqlQuery;
     ppStmtAddDriver = new QSqlQuery;
     ppStmtUpdateDriver = new QSqlQuery;
     ppStmtAddCar = new QSqlQuery;
     ppStmtUpdateCar = new QSqlQuery;
-    ppStmtOneRecord = new QSqlQuery;
-    ppStmtMonthlyData = new QSqlQuery;
-    ppStmtRecords = new QSqlQuery;
     ppStmtExport = new QSqlQuery;
     ppStmtExportCar = new QSqlQuery;
-    ppStmtNextFull = new QSqlQuery;
-    ppStmtPrevFull = new QSqlQuery;
-    ppStmtDeleteRecord = new QSqlQuery;
-    ppStmtUpdateRecord = new QSqlQuery;
     ppStmtGetReport = new QSqlQuery;
     ppStmtAddAlarmtype = new QSqlQuery;
     ppStmtGetAlarmtype = new QSqlQuery;
@@ -145,9 +154,6 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtUpdateEvent = new QSqlQuery;
 
     ppStmtGetYears = new QSqlQuery;
-    ppStmtDriver = new QSqlQuery;
-    ppStmtCar = new QSqlQuery;
-    ppStmtAddRecord = new QSqlQuery;
     ppStmtAddLog = new QSqlQuery;
     ppStmtDeleteTrip = new QSqlQuery;
     ppStmtUpdateTrip = new QSqlQuery;
@@ -159,9 +165,6 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtUpdateLocation = new QSqlQuery;
     ppStmtDeleteLocation = new QSqlQuery;
 
-    ppStmtGetKmOverall = new QSqlQuery;
-    ppStmtGetKmLastMonth = new QSqlQuery;
-    ppStmtGetKmLastYear = new QSqlQuery;
 
     retVal = true;
 
@@ -284,22 +287,29 @@ bool DatabaseSqlite::prepare_queries(void)
 
 bool DatabaseSqlite::unprepare_queries(void)
 {
-    delete ppStmtOneDriver;
-    delete ppStmtCurCar;
+    delete ppStmtRecords;
+    delete ppStmtOneRecord;
     delete ppStmtOneCar;
     delete ppStmtMonthlyData;
+    delete ppStmtCar;
+    delete ppStmtOneDriver;
+    delete ppStmtDriver;
+    delete ppStmtNextFull;
+    delete ppStmtPrevFull;
+    delete ppStmtAddRecord;
+    delete ppStmtUpdateRecord;
+    delete ppStmtDeleteRecord;
+    delete ppStmtGetKmOverall;
+    delete ppStmtGetKmLastMonth;
+    delete ppStmtGetKmLastYear;
+
+    delete ppStmtCurCar;
     delete ppStmtAddDriver;
     delete ppStmtUpdateDriver;
     delete ppStmtAddCar;
     delete ppStmtUpdateCar;
-    delete ppStmtOneRecord;
-    delete ppStmtRecords;
     delete ppStmtExport;
     delete ppStmtExportCar;
-    delete ppStmtNextFull;
-    delete ppStmtPrevFull;
-    delete ppStmtDeleteRecord;
-    delete ppStmtUpdateRecord;
     delete ppStmtGetReport;
     delete ppStmtAddAlarmtype;
     delete ppStmtGetAlarmtype;
@@ -313,9 +323,6 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtUpdateEvent;
 
     delete ppStmtGetYears;
-    delete ppStmtDriver;
-    delete ppStmtCar;
-    delete ppStmtAddRecord;
     delete ppStmtAddLog;
     delete ppStmtDeleteTrip;
     delete ppStmtUpdateTrip;
@@ -326,10 +333,6 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtLocations;
     delete ppStmtUpdateLocation;
     delete ppStmtDeleteLocation;
-
-    delete ppStmtGetKmOverall;
-    delete ppStmtGetKmLastMonth;
-    delete ppStmtGetKmLastYear;
 
     return true;
 
