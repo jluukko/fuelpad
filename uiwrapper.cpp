@@ -563,11 +563,26 @@ void UiWrapper::addDriver(QString fullname, QString nickname)
     dataBase->addDriver(fullname.toStdString(), nickname.toStdString());
 }
 
+void UiWrapper::updateDriver(QString id, QString fullname, QString nickname)
+{
+    qDebug("%s called!\n",__PRETTY_FUNCTION__);
+
+    dataBase->updateDriver(id.toLongLong(), fullname.toStdString(), nickname.toStdString());
+}
+
 void UiWrapper::addCar(QString mark, QString model, QString year, QString regist, QString notes, quint8 fueltype)
 {
     qDebug("%s called!\n",__PRETTY_FUNCTION__);
 
     dataBase->addCar(mark.toStdString(), model.toStdString(), year.toStdString(), regist.toStdString(), notes.toStdString(), fueltype);
+}
+
+void UiWrapper::updateCar(QString id, QString mark, QString model, QString year, QString regist, QString notes, quint8 fueltype)
+{
+    qDebug("%s called!\n",__PRETTY_FUNCTION__);
+
+    dataBase->updateCar(id.toLongLong(), mark.toStdString(), model.toStdString(),
+                        year.toStdString(), regist.toStdString(), notes.toStdString(), fueltype);
 }
 
 void UiWrapper::setSortColumn(int col, Qt::SortOrder order = Qt::AscendingOrder)

@@ -61,7 +61,11 @@ public:
 
     Q_INVOKABLE void addDriver(QString fullname, QString nickname);
 
+    Q_INVOKABLE void updateDriver(QString id, QString fullname, QString nickname);
+
     Q_INVOKABLE void addCar(QString mark, QString model, QString year, QString regist, QString notes, quint8 fueltype);
+
+    Q_INVOKABLE void updateCar(QString id, QString mark, QString model, QString year, QString regist, QString notes, quint8 fueltype);
 
     Q_INVOKABLE void setSortColumn(int col, Qt::SortOrder order);
 
