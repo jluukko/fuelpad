@@ -76,6 +76,14 @@ struct CarEntry {
     };
 };
 
+struct DriverEntry {
+    enum DriverEntryRoles {
+        FullnameRole = Qt::UserRole + 1,
+        NicknameRole,
+        IdRole
+    };
+};
+
 UiWrapper::UiWrapper(Database *db)
 {
     dataBase = db;
@@ -110,6 +118,7 @@ UiWrapper::UiWrapper(Database *db)
     // Create models needed in Qml
     createFuelEntryModel();
     createCarDataModel();
+    createDriverDataModel();
 }
 
 UiWrapper::~UiWrapper()
@@ -169,6 +178,22 @@ static void addRecordToCarEntryModel(QStandardItemModel *model, CarData *data,
 //    model->insertRow(0, it);
 }
 
+static void setDataToDriverEntryModel(QStandardItem *it, DriverData *data)
+{
+    int id = data->getId();
+    it->setData(data->getFullName(), DriverEntry::FullnameRole);
+    it->setData(data->getNickName(), DriverEntry::NicknameRole);
+    it->setData(id, DriverEntry::IdRole);
+}
+
+static void addRecordToDriverEntryModel(QStandardItemModel *model, DriverData *data)
+{
+    QStandardItem* it = new QStandardItem();
+    setDataToDriverEntryModel(it, data);
+    model->appendRow(it);
+//    model->insertRow(0, it);
+}
+
 void UiWrapper::updateAllModels(void)
 {
     sortModel->sort(FIELD_DATE, Qt::DescendingOrder);
@@ -186,6 +211,10 @@ void UiWrapper::reReadAllModels(void)
     // Car data model
     carDataModel->clear();
     addAllRecordsToCarEntryModel(carDataModel);
+
+    // Driver data model
+    driverDataModel->clear();
+    addAllRecordsToDriverEntryModel(driverDataModel);
 }
 
 QStandardItem* UiWrapper::findFuelEntry(QString id)
@@ -238,6 +267,25 @@ void UiWrapper::addAllRecordsToCarEntryModel(QStandardItemModel *model)
             lastYearKm = getLastYearKm(carData[i].getId());
             addRecordToCarEntryModel(model, &carData[i], totalKm, lastMonthKm, lastYearKm);
             if (carData[i].getId() == dataBase->getCurrentCar().getId()) {
+                activeIndex = i;
+            }
+        }
+
+    }
+}
+
+void UiWrapper::addAllRecordsToDriverEntryModel(QStandardItemModel *model)
+{
+    vector<DriverData> drvData;
+    int activeIndex;
+
+    if (dataBase->isOpen()) {
+
+        drvData = dataBase->getDriverData();
+
+        for (vector<DriverData>::size_type i=0; i < drvData.size(); i++) {
+            addRecordToDriverEntryModel(model, &drvData[i]);
+            if (drvData[i].getId() == dataBase->getCurrentDriver().getId()) {
                 activeIndex = i;
             }
         }
@@ -303,6 +351,20 @@ void UiWrapper::createCarDataModel(void)
 
 }
 
+void UiWrapper::createDriverDataModel(void)
+{
+    QHash<int, QByteArray> roleNames;
+    roleNames[DriverEntry::FullnameRole] =  "fullname";
+    roleNames[DriverEntry::NicknameRole] =  "nickname";
+    roleNames[DriverEntry::IdRole] =  "databaseid";
+    RoleItemModel *model = new RoleItemModel(roleNames);
+
+    addAllRecordsToDriverEntryModel(model);
+
+    driverDataModel = model;
+
+}
+
 
 MySortFilterProxyModel *UiWrapper::getFuelEntryModel(void)
 {
@@ -313,6 +375,11 @@ MySortFilterProxyModel *UiWrapper::getFuelEntryModel(void)
 RoleItemModel* UiWrapper::getCarEntryModel(void)
 {
     return carDataModel;
+}
+
+RoleItemModel* UiWrapper::getDriverEntryModel(void)
+{
+    return driverDataModel;
 }
 
 void UiWrapper::addFuelEntry(QString date, double km, double trip, double fill, bool notFull,

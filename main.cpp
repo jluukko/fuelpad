@@ -90,6 +90,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     UiWrapper uiWrapper(dataBase);
     MySortFilterProxyModel *fuelEntryModel = uiWrapper.getFuelEntryModel();
     RoleItemModel *carEntryModel = uiWrapper.getCarEntryModel();
+    RoleItemModel *driverEntryModel = uiWrapper.getDriverEntryModel();
 
 //    uiWrapper.setSortColumn(3);
     int numRows = fuelEntryModel->rowCount();
@@ -103,6 +104,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     // From C++ to Qml
     view.rootContext()->setContextProperty("fuelModel", fuelEntryModel);
     view.rootContext()->setContextProperty("carModel", carEntryModel);
+    view.rootContext()->setContextProperty("driverModel", driverEntryModel);
     view.rootContext()->setContextProperty("applicationData", &uiWrapper);
 
     // qml source

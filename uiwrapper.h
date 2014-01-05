@@ -39,6 +39,7 @@ public:
 
     MySortFilterProxyModel* getFuelEntryModel(void);
     RoleItemModel* getCarEntryModel(void);
+    RoleItemModel* getDriverEntryModel(void);
 
     // Exposed to Qml
     Q_INVOKABLE void addFuelEntry(QString date, double km, double trip, double fill, bool notFull,
@@ -97,6 +98,7 @@ private:
     CarData *carData;
     RoleItemModel *fuelEntryModel;
     RoleItemModel *carDataModel;
+    RoleItemModel *driverDataModel;
     MySortFilterProxyModel *sortModel;
 
     void updateAllModels(void);
@@ -104,8 +106,10 @@ private:
     QStandardItem *findFuelEntry(QString id);
     void addAllRecordsToCarEntryModel(QStandardItemModel *model);
     void addAllRecordsToFuelEntryModel(QStandardItemModel *model);
+    void addAllRecordsToDriverEntryModel(QStandardItemModel *model);
     void createFuelEntryModel(void);
     void createCarDataModel(void);
+    void createDriverDataModel(void);
 };
 
 #endif // UIWRAPPER_H
