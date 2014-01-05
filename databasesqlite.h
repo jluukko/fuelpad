@@ -71,6 +71,12 @@ public:
                         vector<double> &fill, vector<double> &trip,
                         vector<double> &consum, vector<double> &ppl);
 
+    // Add a new driver
+    bool addDriver(string fullname, string nickname);
+
+    // Add a new car
+    bool addCar(string mark, string model, string year, string regist, string notes, quint8 fueltype);
+
     vector<CarData> getCarData(void);
     vector<DriverData> getDriverData(void);
 
@@ -108,12 +114,12 @@ private:
     QSqlQuery *ppStmtDeleteRecord;
     QSqlQuery *ppStmtGetKmOverall;
     QSqlQuery *ppStmtGetKmLastMonth;
+    QSqlQuery *ppStmtAddDriver;
+    QSqlQuery *ppStmtAddCar;
 
     // Statements without a ready implementation
     QSqlQuery *ppStmtCurCar;
-    QSqlQuery *ppStmtAddDriver;
     QSqlQuery *ppStmtUpdateDriver;
-    QSqlQuery *ppStmtAddCar;
     QSqlQuery *ppStmtUpdateCar;
     QSqlQuery *ppStmtExport;
     QSqlQuery *ppStmtExportCar;

@@ -132,12 +132,12 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtGetKmOverall = new QSqlQuery;
     ppStmtGetKmLastMonth = new QSqlQuery;
     ppStmtGetKmLastYear = new QSqlQuery;
+    ppStmtAddDriver = new QSqlQuery;
+    ppStmtAddCar = new QSqlQuery;
 
     // Statements without a ready implementation
     ppStmtCurCar = new QSqlQuery;
-    ppStmtAddDriver = new QSqlQuery;
     ppStmtUpdateDriver = new QSqlQuery;
-    ppStmtAddCar = new QSqlQuery;
     ppStmtUpdateCar = new QSqlQuery;
     ppStmtExport = new QSqlQuery;
     ppStmtExportCar = new QSqlQuery;
@@ -282,6 +282,20 @@ bool DatabaseSqlite::prepare_queries(void)
             ppStmtGetKmLastYear->prepare("SELECT SUM(trip) FROM record "
                                         "WHERE carid=:carid AND day BETWEEN DATE('now','-1 year') AND DATE('now');");
 
+    //--------------------------------------------------------------------------
+    // Add a new driver
+    //--------------------------------------------------------------------------
+    retVal = retVal |
+            ppStmtAddDriver->prepare("INSERT INTO driver(fullname,nickname) VALUES(:fullname,:nickname);");
+
+    //--------------------------------------------------------------------------
+    // Add a new car
+    //--------------------------------------------------------------------------
+    retVal = retVal |
+            ppStmtAddCar->prepare("INSERT INTO car(mark,model,year,register,notes,fueltype) "
+                                  "VALUES(:mark,:model,:year,:register,:notes,:fueltype);");
+
+
     return retVal;
 }
 
@@ -302,11 +316,11 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtGetKmOverall;
     delete ppStmtGetKmLastMonth;
     delete ppStmtGetKmLastYear;
+    delete ppStmtAddDriver;
+    delete ppStmtAddCar;
 
     delete ppStmtCurCar;
-    delete ppStmtAddDriver;
     delete ppStmtUpdateDriver;
-    delete ppStmtAddCar;
     delete ppStmtUpdateCar;
     delete ppStmtExport;
     delete ppStmtExportCar;
@@ -983,6 +997,45 @@ bool DatabaseSqlite::getMonthlyData(int year, UnitSystem unit, vector<int> &mont
     return retVal;
 }
 
+//--------------------------------------------------------------------------
+// Add a new driver
+//--------------------------------------------------------------------------
+bool DatabaseSqlite::addDriver(string fullname, string nickname)
+{
+    ppStmtAddDriver->bindValue(":fullname",QString::fromUtf8(fullname.c_str()));
+    ppStmtAddDriver->bindValue(":nickname",QString::fromUtf8(nickname.c_str()));
+
+    // Finally, do the update
+    if (ppStmtAddDriver->exec()) {
+        // @todo do we need to ppStmtAddDriver->next()
+        qDebug("Adding a driver was succesful");
+    }
+    else {
+        qDebug("Adding a driver was not succesful");
+    }
+}
+
+//--------------------------------------------------------------------------
+// Add a new car
+//--------------------------------------------------------------------------
+bool DatabaseSqlite::addCar(string mark, string model, string year, string regist, string notes, quint8 fueltype)
+{
+    ppStmtAddCar->bindValue(":mark",QString::fromUtf8(mark.c_str()));
+    ppStmtAddCar->bindValue(":model",QString::fromUtf8(model.c_str()));
+    ppStmtAddCar->bindValue(":year",QString::fromUtf8(year.c_str()));
+    ppStmtAddCar->bindValue(":register",QString::fromUtf8(regist.c_str()));
+    ppStmtAddCar->bindValue(":notes",QString::fromUtf8(notes.c_str()));
+    ppStmtAddCar->bindValue(":fueltype",fueltype);
+
+    // Finally, do the update
+    if (ppStmtAddCar->exec()) {
+        // @todo do we need to ppStmtAddCar->next()
+        qDebug("Adding a driver was succesful");
+    }
+    else {
+        qDebug("Adding a driver was not succesful");
+    }
+}
 
 //--------------------------------------------------------------------------
 // Query all car data and return in as a vector

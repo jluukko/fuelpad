@@ -85,6 +85,12 @@ public:
                                 vector<double> &fill, vector<double> &trip,
                                 vector<double> &consum, vector<double> &ppl) = 0;
 
+    // Add a new driver
+    virtual bool addDriver(string fullname, string nickname) =0;
+
+    // Add a new car
+    virtual bool addCar(string mark, string model, string year, string regist, string notes, quint8 fueltype) =0;
+
     virtual vector<CarData> getCarData(void) =0;
     virtual vector<DriverData> getDriverData(void) =0;
 
