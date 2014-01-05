@@ -120,6 +120,7 @@ private:
     QSqlQuery *ppStmtDeleteRecord;
     QSqlQuery *ppStmtGetKmOverall;
     QSqlQuery *ppStmtGetKmLastMonth;
+    QSqlQuery *ppStmtGetKmLastYear;
     QSqlQuery *ppStmtAddDriver;
     QSqlQuery *ppStmtAddCar;
     QSqlQuery *ppStmtUpdateDriver;
@@ -152,8 +153,6 @@ private:
     QSqlQuery *ppStmtLocations;
     QSqlQuery *ppStmtUpdateLocation;
     QSqlQuery *ppStmtDeleteLocation;
-
-    QSqlQuery *ppStmtGetKmLastYear;
 
 };
 
