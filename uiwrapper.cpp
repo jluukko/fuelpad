@@ -228,6 +228,17 @@ QStandardItem* UiWrapper::findFuelEntry(QString id)
     return it;
 }
 
+QStandardItem* UiWrapper::findCar(QString id)
+{
+    QStandardItem *it = 0;
+    QList<QModelIndex> items = carDataModel->match(carDataModel->index(0,0), CarEntry::IdRole, QVariant(id));
+    if (items.size() == 1) {
+        it = carDataModel->itemFromIndex(items.at(0));
+    }
+
+    return it;
+}
+
 void UiWrapper::addAllRecordsToFuelEntryModel(QStandardItemModel *model)
 {
     Fuelrecord *data;
@@ -339,6 +350,7 @@ void UiWrapper::createCarDataModel(void)
     roleNames[CarEntry::YearRole] =  "year";
     roleNames[CarEntry::RegnumRole] =  "regnum";
     roleNames[CarEntry::NotesRole] =  "notes";
+    roleNames[CarEntry::FueltypeRole] =  "fueltype";
     roleNames[CarEntry::IdRole] =  "databaseid";
     roleNames[CarEntry::TotalKmRole] =  "totalkm";
     roleNames[CarEntry::LastMonthKmRole] =  "lastmonthkm";
@@ -628,6 +640,9 @@ void UiWrapper::addDriver(QString fullname, QString nickname)
     qDebug("%s called!\n",__PRETTY_FUNCTION__);
 
     dataBase->addDriver(fullname.toStdString(), nickname.toStdString());
+
+    // Notify Qml side that list models have changed
+    updateAllModels();
 }
 
 void UiWrapper::updateDriver(QString id, QString fullname, QString nickname)
@@ -635,21 +650,94 @@ void UiWrapper::updateDriver(QString id, QString fullname, QString nickname)
     qDebug("%s called!\n",__PRETTY_FUNCTION__);
 
     dataBase->updateDriver(id.toLongLong(), fullname.toStdString(), nickname.toStdString());
+
+    // Notify Qml side that list models have changed
+    updateAllModels();
+}
+
+void UiWrapper::deleteDriver(QString id)
+{
+    qDebug("%s called!\n",__PRETTY_FUNCTION__);
+
+//    dataBase->deleteDriver(id.toLongLong());
+
+    // Notify Qml side that list models have changed
+    updateAllModels();
 }
 
 void UiWrapper::addCar(QString mark, QString model, QString year, QString regist, QString notes, quint8 fueltype)
 {
     qDebug("%s called!\n",__PRETTY_FUNCTION__);
+    CarData *record = new CarData();
+
+    record->setMark(mark);
+    record->setModel(model);
+    record->setYear(year.toUInt());
+    record->setRegNum(regist);
+    record->setNotes(notes);
+    record->setFuelType((enum CarData::FuelType)fueltype);
 
     dataBase->addCar(mark.toStdString(), model.toStdString(), year.toStdString(), regist.toStdString(), notes.toStdString(), fueltype);
+
+    addRecordToCarEntryModel(carDataModel, record, 0.0, 0.0, 0.0);
+
+    // Notify Qml side that list models have changed
+    updateAllModels();
+
+    delete record;
 }
 
 void UiWrapper::updateCar(QString id, QString mark, QString model, QString year, QString regist, QString notes, quint8 fueltype)
 {
     qDebug("%s called!\n",__PRETTY_FUNCTION__);
+    qlonglong Id = id.toLongLong();
+    CarData *record = new CarData();
+    QStandardItem *currentItem;
+
+    record->setMark(mark);
+    record->setModel(model);
+    record->setYear(year.toUInt());
+    record->setRegNum(regist);
+    record->setNotes(notes);
+    record->setFuelType((enum CarData::FuelType)fueltype);
+    record->setId(Id);
 
     dataBase->updateCar(id.toLongLong(), mark.toStdString(), model.toStdString(),
                         year.toStdString(), regist.toStdString(), notes.toStdString(), fueltype);
+
+    // Change the data in the model
+    currentItem = findCar(id);
+    if (currentItem != 0) {
+        qDebug("Found current id from model and trying to update it");
+        setDataToCarEntryModel(currentItem, record, getTotalKm(Id), getLastMonthKm(Id), getLastYearKm(Id));
+    }
+    else {
+        qDebug("Did not find current id from model");
+    }
+
+    // Notify Qml side that list models have changed
+    updateAllModels();
+
+    delete record;
+}
+
+void UiWrapper::deleteCar(QString id)
+{
+    qDebug("%s called!\n",__PRETTY_FUNCTION__);
+
+    dataBase->deleteCar(id.toLongLong());
+
+    currentItem = findCar(id);
+    if (currentItem != 0) {
+        qDebug("Found current id from model and trying to update it");
+        carDataModel->removeRows(currentItem->row(), 1);
+    }
+    else {
+        qDebug("Did not find current id from model");
+    }
+
+    // Notify Qml side that list models have changed
+    updateAllModels();
 }
 
 void UiWrapper::setSortColumn(int col, Qt::SortOrder order = Qt::AscendingOrder)

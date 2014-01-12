@@ -64,9 +64,13 @@ public:
 
     Q_INVOKABLE void updateDriver(QString id, QString fullname, QString nickname);
 
+    Q_INVOKABLE void deleteDriver(QString id);
+
     Q_INVOKABLE void addCar(QString mark, QString model, QString year, QString regist, QString notes, quint8 fueltype);
 
     Q_INVOKABLE void updateCar(QString id, QString mark, QString model, QString year, QString regist, QString notes, quint8 fueltype);
+
+    Q_INVOKABLE void deleteCar(QString id);
 
     Q_INVOKABLE void setSortColumn(int col, Qt::SortOrder order);
 
@@ -104,6 +108,7 @@ private:
     void updateAllModels(void);
     void reReadAllModels(void);
     QStandardItem *findFuelEntry(QString id);
+    QStandardItem* findCar(QString id);
     void addAllRecordsToCarEntryModel(QStandardItemModel *model);
     void addAllRecordsToFuelEntryModel(QStandardItemModel *model);
     void addAllRecordsToDriverEntryModel(QStandardItemModel *model);

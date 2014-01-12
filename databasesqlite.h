@@ -83,6 +83,9 @@ public:
     // Update car data
     bool updateCar(qlonglong id, string mark, string model, string year, string regist, string notes, quint8 fueltype);
 
+    // Delete a car
+    bool deleteCar(qlonglong id);
+
     vector<CarData> getCarData(void);
     vector<DriverData> getDriverData(void);
 

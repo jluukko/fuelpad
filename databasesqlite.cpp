@@ -1113,6 +1113,47 @@ bool DatabaseSqlite::updateCar(qlonglong id, string mark, string model, string y
     return retVal;
 }
 
+bool DatabaseSqlite::deleteCar(qlonglong id) {
+    bool retVal = false;
+    QSqlQuery q;
+
+    q.prepare("DELETE FROM car WHERE id=:carid;");
+    q.bindValue(":carid", id);
+    if (q.exec()) {
+        qDebug("Car deleted ok");
+        if (q.first()) {
+            QSqlQuery q2;
+
+            q2.prepare("DELETE FROM record WHERE carid=:carid;");
+            q2.bindValue(":carid", id);
+            if (q2.exec()) {
+                qDebug("Car's records deleted ok");
+                if (q2.first()) {
+                    QSqlQuery q3;
+
+                    q3.prepare("DELETE FROM alarmevent WHERE carid=:carid;");
+                    q3.bindValue(":carid", id);
+                    if (q3.exec()) {
+                        qDebug("Car's alarm events deleted ok");
+                        if (q3.first()) {
+
+                        }
+                    }
+                }
+            }
+            retVal = true;
+        }
+    }
+    else {
+        qDebug("Car deletion unsuccesful");
+        std::cout << "error type =" << q.lastError().type() << " database error = " << q.lastError().databaseText().toStdString() << std::endl;
+        std::cout << "driver error= " << q.lastError().driverText().toStdString() << std::endl;
+        retVal = false;
+    }
+    return retVal;
+}
+
+
 //--------------------------------------------------------------------------
 // Query all car data and return in as a vector
 //--------------------------------------------------------------------------

@@ -97,6 +97,9 @@ public:
     // Update car data
     virtual bool updateCar(qlonglong id, string mark, string model, string year, string regist, string notes, quint8 fueltype) =0;
 
+    // Delete a car
+    virtual bool deleteCar(qlonglong id) =0;
+
     virtual vector<CarData> getCarData(void) =0;
     virtual vector<DriverData> getDriverData(void) =0;
 

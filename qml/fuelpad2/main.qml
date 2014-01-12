@@ -63,6 +63,14 @@ PageStackWindow {
                 text: qsTr("Settings")
                 onClicked: pageStack.push(Funcs.loadComponent("SettingsPage.qml",mainPage, {}))
             }
+            MenuItem {
+                text: qsTr("Manage cars")
+                onClicked: pageStack.push(Funcs.loadComponent("ManageCarsPage.qml",mainPage, {}))
+            }
+            MenuItem {
+                text: qsTr("Manage drivers")
+                onClicked: pageStack.push(Funcs.loadComponent("ManageDriversPage.qml",mainPage, {}))
+            }
         }
     }
 
