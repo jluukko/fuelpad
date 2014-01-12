@@ -109,6 +109,7 @@ private:
     void reReadAllModels(void);
     QStandardItem *findFuelEntry(QString id);
     QStandardItem* findCar(QString id);
+    QStandardItem* findDriver(QString id);
     void addAllRecordsToCarEntryModel(QStandardItemModel *model);
     void addAllRecordsToFuelEntryModel(QStandardItemModel *model);
     void addAllRecordsToDriverEntryModel(QStandardItemModel *model);

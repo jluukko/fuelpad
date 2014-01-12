@@ -239,6 +239,17 @@ QStandardItem* UiWrapper::findCar(QString id)
     return it;
 }
 
+QStandardItem* UiWrapper::findDriver(QString id)
+{
+    QStandardItem *it = 0;
+    QList<QModelIndex> items = driverDataModel->match(driverDataModel->index(0,0), DriverEntry::IdRole, QVariant(id));
+    if (items.size() == 1) {
+        it = driverDataModel->itemFromIndex(items.at(0));
+    }
+
+    return it;
+}
+
 void UiWrapper::addAllRecordsToFuelEntryModel(QStandardItemModel *model)
 {
     Fuelrecord *data;
@@ -638,8 +649,14 @@ double UiWrapper::getLastYearKm(int carid=-1)
 void UiWrapper::addDriver(QString fullname, QString nickname)
 {
     qDebug("%s called!\n",__PRETTY_FUNCTION__);
+    DriverData *record = new DriverData();
+
+    record->setFullName(fullname);
+    record->setNickName(nickname);
 
     dataBase->addDriver(fullname.toStdString(), nickname.toStdString());
+
+    addRecordToDriverEntryModel(driverDataModel, record);
 
     // Notify Qml side that list models have changed
     updateAllModels();
@@ -648,8 +665,27 @@ void UiWrapper::addDriver(QString fullname, QString nickname)
 void UiWrapper::updateDriver(QString id, QString fullname, QString nickname)
 {
     qDebug("%s called!\n",__PRETTY_FUNCTION__);
+    qlonglong Id = id.toLongLong();
+    DriverData *record = new DriverData();
+    QStandardItem *currentItem;
 
-    dataBase->updateDriver(id.toLongLong(), fullname.toStdString(), nickname.toStdString());
+    qDebug("id = %s, id = %ld\n",id.toStdString().c_str(),Id);
+
+    record->setFullName(fullname);
+    record->setNickName(nickname);
+    record->setId(Id);
+
+    dataBase->updateDriver(Id, fullname.toStdString(), nickname.toStdString());
+
+    // Change the data in the model
+    currentItem = findDriver(id);
+    if (currentItem != 0) {
+        qDebug("Found current id from model and trying to update it");
+        setDataToDriverEntryModel(currentItem, record);
+    }
+    else {
+        qDebug("Did not find current id from model");
+    }
 
     // Notify Qml side that list models have changed
     updateAllModels();
@@ -658,8 +694,18 @@ void UiWrapper::updateDriver(QString id, QString fullname, QString nickname)
 void UiWrapper::deleteDriver(QString id)
 {
     qDebug("%s called!\n",__PRETTY_FUNCTION__);
+    QStandardItem *currentItem;
 
-//    dataBase->deleteDriver(id.toLongLong());
+    dataBase->deleteDriver(id.toLongLong());
+
+    currentItem = findDriver(id);
+    if (currentItem != 0) {
+        qDebug("Found current id from model and trying to update it");
+        driverDataModel->removeRows(currentItem->row(), 1);
+    }
+    else {
+        qDebug("Did not find current id from model");
+    }
 
     // Notify Qml side that list models have changed
     updateAllModels();
@@ -724,6 +770,7 @@ void UiWrapper::updateCar(QString id, QString mark, QString model, QString year,
 void UiWrapper::deleteCar(QString id)
 {
     qDebug("%s called!\n",__PRETTY_FUNCTION__);
+    QStandardItem *currentItem;
 
     dataBase->deleteCar(id.toLongLong());
 

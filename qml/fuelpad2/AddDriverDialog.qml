@@ -29,12 +29,8 @@ Page {
 
     property bool editMode: false
     property string oldId
-    property string oldMark
-    property string oldModel
-    property string oldYear
-    property string oldRegnum
-    property string oldFueltype
-    property string oldNotes
+    property string oldFullname
+    property string oldNickname
 
     function open() {
         addDialog.open()
@@ -44,22 +40,10 @@ Page {
     function addDialogAccepted() {
         if (editMode) {
             console.log("Now entry would be updated if a function would exist")
-            applicationData.updateCar(oldId, markField.text, modelField.text, yearField.text, regnumField.text,
-                                            notesField.text, fueltypeField.selectedIndex)
+            applicationData.updateDriver(oldId, fullnameField.text, nicknameField.text)
         } else {
-            applicationData.addCar(markField.text, modelField.text, yearField.text, regnumField.text,
-                                         notesField.text, fueltypeField.selectedIndex)
+            applicationData.addDriver(fullnameField.text, nicknameField.text)
         }
-    }
-
-    // workaround https://bugreports.qt-project.org/browse/QTBUG-11403
-    Text { text: qsTr(name) }
-    ListModel {
-        id: fueltypeModel
-        ListElement { name: QT_TR_NOOP("Petrol") }
-        ListElement { name: QT_TR_NOOP("Diesel") }
-        ListElement { name: QT_TR_NOOP("Ethanol")}
-        ListElement { name: QT_TR_NOOP("Other")}
     }
 
     Dialog {
@@ -75,7 +59,7 @@ Page {
                     font.weight: Font.Bold
 //                    anchors.centerIn: parent
                     color: "white"
-                    text: editMode ? qsTr("Edit car") : qsTr("Add a new car")
+                    text: editMode ? qsTr("Edit driver") : qsTr("Add a new driver")
                 }
                 Rectangle {
                     id: titleField
@@ -94,80 +78,31 @@ Page {
                 columns: 2
                 spacing: UIConstants.PADDING_MEDIUM
                 Text {
-                    text: qsTr("Mark")
+                    text: qsTr("Full name")
                     font.pixelSize: UIConstants.FONT_DEFAULT
                     font.weight: Font.Light
                     color: "white"
                 }
                 TextField {
-                    id: markField
-                    placeholderText: qsTr("My car mark")
+                    id: fullnameField
+                    placeholderText: qsTr("Full name")
                     maximumLength: 40
                     validator: RegExpValidator{}
-                    text: editMode ? oldMark : ""
+                    text: editMode ? oldFullname : ""
                 }
                 Text {
-                    text: qsTr("Model")
+                    text: qsTr("Nick name")
                     font.pixelSize: UIConstants.FONT_DEFAULT
                     font.weight: Font.Light
                     color: "white"
                 }
                 TextField {
-                    id: modelField
-                    placeholderText: qsTr("My car model")
+                    id: nicknameField
+                    placeholderText: qsTr("Nick name")
                     maximumLength: 40
                     validator: RegExpValidator{}
-                    text: editMode ? oldModel : ""
+                    text: editMode ? oldNickname : ""
                 }
-                Text {
-                    text: qsTr("Model year")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
-                    font.weight: Font.Light
-                    color: "white"
-                }
-                TextField {
-                    id: yearField
-                    placeholderText: qsTr("My car model year")
-                    maximumLength: 4
-                    validator: IntValidator{bottom: 1800; top: 2100}
-                    inputMethodHints: Qt.ImhFormattedNumbersOnly
-                    text: editMode ? oldYear : ""
-                }
-                Text {
-                    text: qsTr("Registration number")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
-                    font.weight: Font.Light
-                    color: "white"
-                }
-                TextField {
-                    id: regnumField
-                    placeholderText: qsTr("My car registration number")
-                    maximumLength: 40
-                    validator: RegExpValidator{}
-                    text: editMode ? oldRegnum : ""
-                }
-                Text {
-                    text: qsTr("Notes")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
-                    font.weight: Font.Light
-                    color: "white"
-                }
-                TextField {
-                    id: notesField
-                    placeholderText: qsTr("Add notes")
-                    maximumLength: 120
-                    validator: RegExpValidator{}
-                    text: editMode ? oldNotes : ""
-                }
-            }
-
-            TouchSelector {
-                id: fueltypeField
-                anchors.top: addDialogGrid.bottom
-                buttonText: qsTr("Primary fuel type")
-                titleText: qsTr("Select primary fuel type")
-                selectedIndex: 0
-                model: fueltypeModel
             }
 
         }

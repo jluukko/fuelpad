@@ -1059,6 +1059,51 @@ bool DatabaseSqlite::updateDriver(qlonglong id, string fullname, string nickname
 }
 
 //--------------------------------------------------------------------------
+// Delete a driver
+//--------------------------------------------------------------------------
+bool DatabaseSqlite::deleteDriver(qlonglong id)
+{
+    bool retVal = false;
+    QSqlQuery q;
+
+    q.prepare("DELETE FROM driver WHERE id=:driverid;");
+    q.bindValue(":driverid", id);
+    if (q.exec()) {
+        qDebug("Driver deleted ok");
+        if (q.first()) {
+            QSqlQuery q2;
+
+            q2.prepare("DELETE FROM record WHERE driverid=:driverid;");
+            q2.bindValue(":driverid", id);
+            if (q2.exec()) {
+                qDebug("Driver's records deleted ok");
+                if (q2.first()) {
+                    QSqlQuery q3;
+
+                    q3.prepare("DELETE FROM alarmevent WHERE driverid=:driverid;");
+                    q3.bindValue(":driverid", id);
+                    if (q3.exec()) {
+                        qDebug("Driver's alarm events deleted ok");
+                        if (q3.first()) {
+
+                        }
+                    }
+                }
+            }
+            retVal = true;
+        }
+    }
+    else {
+        qDebug("Car deletion unsuccesful");
+        std::cout << "error type =" << q.lastError().type() << " database error = " << q.lastError().databaseText().toStdString() << std::endl;
+        std::cout << "driver error= " << q.lastError().driverText().toStdString() << std::endl;
+        retVal = false;
+    }
+    return retVal;
+}
+
+
+//--------------------------------------------------------------------------
 // Add a new car
 //--------------------------------------------------------------------------
 bool DatabaseSqlite::addCar(string mark, string model, string year, string regist, string notes, quint8 fueltype)
@@ -1113,7 +1158,11 @@ bool DatabaseSqlite::updateCar(qlonglong id, string mark, string model, string y
     return retVal;
 }
 
-bool DatabaseSqlite::deleteCar(qlonglong id) {
+//--------------------------------------------------------------------------
+// Delete a car
+//--------------------------------------------------------------------------
+bool DatabaseSqlite::deleteCar(qlonglong id)
+{
     bool retVal = false;
     QSqlQuery q;
 
@@ -1219,7 +1268,7 @@ vector<DriverData> DatabaseSqlite::getDriverData(void)
 
             driverRecord.setFullName(ppStmtDriver->value(0).toString());
             driverRecord.setNickName(ppStmtDriver->value(1).toString());
-            driverRecord.setId(ppStmtDriver->value(3).toInt());
+            driverRecord.setId(ppStmtDriver->value(2).toInt());
 
             // Store to vector
             data.push_back(driverRecord);

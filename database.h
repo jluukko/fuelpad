@@ -91,6 +91,9 @@ public:
     // Update driver data
     virtual bool updateDriver(qlonglong id, string fullname, string nickname) =0;
 
+    // Delete a driver
+    virtual bool deleteDriver(qlonglong id) =0;
+
     // Add a new car
     virtual bool addCar(string mark, string model, string year, string regist, string notes, quint8 fueltype) =0;
 

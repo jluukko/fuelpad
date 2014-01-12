@@ -25,7 +25,7 @@ import "UIConstants.js" as UIConstants
 import "CommonFuncs.js" as Funcs
 
 Page {
-    tools: commonTools
+    tools: manageDriversTools
 
     PageHeader {
         id: applicationHeader
@@ -34,16 +34,123 @@ Page {
         titleBackgroundColor: UIConstants.COLOR_PAGEHEADER_BACKGROUND
     }
 
-    Text {
-        wrapMode: Text.WordWrap
-        text: "Driver management has not been implemented yet"
-        font.pixelSize: UIConstants.FONT_XLARGE
-        width: parent.width
-        horizontalAlignment: Text.AlignHCenter
+    ListView {
+        id: listView
+        model: driverModel
+        delegate: delegate
         anchors {
-            verticalCenter: parent.verticalCenter
-            horizontalCenter: parent.horizontalCenter
+            top: applicationHeader.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+            leftMargin: UIConstants.DEFAULT_MARGIN
+            rightMargin: UIConstants.DEFAULT_MARGIN
         }
+        clip: true
+    }
+
+    ScrollDecorator {
+        flickableItem: listView
+    }
+
+    Component {
+        id: delegate
+            Rectangle {
+                id: delegateRec
+                height: driverNameText.height*1.5 + + grid.height
+                width: parent.width
+                MouseArea {
+                    width: parent.width
+                    height: parent.height
+                    onPressAndHold: Funcs.loadComponent("DeleteDriverDialog.qml", mainPage,
+                                                        {databaseId: databaseid}).open()
+                    onClicked: Funcs.loadComponent("AddDriverDialog.qml",mainPage,
+                                                   {editMode: true,
+                                                    oldId: databaseid,
+                                                    oldFullname: fullname,
+                                                    oldNickname: nickname
+                                                   }).open()
+                }
+
+                states: [
+                    State {
+                        name: "selected"
+                        when: (databaseid==selectedId)
+                        PropertyChanges {target: delegateRec; color: "red"}
+                    }
+                ]
+
+                Image {
+                    id: subIndicatorArrow
+                    width: sourceSize.width
+
+                    anchors {
+                        right: parent.right
+                        verticalCenter: parent.verticalCenter
+                        rightMargin: UIConstants.SCROLLDECORATOR_SHORT_MARGIN
+                    }
+
+                    smooth: true
+                    source: "image://theme/icon-m-common-drilldown-arrow"
+                            + (theme.inverted ? "-inverse" : "");
+                }
+
+                Label {
+                    id: driverNameText
+                    text: nickname
+                    platformStyle: MyLabelStyleTitle{}
+                    font.bold: true
+                }
+                Grid {
+                    id: grid
+                    anchors {
+                        top: driverNameText.bottom
+                    }
+
+                    columns: 1
+
+                    Row {
+                        Text {
+                            text: databaseid
+                            visible: false
+                        }
+                    }
+
+                    Row {
+                        LabelText {
+                            text: qsTr("Full name:") + " "
+                        }
+                        ElementText {
+                            text: fullname
+                        }
+                    }
+            }
+            Rectangle {
+                id: itemSeperator
+                height: 2
+                width: parent.width
+                color: UIConstants.COLOR_INVERTED_BACKGROUND
+            }
+
+        }
+    }
+
+    ToolBarLayout {
+        id: manageDriversTools
+        visible: false
+        ToolIcon {
+            iconId: "toolbar-back"
+            onClicked: { pageStack.pop(); }
+        }
+        ToolIcon {
+            iconId: "toolbar-add"
+            onClicked: Funcs.loadComponent("AddDriverDialog.qml",mainPage, {}).open()
+        }
+//        ToolIcon {
+//            platformIconId: "toolbar-view-menu"
+//            anchors.right: (parent === undefined) ? undefined : parent.right
+//            onClicked: (fuelViewMenu.status === DialogStatus.Closed) ? fuelViewMenu.open() : fuelViewMenu.close()
+//        }
     }
 
 }

@@ -77,6 +77,9 @@ public:
     // Update driver data
     bool updateDriver(qlonglong id, string fullname, string nickname);
 
+    // Delete a driver
+    bool deleteDriver(qlonglong id);
+
     // Add a new car
     bool addCar(string mark, string model, string year, string regist, string notes, quint8 fueltype);
 
