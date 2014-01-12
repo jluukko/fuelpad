@@ -71,6 +71,10 @@ PageStackWindow {
                 text: qsTr("Manage drivers")
                 onClicked: pageStack.push(Funcs.loadComponent("ManageDriversPage.qml",mainPage, {}))
             }
+            MenuItem {
+                text: qsTr("About")
+                onClicked: Funcs.loadComponent("AboutDialog.qml",mainPage, {}).open()
+            }
         }
     }
 
