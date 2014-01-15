@@ -38,6 +38,7 @@ Page {
 
         title: Column {
                 spacing: UIConstants.PADDING_MEDIUM
+                anchors.centerIn: parent
                 Text {
                     id: titleText
                     font.pixelSize: UIConstants.FONT_XLARGE
@@ -55,7 +56,7 @@ Page {
 
         content:Item {
             id: aboutDialogData
-            height: 600
+            height: 300
             width: parent.width
             Text {
                 anchors.centerIn: parent
