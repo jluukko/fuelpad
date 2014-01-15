@@ -44,7 +44,7 @@ Page {
                     font.pixelSize: UIConstants.FONT_XLARGE
                     font.weight: Font.Bold
                     color: "white"
-                    text: "Fuelpad2 v 0.0.10"
+                    text: "Fuelpad2 v 0.0.11"
                 }
                 Rectangle {
                     id: titleField
