@@ -21,6 +21,7 @@
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import com.nokia.meego 1.1
+import "UIConstants.js" as UIConstants
 
 Item {
     id: touchSelector
@@ -31,8 +32,16 @@ Item {
 
     signal selected(int selectedIndex)
 
-    height: button.height
-    width: button.width
+    height: content.height
+    width: parent.width
+
+    Rectangle {
+        id: background
+        anchors.fill: touchSelector
+        anchors.margins: -UIConstants.DEFAULT_MARGIN
+        visible: mouseArea.pressed
+        color: UIConstants.COLOR_SELECT
+    }
 
     SelectionDialog {
         id: selectionDialog
@@ -42,10 +51,26 @@ Item {
         onSelectedIndexChanged: touchSelector.selected(selectedIndex)
     }
 
-    Button {
-        id: button
-        text: buttonText
+    Column {
+        id: content
+        width: parent.width
+
+        Label {
+            id: button
+            text: buttonText
+            font.bold: true
+        }
+
+        Label {
+            id: value
+            text: selectionDialog.model.get(selectedIndex).name
+        }
+    }
+
+
+    MouseArea {
+        id: mouseArea
+        anchors.fill: background
         onClicked: selectionDialog.open()
-//        anchors: anchors
     }
 }
