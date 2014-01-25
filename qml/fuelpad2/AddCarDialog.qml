@@ -62,7 +62,7 @@ Page {
         ListElement { name: QT_TR_NOOP("Other")}
     }
 
-    Dialog {
+    MyDialog {
         id: addDialog
 
         width: parent.width
@@ -173,7 +173,7 @@ Page {
         }
 
         buttons: ButtonRow {
-            style: ButtonStyle { }
+            platformStyle: ButtonStyle { }
             anchors.horizontalCenter: parent.horizontalCenter
             Button {
                 text: editMode ? qsTr("Apply") : qsTr("Add");
@@ -181,7 +181,7 @@ Page {
             }
             Button {
                 text: qsTr("Cancel");
-                onClicked: addDialog.reject()
+                onClicked: addDialog.cancel()
             }
           }
 

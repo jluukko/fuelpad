@@ -78,7 +78,7 @@ Page {
         onAccepted: dateDialogAccecpted()
     }
 
-    Dialog {
+    MyDialog {
         id: addDialog
 
         width: parent.width
@@ -255,7 +255,7 @@ Page {
             }
             Button {
                 text: qsTr("Cancel");
-                onClicked: addDialog.reject()
+                onClicked: addDialog.cancel()
             }
           }
 
