@@ -24,6 +24,27 @@ import com.nokia.meego 1.1
 Dialog {
     id: dialog
 
+    property alias titleText: titleText.text
+
+    title: Column {
+            spacing: UIConstants.PADDING_MEDIUM
+            Text {
+                id: titleText
+                font.pixelSize: UIConstants.FONT_XLARGE
+                font.weight: Font.Bold
+//                    anchors.centerIn: parent
+                color: "white"
+                text: titleText
+            }
+            Rectangle {
+                id: titleField
+                height: 2
+                width: dialog.width
+                color: "red"
+            }
+    }
+
+
     function cancel() {
         close();
         rejected();

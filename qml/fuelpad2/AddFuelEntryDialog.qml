@@ -83,25 +83,9 @@ Page {
 
         width: parent.width
 
-        title: Column {
-                spacing: UIConstants.PADDING_MEDIUM
-                Text {
-                    id: titleText
-                    font.pixelSize: UIConstants.FONT_XLARGE
-                    font.weight: Font.Bold
-//                    anchors.centerIn: parent
-                    color: "white"
-                    text: editMode ? qsTr("Edit fuel record") : qsTr("Add a new fuel record")
-                }
-                Rectangle {
-                    id: titleField
-                    height: 2
-                    width: parent.width
-                    color: "red"
-                }
-        }
+        titleText: editMode ? qsTr("Edit fuel record") : qsTr("Add a new fuel record")
 
-        content:Item {
+        content:Flickable {
             id: addDialogData
             height: 600
             width: parent.width
