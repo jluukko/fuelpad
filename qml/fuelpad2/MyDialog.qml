@@ -21,12 +21,13 @@
 import QtQuick 1.1
 import com.nokia.meego 1.1
 
-Dialog {
+Sheet {
     id: dialog
 
     property alias titleText: titleText.text
 
     title: Column {
+            visible: false
             spacing: UIConstants.PADDING_MEDIUM
             Text {
                 id: titleText
