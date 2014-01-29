@@ -29,7 +29,7 @@ Page {
     id: fuelViewPage
     tools: fuelViewTools
 
-    property int selectedId: -1
+    property int carId: -1
 
     PageHeader {
         id: applicationHeader
@@ -69,7 +69,8 @@ Page {
                     onPressAndHold: Funcs.loadComponent("DeleteFuelEntryDialog.qml", mainPage,
                                                         {databaseId: databaseid}).open()
                     onClicked: Funcs.loadComponent("AddFuelEntryDialog.qml",mainPage,
-                                                   {editMode: true,
+                                                   {carId: carId,
+                                                    editMode: true,
                                                     oldId: databaseid,
                                                     oldDate: date,
                                                     oldKm: km,
@@ -84,13 +85,13 @@ Page {
                                                    }).open()
                 }
 
-                states: [
-                    State {
-                        name: "selected"
-                        when: (databaseid==selectedId)
-                        PropertyChanges {target: delegateRec; color: "red"}
-                    }
-                ]
+//                states: [
+//                    State {
+//                        name: "selected"
+//                        when: (databaseid==selectedId)
+//                        PropertyChanges {target: delegateRec; color: "red"}
+//                    }
+//                ]
 
                 Image {
                     id: subIndicatorArrow
@@ -245,7 +246,7 @@ Page {
         }
         ToolIcon {
             iconId: "toolbar-add"
-            onClicked: Funcs.loadComponent("AddFuelEntryDialog.qml",mainPage, {}).open()
+            onClicked: Funcs.loadComponent("AddFuelEntryDialog.qml",mainPage, {carId: carId}).open()
         }
         ToolIcon {
             platformIconId: "toolbar-view-menu"

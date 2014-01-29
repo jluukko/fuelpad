@@ -27,6 +27,7 @@ import "UIConstants.js" as UIConstants
 Page {
     tools: commonTools
 
+    property int carId: -1
     property bool editMode: false
     property string oldId
     property string oldDate
@@ -59,12 +60,11 @@ Page {
     // applicationData.addFuelEntry could be directly called from onAccepted
     function addDialogAccepted() {
         if (editMode) {
-            console.log("Now entry would be updated if a function would exist")
-            applicationData.updateFuelEntry(oldId, dateField.text, kmField.text, tripField.text, fillField.text,
+            applicationData.updateFuelEntry(carId, oldId, dateField.text, kmField.text, tripField.text, fillField.text,
                                          notFullFill.checked, priceField.text, serviceField.text,
                                          oilField.text, tiresField.text, notesField.text)
         } else {
-            applicationData.addFuelEntry(dateField.text, kmField.text, tripField.text, fillField.text,
+            applicationData.addFuelEntry(carId, dateField.text, kmField.text, tripField.text, fillField.text,
                                          notFullFill.checked, priceField.text, serviceField.text,
                                          oilField.text, tiresField.text, notesField.text)
         }
@@ -87,147 +87,151 @@ Page {
 
         content:Flickable {
             id: addDialogData
-            height: 600
+            anchors.fill: parent
             width: parent.width
-            Grid {
-                columns: 2
-                spacing: UIConstants.PADDING_MEDIUM
-                ListButton {
-                     id: dateButton
-                     text: qsTr("Pick date")
-                     width: text.width
-                     onClicked: launchDateDialogToToday()
-                }
-                TextField {
-                    id: dateField
-                    placeholderText: qsTr("Add date")
-                    maximumLength: 10
-                    readOnly: true
-                    text: editMode ? oldDate : ""
-                }
-                Text {
-                    text: qsTr("Km")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
-                    font.weight: Font.Light
-                    color: "white"
-                }
-                TextField {
-                    id: kmField
-                    placeholderText: qsTr("Add overall km")
-                    maximumLength: 8
-                    validator: DoubleValidator{bottom: 0.0}
-                    inputMethodHints: Qt.ImhFormattedNumbersOnly
-                    text: editMode ? oldKm : ""
-                }
-                Text {
-                    text: qsTr("Trip")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
-                    font.weight: Font.Light
-                    color: "white"
-                }
-                TextField {
-                    id: tripField
-                    placeholderText: qsTr("Add trip")
-                    maximumLength: 5
-                    validator: DoubleValidator{bottom: 0.0}
-                    inputMethodHints: Qt.ImhFormattedNumbersOnly
-                    text: editMode ? oldTrip : ""
-                }
-                Text {
-                    text: qsTr("Fill")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
-                    font.weight: Font.Light
-                    color: "white"
-                }
-                TextField {
-                    id: fillField
-                    placeholderText: qsTr("Add fill")
-                    maximumLength: 5
-                    validator: DoubleValidator{bottom: 0.0}
-                    inputMethodHints: Qt.ImhFormattedNumbersOnly
-                    text: editMode ? oldFill : ""
-                }
-                Text {
-                    text: qsTr("Not full fill")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
-                    font.weight: Font.Light
-                    color: "white"
-                }
-                Switch {
-                    id: notFullFill
-                    checked: editMode ? oldNotFull : false
-                }
-                Text {
-                    text: qsTr("Price")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
-                    font.weight: Font.Light
-                    color: "white"
-                }
-                TextField {
-                    id: priceField
-                    placeholderText: qsTr("Add price")
-                    maximumLength: 10
-                    validator: DoubleValidator{}
-                    inputMethodHints: Qt.ImhFormattedNumbersOnly
-                    text: editMode ? oldPrice : ""
-                }
-                Text {
-                    text: qsTr("Notes")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
-                    font.weight: Font.Light
-                    color: "white"
-                }
-                TextField {
-                    id: notesField
-                    placeholderText: qsTr("Add notes")
-                    maximumLength: 120
-                    validator: RegExpValidator{}
-                    text: editMode ? oldNotes : ""
-                }
-                Text {
-                    text: qsTr("Service")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
-                    font.weight: Font.Light
-                    color: "white"
-                }
-                TextField {
-                    id: serviceField
-                    placeholderText: qsTr("Add service cost")
-                    maximumLength: 5
-                    validator: DoubleValidator{bottom: 0.0}
-                    inputMethodHints: Qt.ImhFormattedNumbersOnly
-                    text: editMode ? oldService : ""
-                }
-                Text {
-                    text: qsTr("Oil")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
-                    font.weight: Font.Light
-                    color: "white"
-                }
-                TextField {
-                    id: oilField
-                    placeholderText: qsTr("Add oil cost")
-                    maximumLength: 5
-                    validator: DoubleValidator{bottom: 0.0}
-                    inputMethodHints: Qt.ImhFormattedNumbersOnly
-                    text: editMode ? oldOil : ""
-                }
-                Text {
-                    text: qsTr("Tires")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
-                    font.weight: Font.Light
-                    color: "white"
-                }
-                TextField {
-                    id: tiresField
-                    placeholderText: qsTr("Add tires cost")
-                    maximumLength: 5
-                    validator: DoubleValidator{bottom: 0.0}
-                    inputMethodHints: Qt.ImhFormattedNumbersOnly
-                    text: editMode ? oldTires : ""
-                }
-            }
+            Column{
 
+                Grid {
+                    columns: 2
+                    spacing: UIConstants.PADDING_MEDIUM
+
+                    ListButton {
+                         id: dateButton
+                         text: qsTr("Pick date")
+                         width: text.width
+                         onClicked: launchDateDialogToToday()
+                    }
+                    TextField {
+                        id: dateField
+                        placeholderText: qsTr("Add date")
+                        maximumLength: 10
+                        readOnly: true
+                        text: editMode ? oldDate : ""
+                    }
+                    Text {
+                        text: qsTr("Km")
+                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.weight: Font.Light
+                        color: "white"
+                    }
+                    TextField {
+                        id: kmField
+                        placeholderText: qsTr("Add overall km")
+                        maximumLength: 8
+                        validator: DoubleValidator{bottom: 0.0}
+                        inputMethodHints: Qt.ImhFormattedNumbersOnly
+                        text: editMode ? oldKm : ""
+                    }
+                    Text {
+                        text: qsTr("Trip")
+                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.weight: Font.Light
+                        color: "white"
+                    }
+                    TextField {
+                        id: tripField
+                        placeholderText: qsTr("Add trip")
+                        maximumLength: 5
+                        validator: DoubleValidator{bottom: 0.0}
+                        inputMethodHints: Qt.ImhFormattedNumbersOnly
+                        text: editMode ? oldTrip : ""
+                    }
+                    Text {
+                        text: qsTr("Fill")
+                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.weight: Font.Light
+                        color: "white"
+                    }
+                    TextField {
+                        id: fillField
+                        placeholderText: qsTr("Add fill")
+                        maximumLength: 5
+                        validator: DoubleValidator{bottom: 0.0}
+                        inputMethodHints: Qt.ImhFormattedNumbersOnly
+                        text: editMode ? oldFill : ""
+                    }
+                    Text {
+                        text: qsTr("Not full fill")
+                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.weight: Font.Light
+                        color: "white"
+                    }
+                    Switch {
+                        id: notFullFill
+                        checked: editMode ? oldNotFull : false
+                    }
+                    Text {
+                        text: qsTr("Price")
+                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.weight: Font.Light
+                        color: "white"
+                    }
+                    TextField {
+                        id: priceField
+                        placeholderText: qsTr("Add price")
+                        maximumLength: 10
+                        validator: DoubleValidator{}
+                        inputMethodHints: Qt.ImhFormattedNumbersOnly
+                        text: editMode ? oldPrice : ""
+                    }
+                    Text {
+                        text: qsTr("Notes")
+                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.weight: Font.Light
+                        color: "white"
+                    }
+                    TextField {
+                        id: notesField
+                        placeholderText: qsTr("Add notes")
+                        maximumLength: 120
+                        validator: RegExpValidator{}
+                        text: editMode ? oldNotes : ""
+                    }
+                    Text {
+                        text: qsTr("Service")
+                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.weight: Font.Light
+                        color: "white"
+                    }
+                    TextField {
+                        id: serviceField
+                        placeholderText: qsTr("Add service cost")
+                        maximumLength: 5
+                        validator: DoubleValidator{bottom: 0.0}
+                        inputMethodHints: Qt.ImhFormattedNumbersOnly
+                        text: editMode ? oldService : ""
+                    }
+                    Text {
+                        text: qsTr("Oil")
+                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.weight: Font.Light
+                        color: "white"
+                    }
+                    TextField {
+                        id: oilField
+                        placeholderText: qsTr("Add oil cost")
+                        maximumLength: 5
+                        validator: DoubleValidator{bottom: 0.0}
+                        inputMethodHints: Qt.ImhFormattedNumbersOnly
+                        text: editMode ? oldOil : ""
+                    }
+                    Text {
+                        text: qsTr("Tires")
+                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.weight: Font.Light
+                        color: "white"
+                    }
+                    TextField {
+                        id: tiresField
+                        placeholderText: qsTr("Add tires cost")
+                        maximumLength: 5
+                        validator: DoubleValidator{bottom: 0.0}
+                        inputMethodHints: Qt.ImhFormattedNumbersOnly
+                        text: editMode ? oldTires : ""
+                    }
+                }
+
+            }
         }
 
         buttons: ButtonRow {

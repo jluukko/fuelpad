@@ -56,7 +56,7 @@ Page {
 
     function loadFuelViewPage(dbid) {
         applicationData.setCurrentCar(dbid)
-        pageStack.push(Funcs.loadComponent("FuelViewPage.qml",mainPage, {}))
+        pageStack.push(Funcs.loadComponent("FuelViewPage.qml",mainPage, {"carId": dbid}))
     }
 
     Component {

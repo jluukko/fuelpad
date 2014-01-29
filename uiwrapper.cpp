@@ -405,10 +405,12 @@ RoleItemModel* UiWrapper::getDriverEntryModel(void)
     return driverDataModel;
 }
 
-void UiWrapper::addFuelEntry(QString date, double km, double trip, double fill, bool notFull,
+void UiWrapper::addFuelEntry(int carid, QString date, double km, double trip, double fill, bool notFull,
                              double price, double service, double oil, double tires, QString notes)
 {
     qDebug("%s called!\n",__PRETTY_FUNCTION__);
+
+    setCurrentCar(carid);
 
     Fuelrecord *record = new Fuelrecord(*unitSystem);
     qlonglong affectedId;
@@ -465,10 +467,12 @@ void UiWrapper::addFuelEntry(QString date, double km, double trip, double fill, 
 
 }
 
-void UiWrapper::updateFuelEntry(QString id, QString date, double km, double trip, double fill, bool notFull,
+void UiWrapper::updateFuelEntry(int carid, QString id, QString date, double km, double trip, double fill, bool notFull,
                                 double price, double service, double oil, double tires, QString notes)
 {
     qDebug("%s called!\n",__PRETTY_FUNCTION__);
+
+    setCurrentCar(carid);
 
     Fuelrecord *record = new Fuelrecord(*unitSystem);
     QStandardItem *currentItem;
@@ -796,10 +800,12 @@ void UiWrapper::setSortColumn(int col, Qt::SortOrder order = Qt::AscendingOrder)
 
 void UiWrapper::setCurrentCar(int carid)
 {
-    dataBase->setCurrentCar(carid);
+    if (carid != -1) {
+        dataBase->setCurrentCar(carid);
 
-    reReadAllModels();
-    updateAllModels();
+        reReadAllModels();
+        updateAllModels();
+    }
 }
 
 void UiWrapper::setMainUnit(int unit, bool individualUnit)
@@ -816,7 +822,7 @@ void UiWrapper::setMainUnit(int unit, bool individualUnit)
 
 void UiWrapper::setLengthUnit(int unit)
 {
-    if (unit >= UnitSystem::SI || unit < UnitSystem::NUMUNITS) {
+    if ((UnitSystem::unit)unit != unitSystem->getLengthUnit() && (unit >= UnitSystem::SI || unit < UnitSystem::NUMUNITS)) {
         unitSystem->setLengthUnit((UnitSystem::unit)unit);
 
         reReadAllModels();
@@ -826,7 +832,7 @@ void UiWrapper::setLengthUnit(int unit)
 
 void UiWrapper::setMassUnit(int unit)
 {
-    if (unit >= UnitSystem::SI || unit < UnitSystem::NUMUNITS) {
+    if ((UnitSystem::unit)unit != unitSystem->getMassUnit() && (unit >= UnitSystem::SI || unit < UnitSystem::NUMUNITS)) {
         unitSystem->setMassUnit((UnitSystem::unit)unit);
 
         reReadAllModels();
@@ -837,7 +843,7 @@ void UiWrapper::setMassUnit(int unit)
 
 void UiWrapper::setVolumeUnit(int unit)
 {
-    if (unit >= UnitSystem::SI || unit < UnitSystem::NUMUNITS) {
+    if ((UnitSystem::unit)unit != unitSystem->getVolumeUnit() && (unit >= UnitSystem::SI || unit < UnitSystem::NUMUNITS)) {
         unitSystem->setVolumeUnit((UnitSystem::unit)unit);
 
         reReadAllModels();
@@ -847,7 +853,7 @@ void UiWrapper::setVolumeUnit(int unit)
 
 void UiWrapper::setConsumeUnit(int unit)
 {
-    if (unit >= UnitSystem::SI || unit < UnitSystem::NUMUNITS) {
+    if ((UnitSystem::unit)unit != unitSystem->getConsumeUnit() && (unit >= UnitSystem::SI || unit < UnitSystem::NUMUNITS)) {
         unitSystem->setConsumeUnit((UnitSystem::unit)unit);
 
         reReadAllModels();

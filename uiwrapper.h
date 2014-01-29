@@ -42,10 +42,10 @@ public:
     RoleItemModel* getDriverEntryModel(void);
 
     // Exposed to Qml
-    Q_INVOKABLE void addFuelEntry(QString date, double km, double trip, double fill, bool notFull,
+    Q_INVOKABLE void addFuelEntry(int carid, QString date, double km, double trip, double fill, bool notFull,
                                   double price, double service, double oil, double tires, QString notes);
 
-    Q_INVOKABLE void updateFuelEntry(QString id, QString date, double km, double trip, double fill, bool notFull,
+    Q_INVOKABLE void updateFuelEntry(int carid, QString id, QString date, double km, double trip, double fill, bool notFull,
                                     double price, double service, double oil, double tires, QString notes);
 
     Q_INVOKABLE void deleteRecord(QString id);
