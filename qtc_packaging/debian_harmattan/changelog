@@ -1,3 +1,10 @@
+fuelpad2 (0.0.12) unstable; urgency=low
+
+  * Dialogs to use qml sheets instead of qml dialogs
+  * Icon back
+
+ -- Julius Luukko <julle.luukko@quicknet.inet.fi>  Sat, 01 Feb 2014 10:22:11 +0200
+
 fuelpad2 (0.0.11) unstable; urgency=low
 
   * Car and driver management added
