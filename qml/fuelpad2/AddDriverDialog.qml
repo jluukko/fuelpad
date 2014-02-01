@@ -65,7 +65,6 @@ Page {
                     text: qsTr("Full name")
                     font.pixelSize: UIConstants.FONT_DEFAULT
                     font.weight: Font.Light
-                    color: "white"
                 }
                 TextField {
                     id: fullnameField
@@ -78,7 +77,6 @@ Page {
                     text: qsTr("Nick name")
                     font.pixelSize: UIConstants.FONT_DEFAULT
                     font.weight: Font.Light
-                    color: "white"
                 }
                 TextField {
                     id: nicknameField
