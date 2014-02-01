@@ -84,7 +84,6 @@ Page {
                 Text {
                     text: qsTr("Mark")
                     font.pixelSize: UIConstants.FONT_DEFAULT
-                    font.weight: Font.Light
                 }
                 TextField {
                     id: markField
@@ -96,7 +95,6 @@ Page {
                 Text {
                     text: qsTr("Model")
                     font.pixelSize: UIConstants.FONT_DEFAULT
-                    font.weight: Font.Light
                 }
                 TextField {
                     id: modelField
@@ -108,7 +106,6 @@ Page {
                 Text {
                     text: qsTr("Model year")
                     font.pixelSize: UIConstants.FONT_DEFAULT
-                    font.weight: Font.Light
                 }
                 TextField {
                     id: yearField
@@ -121,7 +118,6 @@ Page {
                 Text {
                     text: qsTr("Registration number")
                     font.pixelSize: UIConstants.FONT_DEFAULT
-                    font.weight: Font.Light
                 }
                 TextField {
                     id: regnumField
@@ -133,7 +129,6 @@ Page {
                 Text {
                     text: qsTr("Notes")
                     font.pixelSize: UIConstants.FONT_DEFAULT
-                    font.weight: Font.Light
                 }
                 TextField {
                     id: notesField

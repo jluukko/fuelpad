@@ -115,7 +115,6 @@ Page {
                     Text {
                         text: qsTr("Km")
                         font.pixelSize: UIConstants.FONT_DEFAULT
-                        font.weight: Font.Light
                     }
                     TextField {
                         id: kmField
@@ -128,7 +127,6 @@ Page {
                     Text {
                         text: qsTr("Trip")
                         font.pixelSize: UIConstants.FONT_DEFAULT
-                        font.weight: Font.Light
                     }
                     TextField {
                         id: tripField
@@ -141,7 +139,6 @@ Page {
                     Text {
                         text: qsTr("Fill")
                         font.pixelSize: UIConstants.FONT_DEFAULT
-                        font.weight: Font.Light
                     }
                     TextField {
                         id: fillField
@@ -154,7 +151,6 @@ Page {
                     Text {
                         text: qsTr("Not full fill")
                         font.pixelSize: UIConstants.FONT_DEFAULT
-                        font.weight: Font.Light
                     }
                     Switch {
                         id: notFullFill
@@ -163,7 +159,6 @@ Page {
                     Text {
                         text: qsTr("Price")
                         font.pixelSize: UIConstants.FONT_DEFAULT
-                        font.weight: Font.Light
                     }
                     TextField {
                         id: priceField
@@ -176,7 +171,6 @@ Page {
                     Text {
                         text: qsTr("Notes")
                         font.pixelSize: UIConstants.FONT_DEFAULT
-                        font.weight: Font.Light
                     }
                     TextField {
                         id: notesField
@@ -188,7 +182,6 @@ Page {
                     Text {
                         text: qsTr("Service")
                         font.pixelSize: UIConstants.FONT_DEFAULT
-                        font.weight: Font.Light
                     }
                     TextField {
                         id: serviceField
@@ -201,7 +194,6 @@ Page {
                     Text {
                         text: qsTr("Oil")
                         font.pixelSize: UIConstants.FONT_DEFAULT
-                        font.weight: Font.Light
                     }
                     TextField {
                         id: oilField
@@ -214,7 +206,6 @@ Page {
                     Text {
                         text: qsTr("Tires")
                         font.pixelSize: UIConstants.FONT_DEFAULT
-                        font.weight: Font.Light
                     }
                     TextField {
                         id: tiresField
