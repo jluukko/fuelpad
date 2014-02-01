@@ -137,17 +137,6 @@ Page {
         id: button1
         anchors {
             horizontalCenter: parent.horizontalCenter
-            bottom: button3.top
-            topMargin: 10
-        }
-        text: qsTr("Add new fuel entry")
-        onClicked: Funcs.loadComponent("AddFuelEntryDialog.qml",mainPage, {}).open()
-        width: parent.width-50
-    }
-    Button{
-        id: button3
-        anchors {
-            horizontalCenter: parent.horizontalCenter
             bottom: button4.top
             topMargin: 10
         }
