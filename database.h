@@ -79,6 +79,7 @@ public:
 
     // Querying simple statistics
     virtual dbtimespan getTotalKm(UnitSystem unit) =0;
+    virtual dbtimespan getTotalFill(UnitSystem unit) =0;
 
     // Querying monthly statistics
     virtual bool getMonthlyData(int year, UnitSystem unit, vector<int> &month,

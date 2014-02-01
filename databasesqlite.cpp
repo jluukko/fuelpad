@@ -132,6 +132,9 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtGetKmOverall = new QSqlQuery;
     ppStmtGetKmLastMonth = new QSqlQuery;
     ppStmtGetKmLastYear = new QSqlQuery;
+    ppStmtGetFillOverall = new QSqlQuery;
+    ppStmtGetFillLastMonth = new QSqlQuery;
+    ppStmtGetFillLastYear = new QSqlQuery;
     ppStmtAddDriver = new QSqlQuery;
     ppStmtAddCar = new QSqlQuery;
     ppStmtUpdateDriver = new QSqlQuery;
@@ -282,6 +285,18 @@ bool DatabaseSqlite::prepare_queries(void)
             ppStmtGetKmLastYear->prepare("SELECT SUM(trip) FROM record "
                                         "WHERE carid=:carid AND day BETWEEN DATE('now','-1 year') AND DATE('now');");
 
+    retVal = retVal |
+            ppStmtGetFillOverall->prepare("SELECT SUM(fill) FROM record "
+                                        "WHERE carid=:carid;");
+
+    retVal = retVal |
+            ppStmtGetFillLastMonth->prepare("SELECT SUM(fill) FROM record "
+                                        "WHERE carid=:carid AND day BETWEEN DATE('now','-1 month') AND DATE('now');");
+
+    retVal = retVal |
+            ppStmtGetFillLastYear->prepare("SELECT SUM(fill) FROM record "
+                                        "WHERE carid=:carid AND day BETWEEN DATE('now','-1 year') AND DATE('now');");
+
     //--------------------------------------------------------------------------
     // Add a new driver
     //--------------------------------------------------------------------------
@@ -330,6 +345,9 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtGetKmOverall;
     delete ppStmtGetKmLastMonth;
     delete ppStmtGetKmLastYear;
+    delete ppStmtGetFillOverall;
+    delete ppStmtGetFillLastMonth;
+    delete ppStmtGetFillLastYear;
     delete ppStmtAddDriver;
     delete ppStmtAddCar;
     delete ppStmtUpdateDriver;
@@ -1332,6 +1350,46 @@ Database::dbtimespan DatabaseSqlite::getTotalKm(UnitSystem unit)
     if (success) {
         if (ppStmtGetKmLastYear->exec() && ppStmtGetKmLastYear->next() ) {
             retVal.lastyear = ppStmtGetKmLastYear->value(0).toDouble()/unit.getLengthConversionFactor();
+            success = true;
+        }
+        else {
+            success = false;
+        }
+    }
+
+    return retVal;
+}
+
+Database::dbtimespan DatabaseSqlite::getTotalFill(UnitSystem unit)
+{
+    bool success = false;
+    dbtimespan retVal = {0, 0, 0};
+
+    // QSqlQuery.bindValue is void, we'll have to assume it worked
+    ppStmtGetFillOverall->bindValue(":carid",getCurrentCar().getId());
+    ppStmtGetFillLastMonth->bindValue(":carid",getCurrentCar().getId());
+    ppStmtGetFillLastYear->bindValue(":carid",getCurrentCar().getId());
+
+    if (ppStmtGetFillOverall->exec() && ppStmtGetFillOverall->next() ) {
+        retVal.overall = ppStmtGetFillOverall->value(0).toDouble()/unit.getVolumeConversionFactor();
+        success = true;
+    }
+    else {
+        success = false;
+    }
+
+    if (success) {
+        if (ppStmtGetFillLastMonth->exec() && ppStmtGetFillLastMonth->next() ) {
+            retVal.lastmonth = ppStmtGetFillLastMonth->value(0).toDouble()/unit.getVolumeConversionFactor();
+            success = true;
+        }
+        else {
+            success = false;
+        }
+    }
+    if (success) {
+        if (ppStmtGetFillLastYear->exec() && ppStmtGetFillLastYear->next() ) {
+            retVal.lastyear = ppStmtGetFillLastYear->value(0).toDouble()/unit.getVolumeConversionFactor();
             success = true;
         }
         else {
