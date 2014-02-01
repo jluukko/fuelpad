@@ -87,7 +87,11 @@ Page {
 
         content:Flickable {
             id: addDialogData
-            anchors.fill: parent
+            anchors {
+                fill: parent
+                leftMargin: UIConstants.DEFAULT_MARGIN
+                rightMargin: UIConstants.DEFAULT_MARGIN
+            }
             width: parent.width
             Column{
 

@@ -56,6 +56,11 @@ Page {
         content:Flickable {
             id: addDialogData
             height: 600
+            anchors {
+                fill: parent
+                leftMargin: UIConstants.DEFAULT_MARGIN
+                rightMargin: UIConstants.DEFAULT_MARGIN
+            }
             width: parent.width
             Grid {
                 id: addDialogGrid
