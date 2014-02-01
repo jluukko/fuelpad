@@ -23,24 +23,20 @@
 MySortFilterProxyModel::MySortFilterProxyModel(QObject *parent, const QHash<int, QByteArray> &roleNames) :
     QSortFilterProxyModel(parent)
 {
-    qDebug("%s",__PRETTY_FUNCTION__);
     setRoleNames(roleNames);
 }
 
 bool MySortFilterProxyModel::filterAcceptsRow(int sourceRow,
         const QModelIndex &sourceParent) const
 {
-//    qDebug("%s",__PRETTY_FUNCTION__);
     return true;
 }
 
 bool MySortFilterProxyModel::lessThan(const QModelIndex &left,
                                        const QModelIndex &right) const
 {
-    QVariant leftData = sourceModel()->data(left);
-    QVariant rightData = sourceModel()->data(right);
-
-//    qDebug("%s",__PRETTY_FUNCTION__);
+    QVariant leftData = sourceModel()->data(left,sortRole());
+    QVariant rightData = sourceModel()->data(right,sortRole());
 
     if (leftData.type() == QVariant::DateTime) {
         return leftData.toDateTime() < rightData.toDateTime();
@@ -59,12 +55,10 @@ bool MySortFilterProxyModel::lessThan(const QModelIndex &left,
 
 void MySortFilterProxyModel::beginResetModel()
 {
-    qDebug("%s",__PRETTY_FUNCTION__);
     QSortFilterProxyModel::beginResetModel();
 }
 
 void MySortFilterProxyModel::endResetModel()
 {
-    qDebug("%s",__PRETTY_FUNCTION__);
     QSortFilterProxyModel::endResetModel();
 }

@@ -92,15 +92,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     RoleItemModel *carEntryModel = uiWrapper.getCarEntryModel();
     RoleItemModel *driverEntryModel = uiWrapper.getDriverEntryModel();
 
-//    uiWrapper.setSortColumn(3);
-    int numRows = fuelEntryModel->rowCount();
-    qDebug("rowcount = %d", numRows);
-    for (int i=0;i<numRows;i++) {
-        QModelIndex index = fuelEntryModel->index(i, 0);
-        QString text = fuelEntryModel->data(index, Qt::UserRole + 1).toString();
-        std::cout << i << ": '" << text.toStdString() << "'" << std::endl;
-    }
-
     // From C++ to Qml
     view.rootContext()->setContextProperty("fuelModel", fuelEntryModel);
     view.rootContext()->setContextProperty("carModel", carEntryModel);
@@ -123,9 +114,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 #else
     view.show();
 #endif
-
-//    object = view.rootObject();
-//    object->setProperty("omaVari", "green");
 
     return app.exec();
 }

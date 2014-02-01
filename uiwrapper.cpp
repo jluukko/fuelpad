@@ -196,8 +196,7 @@ static void addRecordToDriverEntryModel(QStandardItemModel *model, DriverData *d
 
 void UiWrapper::updateAllModels(void)
 {
-    sortModel->sort(FIELD_DATE, Qt::DescendingOrder);
-    fuelEntryModel->sort(FIELD_DATE, Qt::DescendingOrder);
+//    sortModel->sort(FIELD_DATE, Qt::DescendingOrder);
     sortModel->invalidate();
 }
 
@@ -206,7 +205,6 @@ void UiWrapper::reReadAllModels(void)
     // Fuel entry model
     fuelEntryModel->clear();
     addAllRecordsToFuelEntryModel(fuelEntryModel);
-    fuelEntryModel->sort(FIELD_DATE, Qt::DescendingOrder);
 
     // Car data model
     carDataModel->clear();
@@ -341,16 +339,14 @@ void UiWrapper::createFuelEntryModel(void)
 
     fuelEntryModel = model;
 
-//    setSortColumn(FIELD_TRIP);
-    sortModel->setDynamicSortFilter(true);
-//    sortModel->setSortRole(Qt::DisplayRole);
-    sortModel->sort(FIELD_DATE, Qt::DescendingOrder);
     sortModel->setSourceModel(fuelEntryModel);
-    fuelEntryModel->sort(FIELD_DATE, Qt::DescendingOrder);
+    sortModel->sort(FIELD_DATE, Qt::DescendingOrder);
+    sortModel->setDynamicSortFilter(true);
+    sortModel->beginResetModel();
+    sortModel->setSortRole(FuelEntry::DateRole);
+    sortModel->endResetModel();
     sortModel->invalidate();
 
-    qDebug("sort column = %d, sort order = %d, sort role = %d",sortModel->sortColumn(), sortModel->sortOrder(),
-           sortModel->sortRole());
 }
 
 void UiWrapper::createCarDataModel(void)
@@ -408,8 +404,6 @@ RoleItemModel* UiWrapper::getDriverEntryModel(void)
 void UiWrapper::addFuelEntry(int carid, QString date, double km, double trip, double fill, bool notFull,
                              double price, double service, double oil, double tires, QString notes)
 {
-    qDebug("%s called!\n",__PRETTY_FUNCTION__);
-
     setCurrentCar(carid);
 
     Fuelrecord *record = new Fuelrecord(*unitSystem);
@@ -470,8 +464,6 @@ void UiWrapper::addFuelEntry(int carid, QString date, double km, double trip, do
 void UiWrapper::updateFuelEntry(int carid, QString id, QString date, double km, double trip, double fill, bool notFull,
                                 double price, double service, double oil, double tires, QString notes)
 {
-    qDebug("%s called!\n",__PRETTY_FUNCTION__);
-
     setCurrentCar(carid);
 
     Fuelrecord *record = new Fuelrecord(*unitSystem);
@@ -791,7 +783,7 @@ void UiWrapper::deleteCar(QString id)
     updateAllModels();
 }
 
-void UiWrapper::setSortColumn(int col, Qt::SortOrder order = Qt::AscendingOrder)
+void UiWrapper::setSortColumn(int col, Qt::SortOrder order = Qt::DescendingOrder)
 {
     sortModel->beginResetModel();
     sortModel->sort(col, order);
