@@ -66,6 +66,7 @@ public:
     // Querying simple statistics
     dbtimespan getTotalKm(UnitSystem unit);
     dbtimespan getTotalFill(UnitSystem unit);
+    dbtimespan getTotalConsumption(UnitSystem unit);
 
     // Querying monthly statistics
     bool getMonthlyData(int year, UnitSystem unit, vector<int> &month,
@@ -131,6 +132,9 @@ private:
     QSqlQuery *ppStmtGetFillOverall;
     QSqlQuery *ppStmtGetFillLastMonth;
     QSqlQuery *ppStmtGetFillLastYear;
+    QSqlQuery *ppStmtGetConsumOverall;
+    QSqlQuery *ppStmtGetConsumLastMonth;
+    QSqlQuery *ppStmtGetConsumLastYear;
     QSqlQuery *ppStmtAddDriver;
     QSqlQuery *ppStmtAddCar;
     QSqlQuery *ppStmtUpdateDriver;

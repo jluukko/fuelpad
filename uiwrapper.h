@@ -66,6 +66,12 @@ public:
 
     Q_INVOKABLE double getLastYearFill(int carid);
 
+    Q_INVOKABLE double getTotalConsum(int carid);
+
+    Q_INVOKABLE double getLastMonthConsum(int carid);
+
+    Q_INVOKABLE double getLastYearConsum(int carid);
+
     Q_INVOKABLE void addDriver(QString fullname, QString nickname);
 
     Q_INVOKABLE void updateDriver(QString id, QString fullname, QString nickname);

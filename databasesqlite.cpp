@@ -135,6 +135,9 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtGetFillOverall = new QSqlQuery;
     ppStmtGetFillLastMonth = new QSqlQuery;
     ppStmtGetFillLastYear = new QSqlQuery;
+    ppStmtGetConsumOverall = new QSqlQuery;
+    ppStmtGetConsumLastMonth = new QSqlQuery;
+    ppStmtGetConsumLastYear = new QSqlQuery;
     ppStmtAddDriver = new QSqlQuery;
     ppStmtAddCar = new QSqlQuery;
     ppStmtUpdateDriver = new QSqlQuery;
@@ -297,6 +300,19 @@ bool DatabaseSqlite::prepare_queries(void)
             ppStmtGetFillLastYear->prepare("SELECT SUM(fill) FROM record "
                                         "WHERE carid=:carid AND day BETWEEN DATE('now','-1 year') AND DATE('now');");
 
+    // SQL-lauseet päivittämättä
+    retVal = retVal |
+            ppStmtGetConsumOverall->prepare("SELECT SUM(fill)/SUM(trip)*100 FROM record "
+                                        "WHERE carid=:carid;");
+
+    retVal = retVal |
+            ppStmtGetConsumLastMonth->prepare("SELECT SUM(fill)/SUM(trip)*100 FROM record "
+                                        "WHERE carid=:carid AND day BETWEEN DATE('now','-1 month') AND DATE('now');");
+
+    retVal = retVal |
+            ppStmtGetConsumLastYear->prepare("SELECT SUM(fill)/SUM(trip)*100 FROM record "
+                                        "WHERE carid=:carid AND day BETWEEN DATE('now','-1 year') AND DATE('now');");
+
     //--------------------------------------------------------------------------
     // Add a new driver
     //--------------------------------------------------------------------------
@@ -348,6 +364,9 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtGetFillOverall;
     delete ppStmtGetFillLastMonth;
     delete ppStmtGetFillLastYear;
+    delete ppStmtGetConsumOverall;
+    delete ppStmtGetConsumLastMonth;
+    delete ppStmtGetConsumLastYear;
     delete ppStmtAddDriver;
     delete ppStmtAddCar;
     delete ppStmtUpdateDriver;
@@ -1390,6 +1409,61 @@ Database::dbtimespan DatabaseSqlite::getTotalFill(UnitSystem unit)
     if (success) {
         if (ppStmtGetFillLastYear->exec() && ppStmtGetFillLastYear->next() ) {
             retVal.lastyear = ppStmtGetFillLastYear->value(0).toDouble()/unit.getVolumeConversionFactor();
+            success = true;
+        }
+        else {
+            success = false;
+        }
+    }
+
+    return retVal;
+}
+
+Database::dbtimespan DatabaseSqlite::getTotalConsumption(UnitSystem unit)
+{
+    bool success = false;
+    dbtimespan retVal = {0, 0, 0};
+
+    // QSqlQuery.bindValue is void, we'll have to assume it worked
+    ppStmtGetConsumOverall->bindValue(":carid",getCurrentCar().getId());
+    ppStmtGetConsumLastMonth->bindValue(":carid",getCurrentCar().getId());
+    ppStmtGetConsumLastYear->bindValue(":carid",getCurrentCar().getId());
+
+    if (ppStmtGetConsumOverall->exec() && ppStmtGetConsumOverall->next() ) {
+        if (unit.getConsumeUnit() == UnitSystem::SI) {
+            retVal.overall = ppStmtGetConsumOverall->value(0).toDouble();
+        }
+        else {
+            retVal.overall = unit.getVolumeConversionFactor()/unit.getLengthConversionFactor()*100.0/ppStmtGetConsumOverall->value(0).toDouble();
+        }
+        success = true;
+    }
+    else {
+        success = false;
+    }
+
+    if (success) {
+        if (ppStmtGetConsumLastMonth->exec() && ppStmtGetConsumLastMonth->next() ) {
+            if (unit.getConsumeUnit() == UnitSystem::SI) {
+                retVal.lastmonth = ppStmtGetConsumLastMonth->value(0).toDouble();
+            }
+            else {
+                retVal.lastmonth = unit.getVolumeConversionFactor()/unit.getLengthConversionFactor()*100.0/ppStmtGetConsumLastMonth->value(0).toDouble();
+            }
+            success = true;
+        }
+        else {
+            success = false;
+        }
+    }
+    if (success) {
+        if (ppStmtGetConsumLastYear->exec() && ppStmtGetConsumLastYear->next() ) {
+            if (unit.getConsumeUnit() == UnitSystem::SI) {
+                retVal.lastyear = ppStmtGetConsumLastYear->value(0).toDouble();
+            }
+            else {
+                retVal.lastyear = unit.getVolumeConversionFactor()/unit.getLengthConversionFactor()*100.0/ppStmtGetConsumLastYear->value(0).toDouble();
+            }
             success = true;
         }
         else {

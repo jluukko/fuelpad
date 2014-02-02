@@ -75,6 +75,9 @@ struct CarEntry {
         TotalFillRole,
         LastMonthFillRole,
         LastYearFillRole,
+        TotalConsumptionRole,
+        LastMonthConsumptionRole,
+        LastYearConsumptionRole,
         IdRole
     };
 };
@@ -158,7 +161,8 @@ static void addRecordToFuelEntryModel(QStandardItemModel *model, Fuelrecord *dat
 
 static void setDataToCarEntryModel(QStandardItem *it, CarData *data,
                                    double totalKm, double lastMonthKm, double lastYearKm,
-                                   double totalFill, double lastMonthFill, double lastYearFill)
+                                   double totalFill, double lastMonthFill, double lastYearFill,
+                                   double totalConsum, double lastMonthConsum, double lastYearConsum)
 {
     int id = data->getId();
     it->setData(data->getMark(), CarEntry::MarkRole);
@@ -174,14 +178,20 @@ static void setDataToCarEntryModel(QStandardItem *it, CarData *data,
     it->setData(QVariant(totalFill), CarEntry::TotalFillRole);
     it->setData(QVariant(lastMonthFill), CarEntry::LastMonthFillRole);
     it->setData(QVariant(lastYearFill), CarEntry::LastYearFillRole);
+    it->setData(QVariant(totalConsum), CarEntry::TotalConsumptionRole);
+    it->setData(QVariant(lastMonthConsum), CarEntry::LastMonthConsumptionRole);
+    it->setData(QVariant(lastYearConsum), CarEntry::LastYearConsumptionRole);
 }
 
 static void addRecordToCarEntryModel(QStandardItemModel *model, CarData *data,
                                      double totalKm, double lastMonthKm, double lastYearKm,
-                                     double totalFill, double lastMonthFill, double lastYearFill)
+                                     double totalFill, double lastMonthFill, double lastYearFill,
+                                     double totalConsum, double lastMonthConsum, double lastYearConsum)
 {
     QStandardItem* it = new QStandardItem();
-    setDataToCarEntryModel(it, data, totalKm, lastMonthKm, lastYearKm, totalFill, lastMonthFill, lastYearFill);
+    setDataToCarEntryModel(it, data, totalKm, lastMonthKm, lastYearKm,
+                           totalFill, lastMonthFill, lastYearFill,
+                           totalConsum, lastMonthConsum, lastYearConsum);
     model->appendRow(it);
 //    model->insertRow(0, it);
 }
@@ -291,13 +301,19 @@ void UiWrapper::addAllRecordsToCarEntryModel(QStandardItemModel *model)
         for (vector<CarData>::size_type i=0; i < carData.size(); i++) {
             double totalKm, lastMonthKm, lastYearKm;
             double totalFill, lastMonthFill, lastYearFill;
+            double totalConsum, lastMonthConsum, lastYearConsum;
             totalKm = getTotalKm(carData[i].getId());
             lastMonthKm = getLastMonthKm(carData[i].getId());
             lastYearKm = getLastYearKm(carData[i].getId());
             totalFill = getTotalFill(carData[i].getId());
             lastMonthFill = getLastMonthFill(carData[i].getId());
             lastYearFill = getLastYearFill(carData[i].getId());
-            addRecordToCarEntryModel(model, &carData[i], totalKm, lastMonthKm, lastYearKm, totalFill, lastMonthFill, lastYearFill);
+            totalConsum = getTotalConsum(carData[i].getId());
+            lastMonthConsum = getLastMonthConsum(carData[i].getId());
+            lastYearConsum = getLastYearConsum(carData[i].getId());
+            addRecordToCarEntryModel(model, &carData[i], totalKm, lastMonthKm, lastYearKm,
+                                     totalFill, lastMonthFill, lastYearFill,
+                                     totalConsum, lastMonthConsum, lastYearConsum);
             if (carData[i].getId() == dataBase->getCurrentCar().getId()) {
                 activeIndex = i;
             }
@@ -377,6 +393,9 @@ void UiWrapper::createCarDataModel(void)
     roleNames[CarEntry::TotalFillRole] =  "totalfill";
     roleNames[CarEntry::LastMonthFillRole] =  "lastmonthfill";
     roleNames[CarEntry::LastYearFillRole] =  "lastyearfill";
+    roleNames[CarEntry::TotalConsumptionRole] =  "totalconsumption";
+    roleNames[CarEntry::LastMonthConsumptionRole] =  "lastmonthconsumption";
+    roleNames[CarEntry::LastYearConsumptionRole] =  "lastyearconsumption";
     RoleItemModel *model = new RoleItemModel(roleNames);
 
     addAllRecordsToCarEntryModel(model);
@@ -711,6 +730,60 @@ double UiWrapper::getLastYearFill(int carid=-1)
     return totalFill.lastyear;
 }
 
+double UiWrapper::getTotalConsum(int carid=-1)
+{
+    CarData oldCarData;
+
+    if (carid != -1) {
+        oldCarData = dataBase->getCurrentCar();
+        dataBase->setCurrentCar(carid);
+    }
+
+    Database::dbtimespan totalConsum = dataBase->getTotalConsumption(*unitSystem);
+
+    if (carid != -1) {
+        dataBase->setCurrentCar(oldCarData.getId());
+    }
+
+    return totalConsum.overall;
+}
+
+double UiWrapper::getLastMonthConsum(int carid=-1)
+{
+    CarData oldCarData;
+
+    if (carid != -1) {
+        oldCarData = dataBase->getCurrentCar();
+        dataBase->setCurrentCar(carid);
+    }
+
+    Database::dbtimespan totalConsum = dataBase->getTotalConsumption(*unitSystem);
+
+    if (carid != -1) {
+        dataBase->setCurrentCar(oldCarData.getId());
+    }
+
+    return totalConsum.lastmonth;
+}
+
+double UiWrapper::getLastYearConsum(int carid=-1)
+{
+    CarData oldCarData;
+
+    if (carid != -1) {
+        oldCarData = dataBase->getCurrentCar();
+        dataBase->setCurrentCar(carid);
+    }
+
+    Database::dbtimespan totalConsum = dataBase->getTotalConsumption(*unitSystem);
+
+    if (carid != -1) {
+        dataBase->setCurrentCar(oldCarData.getId());
+    }
+
+    return totalConsum.lastyear;
+}
+
 void UiWrapper::addDriver(QString fullname, QString nickname)
 {
     qDebug("%s called!\n",__PRETTY_FUNCTION__);
@@ -790,7 +863,7 @@ void UiWrapper::addCar(QString mark, QString model, QString year, QString regist
 
     dataBase->addCar(mark.toStdString(), model.toStdString(), year.toStdString(), regist.toStdString(), notes.toStdString(), fueltype);
 
-    addRecordToCarEntryModel(carDataModel, record, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    addRecordToCarEntryModel(carDataModel, record, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 
     // Notify Qml side that list models have changed
     updateAllModels();
@@ -821,7 +894,8 @@ void UiWrapper::updateCar(QString id, QString mark, QString model, QString year,
     if (currentItem != 0) {
         qDebug("Found current id from model and trying to update it");
         setDataToCarEntryModel(currentItem, record, getTotalKm(Id), getLastMonthKm(Id), getLastYearKm(Id),
-                               getTotalFill(Id), getLastMonthFill(Id), getLastYearFill(Id));
+                               getTotalFill(Id), getLastMonthFill(Id), getLastYearFill(Id),
+                               getTotalConsum(Id), getLastMonthConsum(Id), getLastYearConsum(Id));
     }
     else {
         qDebug("Did not find current id from model");
