@@ -23,9 +23,10 @@ import QtQuick 1.1
 import com.nokia.meego 1.1
 import "UIConstants.js" as UIConstants
 import "CommonFuncs.js" as Funcs
+import "CommonUnits.js" as Units
 
 Page {
-    tools: commonTools
+    tools: remindersTools
 
     PageHeader {
         id: applicationHeader
@@ -34,16 +35,140 @@ Page {
         titleBackgroundColor: UIConstants.COLOR_PAGEHEADER_BACKGROUND
     }
 
-    Text {
-        wrapMode: Text.WordWrap
-        text: "Reminders functionality has not been implemented yet"
-        font.pixelSize: UIConstants.FONT_XLARGE
-        width: parent.width
-        horizontalAlignment: Text.AlignHCenter
+    ListView {
+        id: listView
+        model: carModel
+        delegate: delegate
         anchors {
-            verticalCenter: parent.verticalCenter
-            horizontalCenter: parent.horizontalCenter
+            top: applicationHeader.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+            leftMargin: UIConstants.DEFAULT_MARGIN
+            rightMargin: UIConstants.DEFAULT_MARGIN
+        }
+        clip: true
+    }
+
+    ScrollDecorator {
+        flickableItem: listView
+    }
+
+    Component {
+        id: delegate
+            Rectangle {
+                id: delegateRec
+                height: carNameText.height*1.5 + + grid.height
+                width: parent.width
+                MouseArea {
+                    width: parent.width
+                    height: parent.height
+//                    onPressAndHold: Funcs.loadComponent("DeleteCarDialog.qml", mainPage,
+//                                                        {databaseId: databaseid}).open()
+//                    onClicked: Funcs.loadComponent("AddCarDialog.qml",mainPage,
+//                                                   {editMode: true,
+//                                                    oldId: databaseid,
+//                                                    oldMark: mark,
+//                                                    oldModel: carmodel,
+//                                                    oldYear: year,
+//                                                    oldRegnum: regnum,
+//                                                    oldFueltype: fueltype,
+//                                                    oldNotes: notes
+//                                                   }).open()
+                }
+
+                states: [
+                    State {
+                        name: "selected"
+                        when: (databaseid==selectedId)
+                        PropertyChanges {target: delegateRec; color: "red"}
+                    }
+                ]
+
+                Image {
+                    id: subIndicatorArrow
+                    width: sourceSize.width
+
+                    anchors {
+                        right: parent.right
+                        verticalCenter: parent.verticalCenter
+                        rightMargin: UIConstants.SCROLLDECORATOR_SHORT_MARGIN
+                    }
+
+                    smooth: true
+                    source: "image://theme/icon-m-common-drilldown-arrow"
+                            + (theme.inverted ? "-inverse" : "");
+                }
+
+                Label {
+                    id: carNameText
+                    text: mark + " " + carmodel
+                    platformStyle: MyLabelStyleTitle{}
+                    font.bold: true
+                }
+                Grid {
+                    id: grid
+                    anchors {
+                        top: carNameText.bottom
+                    }
+
+                    columns: 1
+
+                    Row {
+                        Text {
+                            text: databaseid
+                            visible: false
+                        }
+                    }
+
+                    Row {
+                        LabelText {
+                            text: qsTr("Overall distance:") + " "
+                        }
+                        ElementText {
+                            text: totalkm.toFixed(0) + " " + Units.getLengthUnit()
+                        }
+                    }
+
+            }
+            Rectangle {
+                id: itemSeperator
+                height: 2
+                width: parent.width
+                color: UIConstants.COLOR_INVERTED_BACKGROUND
+            }
+
         }
     }
+
+    ToolBarLayout {
+        id: remindersTools
+        visible: false
+        ToolIcon {
+            iconId: "toolbar-back"
+            onClicked: { pageStack.pop(); }
+        }
+//        ToolIcon {
+//            iconId: "toolbar-add"
+//            onClicked: Funcs.loadComponent("AddCarDialog.qml",mainPage, {}).open()
+//        }
+//        ToolIcon {
+//            platformIconId: "toolbar-view-menu"
+//            anchors.right: (parent === undefined) ? undefined : parent.right
+//            onClicked: (fuelViewMenu.status === DialogStatus.Closed) ? fuelViewMenu.open() : fuelViewMenu.close()
+//        }
+    }
+
+//    Text {
+//        wrapMode: Text.WordWrap
+//        text: "Reminders functionality has not been implemented yet"
+//        font.pixelSize: UIConstants.FONT_XLARGE
+//        width: parent.width
+//        horizontalAlignment: Text.AlignHCenter
+//        anchors {
+//            verticalCenter: parent.verticalCenter
+//            horizontalCenter: parent.horizontalCenter
+//        }
+//    }
 
 }
