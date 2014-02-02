@@ -98,29 +98,41 @@ Page {
                 columns: 1
 
                 Row {
+                    spacing: UIConstants.BUTTON_SPACING
                     LabelText {
-                        text: qsTr("Overall distance:") + " "
+                        text: qsTr("Overall:") + " "
                     }
                     ElementText {
                         text: totalkm.toFixed(0) + " " + Units.getLengthUnit()
                     }
+                    ElementText {
+                        text: totalconsumption.toFixed(1) + " " + Units.getConsumeUnit()
+                    }
                 }
 
                 Row {
+                    spacing: UIConstants.BUTTON_SPACING
                     LabelText {
                         text: qsTr("Last month:") + " "
                     }
                     ElementText {
                         text: lastmonthkm.toFixed(0) + " " + Units.getLengthUnit()
                     }
+                    ElementText {
+                        text: lastmonthconsumption.toFixed(1) + " " + Units.getConsumeUnit()
+                    }
                 }
 
                 Row {
+                    spacing: UIConstants.BUTTON_SPACING
                     LabelText {
                         text: qsTr("Last year:") + " "
                     }
                     ElementText {
                         text: lastyearkm.toFixed(0) + " " + Units.getLengthUnit()
+                    }
+                    ElementText {
+                        text: lastyearconsumption.toFixed(1) + " " + Units.getConsumeUnit()
                     }
                 }
             }
