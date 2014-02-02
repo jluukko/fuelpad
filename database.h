@@ -34,6 +34,7 @@ using namespace std;
 #include "unitsystem.h"
 #include "cardata.h"
 #include "driverdata.h"
+#include "alarmtypedata.h"
 
 class Database
 {
@@ -107,6 +108,8 @@ public:
 
     virtual vector<CarData> getCarData(void) =0;
     virtual vector<DriverData> getDriverData(void) =0;
+
+    virtual vector<AlarmtypeData> getAlarmTypeData(void) =0;
 
 protected:
     QString fileName;

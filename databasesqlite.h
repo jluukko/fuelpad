@@ -94,6 +94,8 @@ public:
     vector<CarData> getCarData(void);
     vector<DriverData> getDriverData(void);
 
+    vector<AlarmtypeData> getAlarmTypeData(void);
+
 private:
     bool create_database(void);
     bool prepare_queries(void);

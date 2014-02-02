@@ -28,6 +28,7 @@
 
 #define SEPARATOR " "
 
+// Fuel entry fields
 #define FIELD_DATE    0
 #define FIELD_KM      1
 #define FIELD_TRIP    2
@@ -41,6 +42,16 @@
 #define FIELD_TIRES  10
 #define FIELD_NOTES  11
 #define FIELD_ID     12
+
+// Alarm entry fields
+#define ALARM_FIELD_DESC      0
+#define ALARM_FIELD_KMLIMIT   1
+#define ALARM_FIELD_TIMELIMIT 2
+#define ALARM_FIELD_NEXTKM    3
+#define ALARM_FIELD_NEXTDATE  4
+#define ALARM_FIELD_LASTKM    5
+#define ALARM_FIELD_LASTDATE  6
+#define ALARM_FIELD_ID        7
 
 struct FuelEntry {
     enum FuelEntryRoles {
@@ -90,6 +101,19 @@ struct DriverEntry {
     };
 };
 
+struct AlarmEntry {
+    enum AlarmEntryRoles {
+        DescrptionRole = Qt::UserRole + 1,
+        KmLimitRole,
+        TimeLimitRole,
+        NextKmRole,
+        NextDateRole,
+        LastKmRole,
+        LastDateRole,
+        IdRole
+    };
+};
+
 UiWrapper::UiWrapper(Database *db)
 {
     dataBase = db;
@@ -125,6 +149,7 @@ UiWrapper::UiWrapper(Database *db)
     createFuelEntryModel();
     createCarDataModel();
     createDriverDataModel();
+    createAlarmEntryModel();
 }
 
 UiWrapper::~UiWrapper()
@@ -204,12 +229,42 @@ static void setDataToDriverEntryModel(QStandardItem *it, DriverData *data)
     it->setData(id, DriverEntry::IdRole);
 }
 
+static void setDataToAlarmEntryModel(QStandardItem *it, AlarmtypeData *data)
+{
+    int id = data->getId();
+    it->setData(data->getShortDesc(), AlarmEntry::DescrptionRole);
+    it->setData(data->getDistance(), AlarmEntry::KmLimitRole);
+    it->setData(data->getInterval(), AlarmEntry::TimeLimitRole);
+
+    // @todo Calculate next km
+//    it->setData(nextkm, AlarmEntry::NextKmRole);
+
+    // @todo Calculate next date
+//    it->setData(nextdate, AlarmEntry::NextDateRole);
+
+    // @todo Get last km
+//    it->setData(lastkm, AlarmEntry::LastKmRole);
+
+    // @todo Get last date
+//    it->setData(nextdate, AlarmEntry::LastDateRole);
+
+    it->setData(id, AlarmEntry::IdRole);
+}
+
+
 static void addRecordToDriverEntryModel(QStandardItemModel *model, DriverData *data)
 {
     QStandardItem* it = new QStandardItem();
     setDataToDriverEntryModel(it, data);
     model->appendRow(it);
 //    model->insertRow(0, it);
+}
+
+static void addRecordToAlarmEntryModel(QStandardItemModel *model, AlarmtypeData *data)
+{
+    QStandardItem* it = new QStandardItem();
+    setDataToAlarmEntryModel(it, data);
+    model->appendRow(it);
 }
 
 void UiWrapper::updateAllModels(void)
@@ -341,9 +396,28 @@ void UiWrapper::addAllRecordsToDriverEntryModel(QStandardItemModel *model)
     }
 }
 
+void UiWrapper::addAllRecordsToAlarmEntryModel(QStandardItemModel *model)
+{
+    vector<AlarmtypeData> alarmData;
+//    int activeIndex;
+
+    if (dataBase->isOpen()) {
+
+        alarmData = dataBase->getAlarmTypeData();
+
+        for (vector<AlarmtypeData>::size_type i=0; i < alarmData.size(); i++) {
+            addRecordToAlarmEntryModel(model, &alarmData[i]);
+//            if (alarmData[i].getId() == dataBase->getCurrentCar().getId()) {
+//                activeIndex = i;
+//            }
+        }
+
+    }
+}
+
+
 void UiWrapper::createFuelEntryModel(void)
 {
-    Fuelrecord *data;
     QHash<int, QByteArray> roleNames;
     roleNames[FuelEntry::DateRole] =  "date";
     roleNames[FuelEntry::KmRole] =  "km";
@@ -418,6 +492,34 @@ void UiWrapper::createDriverDataModel(void)
 
 }
 
+void UiWrapper::createAlarmEntryModel(void)
+{
+    QHash<int, QByteArray> roleNames;
+    roleNames[AlarmEntry::DescrptionRole] =  "descrpition";
+    roleNames[AlarmEntry::KmLimitRole] =  "kmlimit";
+    roleNames[AlarmEntry::TimeLimitRole] =  "timelimit";
+    roleNames[AlarmEntry::NextKmRole] =  "nextkm";
+    roleNames[AlarmEntry::NextDateRole] =  "nextdate";
+    roleNames[AlarmEntry::LastKmRole] =  "lastkm";
+    roleNames[AlarmEntry::LastDateRole] =  "lastdate";
+    roleNames[AlarmEntry::IdRole] =  "databaseid";
+    RoleItemModel *model = new RoleItemModel(roleNames);
+
+    alarmSortModel = new MySortFilterProxyModel(this, roleNames);
+
+    addAllRecordsToAlarmEntryModel(model);
+
+    alarmEntryModel = model;
+
+    alarmSortModel->setSourceModel(alarmEntryModel);
+    alarmSortModel->sort(ALARM_FIELD_NEXTDATE, Qt::DescendingOrder);
+    alarmSortModel->setDynamicSortFilter(true);
+    alarmSortModel->beginResetModel();
+    alarmSortModel->setSortRole(AlarmEntry::NextDateRole);
+    alarmSortModel->endResetModel();
+    alarmSortModel->invalidate();
+
+}
 
 MySortFilterProxyModel *UiWrapper::getFuelEntryModel(void)
 {
@@ -433,6 +535,11 @@ RoleItemModel* UiWrapper::getCarEntryModel(void)
 RoleItemModel* UiWrapper::getDriverEntryModel(void)
 {
     return driverDataModel;
+}
+
+MySortFilterProxyModel *UiWrapper::getAlarmEntryModel(void)
+{
+    return alarmSortModel;
 }
 
 void UiWrapper::addFuelEntry(int carid, QString date, double km, double trip, double fill, bool notFull,

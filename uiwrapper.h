@@ -40,6 +40,7 @@ public:
     MySortFilterProxyModel* getFuelEntryModel(void);
     RoleItemModel* getCarEntryModel(void);
     RoleItemModel* getDriverEntryModel(void);
+    MySortFilterProxyModel* getAlarmEntryModel(void);
 
     // Exposed to Qml
     Q_INVOKABLE void addFuelEntry(int carid, QString date, double km, double trip, double fill, bool notFull,
@@ -115,7 +116,9 @@ private:
     RoleItemModel *fuelEntryModel;
     RoleItemModel *carDataModel;
     RoleItemModel *driverDataModel;
+    RoleItemModel *alarmEntryModel;
     MySortFilterProxyModel *sortModel;
+    MySortFilterProxyModel *alarmSortModel;
 
     void updateAllModels(void);
     void reReadAllModels(void);
@@ -125,9 +128,11 @@ private:
     void addAllRecordsToCarEntryModel(QStandardItemModel *model);
     void addAllRecordsToFuelEntryModel(QStandardItemModel *model);
     void addAllRecordsToDriverEntryModel(QStandardItemModel *model);
+    void addAllRecordsToAlarmEntryModel(QStandardItemModel *model);
     void createFuelEntryModel(void);
     void createCarDataModel(void);
     void createDriverDataModel(void);
+    void createAlarmEntryModel(void);
 };
 
 #endif // UIWRAPPER_H

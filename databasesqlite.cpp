@@ -32,6 +32,7 @@
 // Application includes
 #include "databasesqlite.h"
 #include "cardata.h"
+#include "alarmtypedata.h"
 
 // Local functions
 
@@ -142,6 +143,7 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtAddCar = new QSqlQuery;
     ppStmtUpdateDriver = new QSqlQuery;
     ppStmtUpdateCar = new QSqlQuery;
+    ppStmtGetAlarmtype = new QSqlQuery;
 
     // Statements without a ready implementation
     ppStmtCurCar = new QSqlQuery;
@@ -149,7 +151,6 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtExportCar = new QSqlQuery;
     ppStmtGetReport = new QSqlQuery;
     ppStmtAddAlarmtype = new QSqlQuery;
-    ppStmtGetAlarmtype = new QSqlQuery;
     ppStmtGetOneAlarmtype = new QSqlQuery;
     ppStmtUpdateAlarmtype = new QSqlQuery;
     ppStmtAddEvent = new QSqlQuery;
@@ -341,6 +342,13 @@ bool DatabaseSqlite::prepare_queries(void)
                                      "SET mark=:mark, model=:model, year=:year, register=:register, notes=:notes, fueltype=:fueltype WHERE id=:id;");
 
 
+    //--------------------------------------------------------------------------
+    // Alarms
+    //--------------------------------------------------------------------------
+    retVal = retVal |
+            ppStmtGetAlarmtype->prepare("SELECT shortdesc,longdesc,distance,interval,id "
+                                        "FROM alarmtype WHERE carid=:carid;");
+
     return retVal;
 }
 
@@ -371,13 +379,13 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtAddCar;
     delete ppStmtUpdateDriver;
     delete ppStmtUpdateCar;
+    delete ppStmtGetAlarmtype;
 
     delete ppStmtCurCar;
     delete ppStmtExport;
     delete ppStmtExportCar;
     delete ppStmtGetReport;
     delete ppStmtAddAlarmtype;
-    delete ppStmtGetAlarmtype;
     delete ppStmtGetOneAlarmtype;
     delete ppStmtUpdateAlarmtype;
     delete ppStmtAddEvent;
@@ -1472,4 +1480,29 @@ Database::dbtimespan DatabaseSqlite::getTotalConsumption(UnitSystem unit)
     }
 
     return retVal;
+}
+
+//--------------------------------------------------------------------------
+// Query all alarm type data and return it as a vector
+//--------------------------------------------------------------------------
+vector<AlarmtypeData> DatabaseSqlite::getAlarmTypeData(void)
+{
+    vector<AlarmtypeData> data;
+
+    if (ppStmtGetAlarmtype->exec()) {
+        while (ppStmtGetAlarmtype->next()) {
+            AlarmtypeData alarmtypeRecord;
+
+            alarmtypeRecord.setShortDesc(ppStmtGetAlarmtype->value(0).toString());
+            alarmtypeRecord.setLongDesc(ppStmtGetAlarmtype->value(1).toString());
+            alarmtypeRecord.setDistance(ppStmtGetAlarmtype->value(2).toInt());
+            alarmtypeRecord.setInterval(ppStmtGetAlarmtype->value(3).toInt());
+            alarmtypeRecord.setId(ppStmtGetAlarmtype->value(4).toInt());
+
+            // Store to vector
+            data.push_back(alarmtypeRecord);
+        }
+    }
+
+    return data;
 }
