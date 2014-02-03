@@ -495,7 +495,7 @@ void UiWrapper::createDriverDataModel(void)
 void UiWrapper::createAlarmEntryModel(void)
 {
     QHash<int, QByteArray> roleNames;
-    roleNames[AlarmEntry::DescrptionRole] =  "descrpition";
+    roleNames[AlarmEntry::DescrptionRole] =  "description";
     roleNames[AlarmEntry::KmLimitRole] =  "kmlimit";
     roleNames[AlarmEntry::TimeLimitRole] =  "timelimit";
     roleNames[AlarmEntry::NextKmRole] =  "nextkm";
