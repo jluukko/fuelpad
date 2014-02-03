@@ -286,6 +286,10 @@ void UiWrapper::reReadAllModels(void)
     // Driver data model
     driverDataModel->clear();
     addAllRecordsToDriverEntryModel(driverDataModel);
+
+    // Alarm types model
+    alarmEntryModel->clear();
+    addAllRecordsToAlarmEntryModel(alarmEntryModel);
 }
 
 QStandardItem* UiWrapper::findFuelEntry(QString id)
