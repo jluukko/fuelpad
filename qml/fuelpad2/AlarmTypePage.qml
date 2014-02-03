@@ -1,7 +1,7 @@
 /*
  * This file is part of Fuelpad.
  *
- * Copyright (C) 2007-2012 Julius Luukko <julle.luukko@quicknet.inet.fi>
+ * Copyright (C) 2007-2012,2014 Julius Luukko <julle.luukko@quicknet.inet.fi>
  *
  * Fuelpad is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,25 +26,21 @@ import "CommonFuncs.js" as Funcs
 import "CommonUnits.js" as Units
 
 Page {
-    id: remindersPage
-    tools: remindersTools
+    id: alarmTypePage
+    tools: alarmTypeTools
 
-    function loadAlarmTypePage(dbid) {
-        applicationData.setCurrentCar(dbid)
-        pageStack.push(Funcs.loadComponent("AlarmTypePage.qml",mainPage, {"carId": dbid}))
-    }
-
+    property int carId: -1
 
     PageHeader {
         id: applicationHeader
-        title: "Reminders"
+        title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
         titleForegroundColor: UIConstants.COLOR_PAGEHEADER_FOREGROUND
         titleBackgroundColor: UIConstants.COLOR_PAGEHEADER_BACKGROUND
     }
 
     ListView {
         id: listView
-        model: carModel
+        model: alarmTypeModel
         delegate: delegate
         anchors {
             top: applicationHeader.bottom
@@ -65,14 +61,15 @@ Page {
         id: delegate
             Rectangle {
                 id: delegateRec
-                height: carNameText.height*1.5 + + grid.height
+                height: headerText.height*1.5 + + grid.height
                 width: parent.width
                 MouseArea {
                     width: parent.width
                     height: parent.height
-//                    onPressAndHold: Funcs.loadComponent("DeleteCarDialog.qml", mainPage,
+//                    onPressAndHold: Funcs.loadComponent("DeleteAlarmTypeDialog.qml", mainPage,
 //                                                        {databaseId: databaseid}).open()
-                    onClicked: loadAlarmTypePage(databaseid)
+//                    onClicked: Funcs.loadComponent("AlarmEntryDialog.qml",mainPage,
+//                                                   {carId: carId}).open()
                 }
 
 //                states: [
@@ -99,15 +96,15 @@ Page {
                 }
 
                 Label {
-                    id: carNameText
-                    text: mark + " " + carmodel
+                    id: headerText
+                    text: description
                     platformStyle: MyLabelStyleTitle{}
                     font.bold: true
                 }
                 Grid {
                     id: grid
                     anchors {
-                        top: carNameText.bottom
+                        top: headerText.bottom
                     }
 
                     columns: 1
@@ -117,14 +114,17 @@ Page {
                             text: databaseid
                             visible: false
                         }
+
                     }
 
                     Row {
+                        spacing: 10
                         LabelText {
-                            text: qsTr("Overall distance:") + " "
+                            id: kmlimitLabel
+                            text: applicationData.getLengthUnit() == 0 ? qsTr("Km limit") : qsTr("Miles limit")
                         }
                         ElementText {
-                            text: totalkm.toFixed(0) + " " + Units.getLengthUnit()
+                            text: kmlimit.toFixed(0) + " " + Units.getLengthUnit()
                         }
                     }
 
@@ -140,33 +140,12 @@ Page {
     }
 
     ToolBarLayout {
-        id: remindersTools
+        id: alarmTypeTools
         visible: false
         ToolIcon {
             iconId: "toolbar-back"
             onClicked: { pageStack.pop(); }
         }
-//        ToolIcon {
-//            iconId: "toolbar-add"
-//            onClicked: Funcs.loadComponent("AddCarDialog.qml",mainPage, {}).open()
-//        }
-//        ToolIcon {
-//            platformIconId: "toolbar-view-menu"
-//            anchors.right: (parent === undefined) ? undefined : parent.right
-//            onClicked: (fuelViewMenu.status === DialogStatus.Closed) ? fuelViewMenu.open() : fuelViewMenu.close()
-//        }
     }
-
-//    Text {
-//        wrapMode: Text.WordWrap
-//        text: "Reminders functionality has not been implemented yet"
-//        font.pixelSize: UIConstants.FONT_XLARGE
-//        width: parent.width
-//        horizontalAlignment: Text.AlignHCenter
-//        anchors {
-//            verticalCenter: parent.verticalCenter
-//            horizontalCenter: parent.horizontalCenter
-//        }
-//    }
 
 }
