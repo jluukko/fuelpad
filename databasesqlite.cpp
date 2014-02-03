@@ -1489,6 +1489,8 @@ vector<AlarmtypeData> DatabaseSqlite::getAlarmTypeData(void)
 {
     vector<AlarmtypeData> data;
 
+    ppStmtGetAlarmtype->bindValue(":carid",getCurrentCar().getId());
+
     if (ppStmtGetAlarmtype->exec()) {
         while (ppStmtGetAlarmtype->next()) {
             AlarmtypeData alarmtypeRecord;
