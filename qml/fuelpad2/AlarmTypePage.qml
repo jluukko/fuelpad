@@ -118,6 +118,7 @@ Page {
                     }
 
                     Row {
+                        visible: kmlimit > 0
                         spacing: 10
                         LabelText {
                             id: kmlimitLabel
@@ -125,6 +126,62 @@ Page {
                         }
                         ElementText {
                             text: kmlimit.toFixed(0) + " " + Units.getLengthUnit()
+                        }
+                    }
+
+                    Row {
+                        visible: timelimit > 0
+                        spacing: 10
+                        LabelText {
+                            id: timelimitLabel
+                            text: qsTr("Time limit")
+                        }
+                        ElementText {
+                            text: timelimit.toFixed(0) + " " + qsTr("months")
+                        }
+                    }
+
+                    Row {
+                        spacing: 10
+                        LabelText {
+                            id: lastkmLabel
+                            text: applicationData.getLengthUnit() == 0 ? qsTr("Last km") : qsTr("Last miles")
+                        }
+                        ElementText {
+                            text: lastkm.toFixed(0) + " " + Units.getLengthUnit()
+                        }
+                    }
+
+                    Row {
+                        spacing: 10
+                        LabelText {
+                            id: lastdateLabel
+                            text: qsTr("Last date")
+                        }
+                        ElementText {
+                            text: lastdate
+                        }
+                    }
+
+                    Row {
+                        spacing: 10
+                        LabelText {
+                            id: nextkmLabel
+                            text: applicationData.getLengthUnit() == 0 ? qsTr("Next km") : qsTr("Next miles")
+                        }
+                        ElementText {
+                            text: nextkm.toFixed(0) + " " + Units.getLengthUnit()
+                        }
+                    }
+
+                    Row {
+                        spacing: 10
+                        LabelText {
+                            id: nextdateLabel
+                            text: qsTr("Next date")
+                        }
+                        ElementText {
+                            text: nextdate
                         }
                     }
 
