@@ -73,3 +73,23 @@ quint32 AlarmtypeData::getInterval(void)
 {
     return interval;
 }
+
+void AlarmtypeData::setLastDate(QString date)
+{
+    lastDate = date;
+}
+
+QString AlarmtypeData::getLasteDate(void)
+{
+    return lastDate;
+}
+
+void AlarmtypeData::setLastKm(double km)
+{
+    lastKm = km;
+}
+
+double AlarmtypeData::getLastKm(void)
+{
+    return lastKm;
+}

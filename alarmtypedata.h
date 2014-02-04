@@ -44,6 +44,12 @@ public:
     void setInterval(quint32 inter);
     quint32 getInterval(void);
 
+    void setLastDate(QString date);
+    QString getLasteDate(void);
+
+    void setLastKm(double km);
+    double getLastKm(void);
+
 private:
     qlonglong id;
     qlonglong carId;
@@ -51,6 +57,8 @@ private:
     quint32 distance;
     quint32 interval;
     QString longdesc;
+    QString lastDate;
+    double lastKm;
 };
 
 #endif // ALARMTYPEDATA_H
