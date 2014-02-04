@@ -242,11 +242,8 @@ static void setDataToAlarmEntryModel(QStandardItem *it, AlarmtypeData *data)
     // @todo Calculate next date
 //    it->setData(nextdate, AlarmEntry::NextDateRole);
 
-    // @todo Get last km
-//    it->setData(lastkm, AlarmEntry::LastKmRole);
-
-    // @todo Get last date
-//    it->setData(nextdate, AlarmEntry::LastDateRole);
+    it->setData(data->getLastKm(), AlarmEntry::LastKmRole);
+    it->setData(data->getLasteDate(), AlarmEntry::LastDateRole);
 
     it->setData(id, AlarmEntry::IdRole);
 }

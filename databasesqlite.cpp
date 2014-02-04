@@ -144,6 +144,7 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtUpdateDriver = new QSqlQuery;
     ppStmtUpdateCar = new QSqlQuery;
     ppStmtGetAlarmtype = new QSqlQuery;
+    ppStmtGetLastEvent = new QSqlQuery;
 
     // Statements without a ready implementation
     ppStmtCurCar = new QSqlQuery;
@@ -349,6 +350,10 @@ bool DatabaseSqlite::prepare_queries(void)
             ppStmtGetAlarmtype->prepare("SELECT shortdesc,longdesc,distance,interval,id "
                                         "FROM alarmtype WHERE carid=:carid;");
 
+    retVal = retVal |
+            ppStmtGetLastEvent->prepare("SELECT day, km FROM alarmevent WHERE alarmid=:alarmid "
+                                        "ORDER BY km DESC LIMIT 1;");
+
     return retVal;
 }
 
@@ -380,6 +385,7 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtUpdateDriver;
     delete ppStmtUpdateCar;
     delete ppStmtGetAlarmtype;
+    delete ppStmtGetLastEvent;
 
     delete ppStmtCurCar;
     delete ppStmtExport;
@@ -1494,12 +1500,22 @@ vector<AlarmtypeData> DatabaseSqlite::getAlarmTypeData(void)
     if (ppStmtGetAlarmtype->exec()) {
         while (ppStmtGetAlarmtype->next()) {
             AlarmtypeData alarmtypeRecord;
+            QString lastDate;
+            double lastKm;
+            qlonglong alarmId;
+
+            alarmId = ppStmtGetAlarmtype->value(4).toInt();
 
             alarmtypeRecord.setShortDesc(ppStmtGetAlarmtype->value(0).toString());
             alarmtypeRecord.setLongDesc(ppStmtGetAlarmtype->value(1).toString());
             alarmtypeRecord.setDistance(ppStmtGetAlarmtype->value(2).toInt());
             alarmtypeRecord.setInterval(ppStmtGetAlarmtype->value(3).toInt());
-            alarmtypeRecord.setId(ppStmtGetAlarmtype->value(4).toInt());
+            alarmtypeRecord.setId(alarmId);
+
+            getLastEvent(alarmId, lastDate, lastKm);
+
+            alarmtypeRecord.setLastDate(lastDate);
+            alarmtypeRecord.setLastKm(lastKm);
 
             // Store to vector
             data.push_back(alarmtypeRecord);
@@ -1507,4 +1523,27 @@ vector<AlarmtypeData> DatabaseSqlite::getAlarmTypeData(void)
     }
 
     return data;
+}
+
+//--------------------------------------------------------------------------
+// Query all alarm type data and return it as a vector
+//--------------------------------------------------------------------------
+bool DatabaseSqlite::getLastEvent(qlonglong alarmid, QString &date, double &km)
+{
+    bool retVal = false;
+
+    ppStmtGetLastEvent->bindValue(":alarmid",alarmid);
+
+    if (ppStmtGetLastEvent->exec() && ppStmtGetLastEvent->next()) {
+            date = ppStmtGetLastEvent->value(0).toString();
+            km = ppStmtGetLastEvent->value(1).toDouble();
+            retVal = true;
+    }
+    else {
+        date = QString("");
+        km = 0.0;
+        retVal = false;
+    }
+
+    return retVal;
 }
