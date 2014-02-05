@@ -35,6 +35,7 @@ using namespace std;
 #include "cardata.h"
 #include "driverdata.h"
 #include "alarmtypedata.h"
+#include "alarmeventdata.h"
 
 class Database
 {
@@ -111,6 +112,7 @@ public:
 
     virtual vector<AlarmtypeData> getAlarmTypeData(void) =0;
     virtual bool getLastEvent(qlonglong alarmid, QString &date, double &km) =0;
+    virtual vector<AlarmeventData> getAlarmeventData(qlonglong alarmid) =0;
 
 protected:
     QString fileName;

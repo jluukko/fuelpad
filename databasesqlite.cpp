@@ -33,6 +33,7 @@
 #include "databasesqlite.h"
 #include "cardata.h"
 #include "alarmtypedata.h"
+#include "alarmeventdata.h"
 
 // Local functions
 
@@ -145,6 +146,7 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtUpdateCar = new QSqlQuery;
     ppStmtGetAlarmtype = new QSqlQuery;
     ppStmtGetLastEvent = new QSqlQuery;
+    ppStmtGetEvents = new QSqlQuery;
 
     // Statements without a ready implementation
     ppStmtCurCar = new QSqlQuery;
@@ -155,7 +157,6 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtGetOneAlarmtype = new QSqlQuery;
     ppStmtUpdateAlarmtype = new QSqlQuery;
     ppStmtAddEvent = new QSqlQuery;
-    ppStmtGetEvents = new QSqlQuery;
     ppStmtGetOneEvent = new QSqlQuery;
     ppStmtDeleteEvent = new QSqlQuery;
     ppStmtDeleteEventwithRecordid = new QSqlQuery;
@@ -354,6 +355,10 @@ bool DatabaseSqlite::prepare_queries(void)
             ppStmtGetLastEvent->prepare("SELECT day, km FROM alarmevent WHERE alarmid=:alarmid "
                                         "ORDER BY km DESC LIMIT 1;");
 
+    retVal = retVal |
+            ppStmtGetEvents->prepare("SELECT day,km,id,recordid "
+                                     "FROM alarmevent WHERE alarmid=:alarmid;");
+
     return retVal;
 }
 
@@ -386,6 +391,7 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtUpdateCar;
     delete ppStmtGetAlarmtype;
     delete ppStmtGetLastEvent;
+    delete ppStmtGetEvents;
 
     delete ppStmtCurCar;
     delete ppStmtExport;
@@ -395,7 +401,6 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtGetOneAlarmtype;
     delete ppStmtUpdateAlarmtype;
     delete ppStmtAddEvent;
-    delete ppStmtGetEvents;
     delete ppStmtGetOneEvent;
     delete ppStmtDeleteEvent;
     delete ppStmtDeleteEventwithRecordid;
@@ -1546,4 +1551,30 @@ bool DatabaseSqlite::getLastEvent(qlonglong alarmid, QString &date, double &km)
     }
 
     return retVal;
+}
+
+//--------------------------------------------------------------------------
+// Query event data and return in as a vector
+//--------------------------------------------------------------------------
+vector<AlarmeventData> DatabaseSqlite::getAlarmeventData(qlonglong alarmid)
+{
+    vector<AlarmeventData> data;
+
+    ppStmtGetEvents->bindValue(":alarmid",alarmid);
+
+    if (ppStmtGetEvents->exec()) {
+        while (ppStmtGetEvents->next()) {
+            AlarmeventData eventRecord;
+
+            eventRecord.setDate(ppStmtGetEvents->value(0).toString());
+            eventRecord.setKm(ppStmtGetEvents->value(1).toDouble());
+            eventRecord.setId(ppStmtGetEvents->value(2).toInt());
+            eventRecord.setRecordId(ppStmtGetEvents->value(3).toInt());
+
+            // Store to vector
+            data.push_back(eventRecord);
+        }
+    }
+
+    return data;
 }
