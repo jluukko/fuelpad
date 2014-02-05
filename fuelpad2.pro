@@ -43,7 +43,8 @@ SOURCES += main.cpp \
     uiwrapper.cpp \
     mysortfilterproxymodel.cpp \
     line.cpp \
-    alarmtypedata.cpp
+    alarmtypedata.cpp \
+    alarmeventdata.cpp
 HEADERS += \
     database.h \
     databasesqlite.h \
@@ -57,7 +58,8 @@ HEADERS += \
     uiwrapper.h \
     mysortfilterproxymodel.h \
     line.h \
-    alarmtypedata.h
+    alarmtypedata.h \
+    alarmeventdata.h
 FORMS +=
 QT += sql \
     declarative
