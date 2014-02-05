@@ -68,8 +68,7 @@ Page {
                     height: parent.height
 //                    onPressAndHold: Funcs.loadComponent("DeleteAlarmTypeDialog.qml", mainPage,
 //                                                        {databaseId: databaseid}).open()
-//                    onClicked: Funcs.loadComponent("AlarmEntryDialog.qml",mainPage,
-//                                                   {carId: carId}).open()
+                    onClicked: pageStack.push(Funcs.loadComponent("AlarmEventPage.qml",mainPage, {"alarmId": databaseid}))
                 }
 
 //                states: [
