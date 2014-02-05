@@ -79,7 +79,7 @@ void AlarmtypeData::setLastDate(QString date)
     lastDate = date;
 }
 
-QString AlarmtypeData::getLasteDate(void)
+QString AlarmtypeData::getLastDate(void)
 {
     return lastDate;
 }

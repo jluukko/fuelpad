@@ -45,7 +45,7 @@ public:
     quint32 getInterval(void);
 
     void setLastDate(QString date);
-    QString getLasteDate(void);
+    QString getLastDate(void);
 
     void setLastKm(double km);
     double getLastKm(void);

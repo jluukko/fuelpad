@@ -243,7 +243,7 @@ static void setDataToAlarmEntryModel(QStandardItem *it, AlarmtypeData *data)
 //    it->setData(nextdate, AlarmEntry::NextDateRole);
 
     it->setData(data->getLastKm(), AlarmEntry::LastKmRole);
-    it->setData(data->getLasteDate(), AlarmEntry::LastDateRole);
+    it->setData(data->getLastDate(), AlarmEntry::LastDateRole);
 
     it->setData(id, AlarmEntry::IdRole);
 }
