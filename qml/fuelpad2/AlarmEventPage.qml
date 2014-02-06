@@ -30,10 +30,12 @@ Page {
     tools: alarmEventTools
 
     property int alarmId: -1
+    property string alarmName
 
     PageHeader {
         id: applicationHeader
-        title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
+//        title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
+        title: alarmName + " (" + applicationData.getCarMark(-1) + ")"
         titleForegroundColor: UIConstants.COLOR_PAGEHEADER_FOREGROUND
         titleBackgroundColor: UIConstants.COLOR_PAGEHEADER_BACKGROUND
     }
@@ -68,7 +70,7 @@ Page {
                     height: parent.height
 //                    onPressAndHold: Funcs.loadComponent("DeletealarmEventDialog.qml", mainPage,
 //                                                        {databaseId: databaseid}).open()
-                    onClicked: pageStack.push(Funcs.loadComponent("AlarmEventPage.qml",mainPage, {"carId": carId}))
+//                    onClicked: pageStack.push(Funcs.loadComponent("AddAlarmEventPage.qml",mainPage, {"carId": carId}))
                 }
 
 //                states: [
@@ -96,7 +98,7 @@ Page {
 
                 Label {
                     id: headerText
-                    text: description
+                    text: date + ": " + km.toFixed(0) + " " + Units.getLengthUnit()
                     platformStyle: MyLabelStyleTitle{}
                     font.bold: true
                 }
@@ -118,23 +120,49 @@ Page {
 
                     Row {
                         spacing: 10
+                        visible: (service > 0)? true : false
                         LabelText {
-                            id: kmLabel
-                            text: applicationData.getLengthUnit() == 0 ? qsTr("Km") : qsTr("Miles")
+                            id: serviceLabel
+                            text: qsTr("Service")
                         }
                         ElementText {
-                            text: km.toFixed(0) + " " + Units.getLengthUnit()
+                            text: service.toFixed(2) + " " + applicationData.getCurrencySymbol()
                         }
                     }
 
                     Row {
                         spacing: 10
+                        visible: (oil > 0)? true : false
                         LabelText {
-                            id: dateLabel
-                            text: qsTr("Date")
+                            id: oilLabel
+                            text: qsTr("Oil")
                         }
                         ElementText {
-                            text: date
+                            text: oil
+                        }
+                    }
+
+                    Row {
+                        spacing: 10
+                        visible: (tires > 0)? true : false
+                        LabelText {
+                            id: tiresLabel
+                            text: qsTr("Tires")
+                        }
+                        ElementText {
+                            text: tires
+                        }
+                    }
+
+                    Row {
+                        spacing: 10
+                        visible: (notes == "")? false : true
+                        LabelText {
+                            id: notesLabel
+                            text: qsTr("Notes")
+                        }
+                        ElementText {
+                            text: notes
                         }
                     }
 

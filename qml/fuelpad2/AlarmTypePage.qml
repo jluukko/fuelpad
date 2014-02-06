@@ -31,6 +31,11 @@ Page {
 
     property int carId: -1
 
+    function loadAlarmEventPage(dbid, alarmname) {
+        applicationData.addAllRecordsToAlarmEventModel(dbid);
+        pageStack.push(Funcs.loadComponent("AlarmEventPage.qml",mainPage, {"alarmId": dbid, "alarmName": alarmname}));
+    }
+
     PageHeader {
         id: applicationHeader
         title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
@@ -68,7 +73,7 @@ Page {
                     height: parent.height
 //                    onPressAndHold: Funcs.loadComponent("DeleteAlarmTypeDialog.qml", mainPage,
 //                                                        {databaseId: databaseid}).open()
-                    onClicked: pageStack.push(Funcs.loadComponent("AlarmEventPage.qml",mainPage, {"alarmId": databaseid}))
+                    onClicked: loadAlarmEventPage(databaseid, description)
                 }
 
 //                states: [
