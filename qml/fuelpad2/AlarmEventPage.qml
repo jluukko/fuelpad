@@ -70,7 +70,17 @@ Page {
                     height: parent.height
 //                    onPressAndHold: Funcs.loadComponent("DeletealarmEventDialog.qml", mainPage,
 //                                                        {databaseId: databaseid}).open()
-//                    onClicked: pageStack.push(Funcs.loadComponent("AddAlarmEventPage.qml",mainPage, {"carId": carId}))
+                    onClicked: Funcs.loadComponent("AddAlarmEventDialog.qml",mainPage,
+                                                      {"editMode": true,
+                                                      "oldId": alarmId,
+                                                      "oldRecordId": recordid,
+                                                      "oldDate": date,
+                                                      "oldKm": km,
+                                                      "oldNotes": notes,
+                                                      "oldService": service,
+                                                      "oldOil": oil,
+                                                      "oldTires": tires}
+                                                   ).open()
                 }
 
 //                states: [
@@ -183,6 +193,10 @@ Page {
         ToolIcon {
             iconId: "toolbar-back"
             onClicked: { pageStack.pop(); }
+        }
+        ToolIcon {
+            iconId: "toolbar-add"
+            onClicked: Funcs.loadComponent("AddAlarmEventDialog.qml",mainPage, {"editMode": false}).open()
         }
     }
 
