@@ -44,6 +44,18 @@ public:
     void setKm(double kilom);
     double getKm(void);
 
+    void setOil(double Oil);
+    double getOil(void);
+
+    void setTires(double Tires);
+    double getTires(void);
+
+    void setService(double Service);
+    double getService(void);
+
+    void setNotes(QString Notes);
+    QString getNotes(void);
+
 private:
     // Database id: "id INTEGER PRIMARY KEY AUTOINCREMENT,"
     qlonglong id;
@@ -59,6 +71,18 @@ private:
 
     // Km when event occured
     double km;
+
+    // Cost of oil
+    double oil;
+
+    // Cost of tires
+    double tires;
+
+    // Cost of service
+    double service;
+
+    // Notes
+    QString notes;
 };
 
 #endif // ALARMEVENTDATA_H

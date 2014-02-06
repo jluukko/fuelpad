@@ -73,3 +73,43 @@ double AlarmeventData::getKm(void)
 {
     return km;
 }
+
+void AlarmeventData::setOil(double Oil)
+{
+    oil = Oil;
+}
+
+double AlarmeventData::getOil(void)
+{
+    return oil;
+}
+
+void AlarmeventData::setTires(double Tires)
+{
+    tires = Tires;
+}
+
+double AlarmeventData::getTires(void)
+{
+    return tires;
+}
+
+void AlarmeventData::setService(double Service)
+{
+    service = Service;
+}
+
+double AlarmeventData::getService(void)
+{
+    return service;
+}
+
+void AlarmeventData::setNotes(QString Notes)
+{
+    notes = Notes;
+}
+
+QString AlarmeventData::getNotes(void)
+{
+    return notes;
+}

@@ -1559,17 +1559,28 @@ bool DatabaseSqlite::getLastEvent(qlonglong alarmid, QString &date, double &km)
 vector<AlarmeventData> DatabaseSqlite::getAlarmeventData(qlonglong alarmid)
 {
     vector<AlarmeventData> data;
+    UnitSystem unitSystem;
 
     ppStmtGetEvents->bindValue(":alarmid",alarmid);
 
     if (ppStmtGetEvents->exec()) {
         while (ppStmtGetEvents->next()) {
+            qlonglong recordId;
             AlarmeventData eventRecord;
+            Fuelrecord* fuelRecord;
 
+            recordId = ppStmtGetEvents->value(3).toInt();
             eventRecord.setDate(ppStmtGetEvents->value(0).toString());
             eventRecord.setKm(ppStmtGetEvents->value(1).toDouble());
             eventRecord.setId(ppStmtGetEvents->value(2).toInt());
-            eventRecord.setRecordId(ppStmtGetEvents->value(3).toInt());
+            eventRecord.setRecordId(recordId);
+
+            // Fetch corresponding fuel record data and store it to eventRecord:
+            fuelRecord = queryOneRecord(recordId, unitSystem);
+            eventRecord.setOil(fuelRecord->getOil().toDouble());
+            eventRecord.setTires(fuelRecord->getTires().toDouble());
+            eventRecord.setService(fuelRecord->getService().toDouble());
+            eventRecord.setNotes(fuelRecord->getNotes().toString());
 
             // Store to vector
             data.push_back(eventRecord);
