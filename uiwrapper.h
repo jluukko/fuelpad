@@ -41,6 +41,7 @@ public:
     RoleItemModel* getCarEntryModel(void);
     RoleItemModel* getDriverEntryModel(void);
     MySortFilterProxyModel* getAlarmEntryModel(void);
+    MySortFilterProxyModel* getAlarmEventModel(void);
 
     // Exposed to Qml
     Q_INVOKABLE void addFuelEntry(int carid, QString date, double km, double trip, double fill, bool notFull,
@@ -109,6 +110,8 @@ public:
 
     Q_INVOKABLE QString getCurrencySymbol(void);
 
+    Q_INVOKABLE void addAllRecordsToAlarmEventModel(qlonglong alarmid);
+
 private:
     Database *dataBase;
     UnitSystem *unitSystem;
@@ -117,8 +120,10 @@ private:
     RoleItemModel *carDataModel;
     RoleItemModel *driverDataModel;
     RoleItemModel *alarmEntryModel;
+    RoleItemModel *alarmEventModel;
     MySortFilterProxyModel *sortModel;
     MySortFilterProxyModel *alarmSortModel;
+    MySortFilterProxyModel *alarmEventSortModel;
 
     void updateAllModels(void);
     void reReadAllModels(void);
@@ -133,6 +138,7 @@ private:
     void createCarDataModel(void);
     void createDriverDataModel(void);
     void createAlarmEntryModel(void);
+    void createAlarmEventModel(void);
 };
 
 #endif // UIWRAPPER_H
