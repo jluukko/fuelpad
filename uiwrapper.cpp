@@ -1132,6 +1132,29 @@ void UiWrapper::deleteCar(QString id)
     updateAllModels();
 }
 
+//-------------------------------------------------------------------
+//
+// Alarms
+//
+//-------------------------------------------------------------------
+void UiWrapper::addAlarmEvent(qlonglong alarmId, QString date,
+                              double km, double service, double oil, double tires, QString notes)
+{
+    AlarmeventData *event = new AlarmeventData();
+
+    event->setAlarmId(alarmId);
+    event->setDate(date);
+    event->setKm(km);
+    event->setService(service);
+    event->setOil(oil);
+    event->setTires(tires);
+    event->setNotes(notes);
+
+    dataBase->addNewAlarmEvent(*event, *unitSystem);
+
+    delete event;
+}
+
 void UiWrapper::setSortColumn(int col, Qt::SortOrder order = Qt::DescendingOrder)
 {
     sortModel->beginResetModel();
@@ -1201,7 +1224,6 @@ void UiWrapper::setConsumeUnit(int unit)
         updateAllModels();
     }
 }
-
 
 //-------------------------------------------------------------------
 //
