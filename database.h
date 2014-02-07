@@ -113,6 +113,7 @@ public:
     virtual vector<AlarmtypeData> getAlarmTypeData(void) =0;
     virtual bool getLastEvent(qlonglong alarmid, QString &date, double &km) =0;
     virtual vector<AlarmeventData> getAlarmeventData(qlonglong alarmid) =0;
+    virtual qlonglong addNewAlarmEvent(AlarmeventData &event, UnitSystem unit) =0;
 
 protected:
     QString fileName;

@@ -97,6 +97,7 @@ public:
     vector<AlarmtypeData> getAlarmTypeData(void);
     bool getLastEvent(qlonglong alarmid, QString &date, double &km);
     vector<AlarmeventData> getAlarmeventData(qlonglong alarmid);
+    qlonglong addNewAlarmEvent(AlarmeventData &event, UnitSystem unit);
 
 private:
     bool create_database(void);
@@ -146,6 +147,7 @@ private:
     QSqlQuery *ppStmtGetAlarmtype;
     QSqlQuery *ppStmtGetLastEvent;
     QSqlQuery *ppStmtGetEvents;
+    QSqlQuery *ppStmtAddEvent;
 
     // Statements without a ready implementation
     QSqlQuery *ppStmtCurCar;
@@ -155,7 +157,6 @@ private:
     QSqlQuery *ppStmtAddAlarmtype;
     QSqlQuery *ppStmtGetOneAlarmtype;
     QSqlQuery *ppStmtUpdateAlarmtype;
-    QSqlQuery *ppStmtAddEvent;
     QSqlQuery *ppStmtGetOneEvent;
     QSqlQuery *ppStmtDeleteEvent;
     QSqlQuery *ppStmtDeleteEventwithRecordid;
