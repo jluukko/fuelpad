@@ -89,6 +89,9 @@ public:
     Q_INVOKABLE void addAlarmEvent(qlonglong alarmId, QString date,
                                               double km, double service, double oil, double tires, QString notes);
 
+    Q_INVOKABLE void updateAlarmEvent(qlonglong id, qlonglong alarmid, qlonglong recordId, QString date,
+                                                 double km, double service, double oil, double tires, QString notes);
+
     Q_INVOKABLE void setSortColumn(int col, Qt::SortOrder order);
 
     Q_INVOKABLE void setCurrentCar(int carid);

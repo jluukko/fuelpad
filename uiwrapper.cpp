@@ -1152,6 +1152,30 @@ void UiWrapper::addAlarmEvent(qlonglong alarmId, QString date,
 
     dataBase->addNewAlarmEvent(*event, *unitSystem);
 
+    addAllRecordsToAlarmEventModel(alarmId);
+
+    delete event;
+}
+
+void UiWrapper::updateAlarmEvent(qlonglong id, qlonglong alarmid, qlonglong recordId, QString date,
+                                 double km, double service, double oil, double tires, QString notes)
+{
+    AlarmeventData *event = new AlarmeventData();
+
+    event->setId(id);
+    event->setAlarmId(alarmid);
+    event->setRecordId(recordId);
+    event->setDate(date);
+    event->setKm(km);
+    event->setService(service);
+    event->setOil(oil);
+    event->setTires(tires);
+    event->setNotes(notes);
+
+    dataBase->updateAlarmEvent(*event, *unitSystem);
+
+    addAllRecordsToAlarmEventModel(alarmid);
+
     delete event;
 }
 
