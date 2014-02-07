@@ -32,6 +32,9 @@ public:
     void setId(qlonglong Id);
     qlonglong getId(void);
 
+    void setAlarmId(qlonglong Id);
+    qlonglong getAlarmId(void);
+
     void setCarId(qlonglong Id);
     qlonglong getCarId(void);
 
@@ -59,6 +62,9 @@ public:
 private:
     // Database id: "id INTEGER PRIMARY KEY AUTOINCREMENT,"
     qlonglong id;
+
+    // Alarm id: to which alarm type this event belongs to
+    qlonglong alarmId;
 
     // Car id to which car this event belongs to
     qlonglong carId;

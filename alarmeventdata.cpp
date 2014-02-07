@@ -34,6 +34,16 @@ qlonglong AlarmeventData::getId(void)
     return id;
 }
 
+void AlarmeventData::setAlarmId(qlonglong Id)
+{
+    alarmId = Id;
+}
+
+qlonglong AlarmeventData::getAlarmId(void)
+{
+    return alarmId;
+}
+
 void AlarmeventData::setCarId(qlonglong Id)
 {
     carId = Id;
