@@ -30,6 +30,7 @@ Page {
     tools: alarmEventTools
 
     property int alarmId: -1
+    property int oldId: -1
     property string alarmName
 
     PageHeader {
@@ -72,7 +73,8 @@ Page {
 //                                                        {databaseId: databaseid}).open()
                     onClicked: Funcs.loadComponent("AddAlarmEventDialog.qml",mainPage,
                                                       {"editMode": true,
-                                                      "oldId": alarmId,
+                                                       "oldId": databaseid,
+                                                      "oldAlarmId": alarmId,
                                                       "oldRecordId": recordid,
                                                       "oldDate": date,
                                                       "oldKm": km,

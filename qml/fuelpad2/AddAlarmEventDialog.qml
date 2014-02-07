@@ -29,6 +29,7 @@ Page {
 
     property bool editMode: false
     property string oldId
+    property string oldAlarmId
     property string oldRecordId
     property string oldDate
     property double oldKm
@@ -56,13 +57,14 @@ Page {
 
 
     function addDialogAccepted() {
-//        if (editMode) {
-//            applicationData.updateAlarmEvent(oldId, markField.text, modelField.text, yearField.text, regnumField.text,
-//                                            notesField.text, fueltypeField.selectedIndex)
-//        } else {
-//            applicationData.addAlarmEvent(markField.text, modelField.text, yearField.text, regnumField.text,
-//                                         notesField.text, fueltypeField.selectedIndex)
-//        }
+        if (editMode) {
+            applicationData.updateAlarmEvent(oldId, oldAlarmId, oldRecordId, dateField.text, kmField.text, serviceField.text, oilField.text,
+                                            tiresField.text, notesField.text)
+        }
+        else {
+            applicationData.addAlarmEvent(oldAlarmId, dateField.text, kmField.text, serviceField.text, oilField.text,
+                                          tiresField.text, notesField.text)
+        }
     }
 
     DatePickerDialog {
