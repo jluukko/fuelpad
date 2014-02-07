@@ -148,6 +148,7 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtGetLastEvent = new QSqlQuery;
     ppStmtGetEvents = new QSqlQuery;
     ppStmtAddEvent = new QSqlQuery;
+    ppStmtUpdateEvent = new QSqlQuery;
 
     // Statements without a ready implementation
     ppStmtCurCar = new QSqlQuery;
@@ -160,7 +161,6 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtGetOneEvent = new QSqlQuery;
     ppStmtDeleteEvent = new QSqlQuery;
     ppStmtDeleteEventwithRecordid = new QSqlQuery;
-    ppStmtUpdateEvent = new QSqlQuery;
 
     ppStmtGetYears = new QSqlQuery;
     ppStmtAddLog = new QSqlQuery;
@@ -364,6 +364,10 @@ bool DatabaseSqlite::prepare_queries(void)
                                     "INTO alarmevent(alarmid,carid,driverid,recordid,day,km) "
                                     "VALUES(:alarmid,:carid,:driverid,:recordid,:day,:km);");
 
+    retVal = retVal |
+            ppStmtUpdateEvent->prepare("UPDATE alarmevent "
+                                       "SET day=:day, km=:km WHERE id=:id;");
+
     return retVal;
 }
 
@@ -398,6 +402,7 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtGetLastEvent;
     delete ppStmtGetEvents;
     delete ppStmtAddEvent;
+    delete ppStmtUpdateEvent;
 
     delete ppStmtCurCar;
     delete ppStmtExport;
@@ -409,7 +414,6 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtGetOneEvent;
     delete ppStmtDeleteEvent;
     delete ppStmtDeleteEventwithRecordid;
-    delete ppStmtUpdateEvent;
 
     delete ppStmtGetYears;
     delete ppStmtAddLog;
@@ -1626,6 +1630,42 @@ qlonglong DatabaseSqlite::addNewAlarmEvent(AlarmeventData &event, UnitSystem uni
 
     if (ppStmtAddEvent->exec()) {
         addedId = ppStmtAddEvent->lastInsertId().toLongLong();
+    }
+
+    delete record;
+
+    return addedId;
+}
+
+qlonglong DatabaseSqlite::updateAlarmEvent(AlarmeventData &event, UnitSystem unit)
+{
+    Fuelrecord *record = new Fuelrecord(unit);
+    qlonglong affectedId;
+    qlonglong addedId=0;
+
+    qlonglong id = event.getId();
+    qlonglong recordid = event.getRecordId();
+    QString date = event.getDate();
+    double km = event.getKm();
+    double service = event.getService();
+    double oil = event.getOil();
+    double tires = event.getTires();
+    QString notes = event.getNotes();
+
+    record->setAllValuesUserUnit(date, km, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                 service, oil, tires, notes,
+                                 recordid);
+
+    // Update fuel database
+    affectedId = updateRecord(*record, false);
+
+    // Update alarm event database
+    ppStmtUpdateEvent->bindValue(":id",id);
+    ppStmtUpdateEvent->bindValue(":day",date);
+    ppStmtUpdateEvent->bindValue(":km",km);
+
+    if (ppStmtUpdateEvent->exec()) {
+        addedId = ppStmtUpdateEvent->lastInsertId().toLongLong();
     }
 
     delete record;

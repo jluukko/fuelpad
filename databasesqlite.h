@@ -98,6 +98,7 @@ public:
     bool getLastEvent(qlonglong alarmid, QString &date, double &km);
     vector<AlarmeventData> getAlarmeventData(qlonglong alarmid);
     qlonglong addNewAlarmEvent(AlarmeventData &event, UnitSystem unit);
+    qlonglong updateAlarmEvent(AlarmeventData &event, UnitSystem unit);
 
 private:
     bool create_database(void);
@@ -148,6 +149,7 @@ private:
     QSqlQuery *ppStmtGetLastEvent;
     QSqlQuery *ppStmtGetEvents;
     QSqlQuery *ppStmtAddEvent;
+    QSqlQuery *ppStmtUpdateEvent;
 
     // Statements without a ready implementation
     QSqlQuery *ppStmtCurCar;
@@ -160,7 +162,6 @@ private:
     QSqlQuery *ppStmtGetOneEvent;
     QSqlQuery *ppStmtDeleteEvent;
     QSqlQuery *ppStmtDeleteEventwithRecordid;
-    QSqlQuery *ppStmtUpdateEvent;
 
     QSqlQuery *ppStmtGetYears;
     QSqlQuery *ppStmtAddLog;
