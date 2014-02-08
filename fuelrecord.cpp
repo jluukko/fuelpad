@@ -33,6 +33,9 @@ Fuelrecord::Fuelrecord(UnitSystem u) :
     service(u),
     oil(u),
     tires(u),
+    lat(u),
+    lon(u),
+    place(u),
     notes(u),
     id(u)
 {
@@ -51,7 +54,9 @@ UnitSystem Fuelrecord::getUnitSystem(void)
 
 void Fuelrecord::setAllValues(QString Date, double Km, double Trip, double Fill,
                          double Consum, double Price, double Ppl, double Ppt,
-                         double Service, double Oil, double Tires, QString Notes, qlonglong Id)
+                         double Service, double Oil, double Tires,
+                         double Latitude, double Longitude, QString Place,
+                         QString Notes, qlonglong Id)
 {
     date.setValue(Date, Datafield::DATE);
     km.setValue(Km, Datafield::LENGTH);
@@ -64,13 +69,18 @@ void Fuelrecord::setAllValues(QString Date, double Km, double Trip, double Fill,
     service.setValue(Service, Datafield::PRICE);
     oil.setValue(Oil, Datafield::PRICE);
     tires.setValue(Tires, Datafield::PRICE);
+    lat.setValue(Latitude, Datafield::LATITUDE);
+    lon.setValue(Longitude, Datafield::LONGITUDE);
+    place.setValue(Place, Datafield::PLACE);
     notes.setValue(Notes, Datafield::NOTE);
     id.setValue(Id, Datafield::ID);
 }
 
 void Fuelrecord::setAllValuesUserUnit(QString Date, double Km, double Trip, double Fill,
                          double Consum, double Price, double Ppl, double Ppt,
-                         double Service, double Oil, double Tires, QString Notes, qlonglong Id)
+                         double Service, double Oil, double Tires,
+                         double Latitude, double Longitude, QString Place,
+                         QString Notes, qlonglong Id)
 {
     date.setValueUserUnit(Date, Datafield::DATE);
     km.setValueUserUnit(Km, Datafield::LENGTH);
@@ -83,6 +93,9 @@ void Fuelrecord::setAllValuesUserUnit(QString Date, double Km, double Trip, doub
     service.setValueUserUnit(Service, Datafield::PRICE);
     oil.setValueUserUnit(Oil, Datafield::PRICE);
     tires.setValueUserUnit(Tires, Datafield::PRICE);
+    lat.setValueUserUnit(Latitude, Datafield::LATITUDE);
+    lon.setValueUserUnit(Longitude, Datafield::LONGITUDE);
+    place.setValueUserUnit(Place, Datafield::PLACE);
     notes.setValueUserUnit(Notes, Datafield::NOTE);
     id.setValue(Id, Datafield::ID);
 }
@@ -144,6 +157,21 @@ void Fuelrecord::setOil(double Oil)
 void Fuelrecord::setTires(double Tires)
 {
     tires.setValue(Tires, Datafield::PRICE);
+}
+
+void Fuelrecord::setLatitude(double Lat)
+{
+    lat.setValue(Lat, Datafield::LATITUDE);
+}
+
+void Fuelrecord::setLongitude(double Lon)
+{
+    lat.setValue(Lon, Datafield::LONGITUDE);
+}
+
+void Fuelrecord::setPlace(QString Place)
+{
+    place.setValue(Place, Datafield::PLACE);
 }
 
 void Fuelrecord::setNotes(QString Notes)
@@ -213,6 +241,21 @@ QVariant Fuelrecord::getOil(void)
 QVariant Fuelrecord::getTires(void)
 {
     return tires.getValue();
+}
+
+QVariant Fuelrecord::getLatitude(void)
+{
+    return lat.getValue();
+}
+
+QVariant Fuelrecord::getLongitude(void)
+{
+    return lon.getValue();
+}
+
+QVariant Fuelrecord::getPlace(void)
+{
+    return place.getValue();
 }
 
 //--------------------------------------------------------

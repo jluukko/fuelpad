@@ -20,6 +20,7 @@
 
 import QtQuick 1.1
 import com.nokia.meego 1.1
+import QtMobility.location 1.2
 import "UIConstants.js" as UIConstants
 import "CommonFuncs.js" as Funcs
 import "CommonUnits.js" as Units
@@ -33,6 +34,18 @@ Page {
         title: "Fuelpad"
         titleForegroundColor: UIConstants.COLOR_PAGEHEADER_FOREGROUND
         titleBackgroundColor: UIConstants.COLOR_PAGEHEADER_BACKGROUND
+    }
+
+//    function showLocation() {
+//        console.log("Lat: ",positionSource.position.coordinate.latitude)
+//        console.log("Lon: ",positionSource.position.coordinate.longitude)
+//    }
+
+    PositionSource {
+        id: positionSource
+        updateInterval: 1000
+        active: true
+//        onPositionChanged: showLocation()
     }
 
     ListView {

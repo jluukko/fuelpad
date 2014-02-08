@@ -38,6 +38,9 @@ public:
         PRICEPERTRIP,
         PRICEPERLITRE,
         CO2EMISSION,
+        LATITUDE,
+        LONGITUDE,
+        PLACE,
         NOTE,
         ID,
         NUM_FIELDS

@@ -39,7 +39,7 @@
 
 bool DatabaseSqlite::create_database(void)
 {
-    bool success = FALSE;
+    bool failure = FALSE;
 
     QSqlQuery query;
 
@@ -51,6 +51,8 @@ bool DatabaseSqlite::create_database(void)
                "fullname TEXT,"
                "nickname TEXT); "
                 );
+    failure = query.lastError().type() != QSqlError::NoError;
+
     query.exec(
                "CREATE TABLE car ("
                "id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,"
@@ -61,6 +63,8 @@ bool DatabaseSqlite::create_database(void)
                "notes TEXT,"
                "fueltype INTEGER);"
                 );
+    failure |= query.lastError().type() != QSqlError::NoError;
+
     query.exec(
                "CREATE TABLE record("
                "id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -79,8 +83,13 @@ bool DatabaseSqlite::create_database(void)
                "tires REAL,"
                "insurance REAL,"
                "other REAL,"
+               "lat NUMBER,"
+               "lon NUMBER,"
+               "place TEXT,"
                "notes TEXT);"
                 );
+    failure |= query.lastError().type() != QSqlError::NoError;
+
     query.exec(
                "CREATE TABLE alarmtype ("
                "id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,"
@@ -90,6 +99,8 @@ bool DatabaseSqlite::create_database(void)
                "interval INTEGER,"
                "longdesc TEXT);"
                 );
+    failure |= query.lastError().type() != QSqlError::NoError;
+
     query.exec(
                "CREATE TABLE alarmevent ("
                "id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -100,18 +111,91 @@ bool DatabaseSqlite::create_database(void)
                "day TIMESTAMP,"
                "km REAL);"
                 );
+    failure |= query.lastError().type() != QSqlError::NoError;
+
     query.exec(
                "INSERT INTO driver(fullname,nickname) "
                "VALUES('Default Driver','Default');"
                 );
+    failure |= query.lastError().type() != QSqlError::NoError;
+
     query.exec(
                "INSERT INTO car(mark,model,year,register,notes) "
                "VALUES('Default','Model',2007,'ABC-123','');"
                 );
+    failure |= query.lastError().type() != QSqlError::NoError;
 
-    success = query.lastError().type() == QSqlError::NoError;
+    failure |= create_drivinglog_tables();
 
-    return success;
+    return !failure;
+}
+
+bool DatabaseSqlite::create_drivinglog_tables(void)
+{
+    bool failure = FALSE;
+
+    QSqlQuery query;
+
+    // Qt Bug: not possible to handle multiple SQL statements at once
+    // https://bugreports.qt.nokia.com//browse/QTBUG-2144
+    query.exec(
+                "CREATE TABLE drivinglog ("
+                "id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,"
+                "carid INTEGER,"
+                "driverid INTEGER,"
+                "distance NUMBER,"
+                "starttime DATETIME,"
+                "endtime DATETIME,"
+                "startlat NUMBER,"
+                "startlon NUMBER,"
+                "startplace TEXT,"
+                "endlat NUMBER,"
+                "endlon NUMBER,"
+                "endplace TEXT,"
+                "effectivetime TIMESTAMP,"
+                "explanation TEXT);"
+                );
+    failure = query.lastError().type() != QSqlError::NoError;
+
+    query.exec(
+                "CREATE TABLE locationalias ("
+                "id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,"
+                "latitude NUMBER,"
+                "longitude NUMBER,"
+                "place TEXT,"
+                "alias TEXT);"
+                );
+    failure |= query.lastError().type() != QSqlError::NoError;
+
+    return !failure;
+
+}
+
+bool DatabaseSqlite::add_location_fields(void)
+{
+    bool failure = FALSE;
+
+    QSqlQuery query;
+
+    query.exec(
+                "ALTER TABLE record "
+                "ADD COLUMN lat NUMBER;"
+               );
+    failure = query.lastError().type() != QSqlError::NoError;
+
+    query.exec(
+                "ALTER TABLE record "
+                "ADD COLUMN lon NUMBER;"
+               );
+    failure |= query.lastError().type() != QSqlError::NoError;
+
+    query.exec(
+                "ALTER TABLE record "
+                "ADD COLUMN place TEXT;"
+               );
+    failure |= query.lastError().type() != QSqlError::NoError;
+
+    return !failure;
 }
 
 bool DatabaseSqlite::prepare_queries(void)
@@ -183,7 +267,7 @@ bool DatabaseSqlite::prepare_queries(void)
     // Bind with query.bindValue(":carid", 1001);
     retVal = retVal |
             ppStmtRecords->prepare( "SELECT day,km,trip,fill,consum,price,"
-                           "priceperlitre,pricepertrip,service,oil,tires,notes,"
+                           "priceperlitre,pricepertrip,service,oil,tires,lat,lon,place,notes,"
                            "id FROM record WHERE carid=:carid ORDER BY km;");
 
     //--------------------------------------------------------------------------
@@ -193,7 +277,7 @@ bool DatabaseSqlite::prepare_queries(void)
     retVal = retVal |
             ppStmtOneRecord->prepare(
                 "SELECT day,km,trip,fill,consum,price,"
-                "priceperlitre,pricepertrip,service,oil,tires,notes,"
+                "priceperlitre,pricepertrip,service,oil,tires,lat,lon,place,notes,"
                 "id FROM record WHERE id=:id;");
 
     //--------------------------------------------------------------------------
@@ -464,9 +548,10 @@ bool DatabaseSqlite::openConnection(void)
             std::cout << "Something wrong with opening database" << std::endl;
         }
         else {
+            QSqlQuery query;
+
             // Check that database exists
-            QSqlQuery query("SELECT nickname FROM driver LIMIT 1");
-            query.exec();
+            query.exec("SELECT nickname FROM driver LIMIT 1");
             query.first();
 
             if (query.lastError().type() != QSqlError::NoError) {
@@ -481,6 +566,35 @@ bool DatabaseSqlite::openConnection(void)
             else { // we did find a database but we'll have to check if this is an old version
                 /// @todo Add a lot of checks...
                 qDebug("Database already exists");
+
+                // Check if the driving log exists (GTK Fuelpad 0.90.4 onwards)
+                query.exec("SELECT id FROM drivinglog LIMIT 1;");
+                query.first();
+
+                if (query.lastError().type() != QSqlError::NoError) {
+                        // We'll need to create the driving log
+                    if (!create_drivinglog_tables()) {
+                        qDebug("Creating drivinglog tables failed");
+                    }
+                    else {
+                        qDebug("Created drivinglog tables");
+                    }
+                }
+
+                // Check if the new fuel entry location fields exist
+                // (GTK Fuelpad's did not)
+                query.exec("SELECT lat FROM record LIMIT 1;");
+                query.first();
+
+                if (query.lastError().type() != QSqlError::NoError) {
+                        // We'll need to add the location fields
+                        if (!add_location_fields()) {
+                            qDebug("Adding location fields failed");
+                        }
+                        else {
+                            qDebug("Added location fields");
+                        }
+                }
             }
 
             if (!prepare_queries()) {
@@ -567,8 +681,9 @@ Fuelrecord *DatabaseSqlite::getValuesRecordQuery(UnitSystem unit)
                             ppStmtRecords->value(4).toDouble(), ppStmtRecords->value(5).toDouble(),
                             ppStmtRecords->value(6).toDouble(), ppStmtRecords->value(7).toDouble(),
                             ppStmtRecords->value(8).toDouble(), ppStmtRecords->value(9).toDouble(),
-                            ppStmtRecords->value(10).toDouble(), ppStmtRecords->value(11).toString(),
-                            ppStmtRecords->value(12).toLongLong());
+                            ppStmtRecords->value(10).toDouble(), ppStmtRecords->value(11).toDouble(),
+                            ppStmtRecords->value(12).toDouble(), ppStmtRecords->value(13).toString(),
+                            ppStmtRecords->value(14).toString(), ppStmtRecords->value(15).toLongLong());
 
     return record;
 }
@@ -588,8 +703,9 @@ Fuelrecord *DatabaseSqlite::queryOneRecord(qlonglong id, UnitSystem unit)
                                 ppStmtOneRecord->value(4).toDouble(), ppStmtOneRecord->value(5).toDouble(),
                                 ppStmtOneRecord->value(6).toDouble(), ppStmtOneRecord->value(7).toDouble(),
                                 ppStmtOneRecord->value(8).toDouble(), ppStmtOneRecord->value(9).toDouble(),
-                                ppStmtOneRecord->value(10).toDouble(), ppStmtOneRecord->value(11).toString(),
-                                ppStmtOneRecord->value(12).toLongLong());
+                                ppStmtOneRecord->value(10).toDouble(), ppStmtOneRecord->value(11).toDouble(),
+                                ppStmtOneRecord->value(12).toDouble(), ppStmtOneRecord->value(13).toString(),
+                                ppStmtOneRecord->value(14).toString(), ppStmtOneRecord->value(15).toLongLong());
 
     }
 
@@ -813,8 +929,9 @@ bool DatabaseSqlite::getNextFullFill(float km, Fuelrecord &record)
                                 ppStmtNextFull->value(4).toDouble(), ppStmtNextFull->value(5).toDouble(),
                                 ppStmtNextFull->value(6).toDouble(), ppStmtNextFull->value(7).toDouble(),
                                 ppStmtNextFull->value(8).toDouble(), ppStmtNextFull->value(9).toDouble(),
-                                ppStmtNextFull->value(10).toDouble(), ppStmtNextFull->value(11).toString(),
-                                ppStmtNextFull->value(12).toLongLong());
+                                ppStmtNextFull->value(10).toDouble(), ppStmtNextFull->value(11).toDouble(),
+                                ppStmtNextFull->value(12).toDouble(), ppStmtNextFull->value(13).toString(),
+                                ppStmtNextFull->value(14).toString(), ppStmtNextFull->value(15).toLongLong());
         retVal = true;
     }
 
@@ -1614,7 +1731,9 @@ qlonglong DatabaseSqlite::addNewAlarmEvent(AlarmeventData &event, UnitSystem uni
     QString notes = event.getNotes();
 
     record->setAllValuesUserUnit(date, km, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                 service, oil, tires, notes,
+                                 service, oil, tires,
+                                 0.0, 0.0, "", /* @todo Add geographical location */
+                                 notes,
                                  (qlonglong)0 /* id will be generated by the database add method */);
 
     // Add to fuel database
@@ -1653,7 +1772,9 @@ qlonglong DatabaseSqlite::updateAlarmEvent(AlarmeventData &event, UnitSystem uni
     QString notes = event.getNotes();
 
     record->setAllValuesUserUnit(date, km, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                 service, oil, tires, notes,
+                                 service, oil, tires,
+                                 0.0, 0.0, "", /* @todo Add geographical location */
+                                 notes,
                                  recordid);
 
     // Update fuel database

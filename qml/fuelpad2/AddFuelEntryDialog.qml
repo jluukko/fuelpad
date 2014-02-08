@@ -40,6 +40,9 @@ Page {
     property double oldService
     property double oldOil
     property double oldTires
+    property double oldLat
+    property double oldLon
+    property string oldPlace
 
     function open() {
         addDialog.open()
@@ -62,11 +65,13 @@ Page {
         if (editMode) {
             applicationData.updateFuelEntry(carId, oldId, dateField.text, kmField.text, tripField.text, fillField.text,
                                          notFullFill.checked, priceField.text, serviceField.text,
-                                         oilField.text, tiresField.text, notesField.text)
+                                         oilField.text, tiresField.text, latField.text, lonField.text,
+                                            placeField.text, notesField.text)
         } else {
             applicationData.addFuelEntry(carId, dateField.text, kmField.text, tripField.text, fillField.text,
                                          notFullFill.checked, priceField.text, serviceField.text,
-                                         oilField.text, tiresField.text, notesField.text)
+                                         oilField.text, tiresField.text, latField.text, lonField.text,
+                                         placeField.text, notesField.text)
         }
     }
 
@@ -92,9 +97,11 @@ Page {
                 leftMargin: UIConstants.DEFAULT_MARGIN
                 rightMargin: UIConstants.DEFAULT_MARGIN
             }
-            width: parent.width
+            contentWidth: column.width
+            contentHeight: column.height
+            flickableDirection: Flickable.VerticalFlick
             Column{
-
+                id: column
                 Grid {
                     columns: 2
                     spacing: UIConstants.PADDING_MEDIUM
@@ -214,6 +221,36 @@ Page {
                         validator: DoubleValidator{bottom: 0.0}
                         inputMethodHints: Qt.ImhFormattedNumbersOnly
                         text: editMode ? oldTires : ""
+                    }
+
+                    Text {
+                        text: qsTr("Latitude")
+                        font.pixelSize: UIConstants.FONT_DEFAULT
+                    }
+                    TextField {
+                        id: latField
+                        text: editMode ? oldLat : positionSource.position.coordinate.latitude.toFixed(8)
+                    }
+
+                    Text {
+                        text: qsTr("Longitude")
+                        font.pixelSize: UIConstants.FONT_DEFAULT
+                    }
+                    TextField {
+                        id: lonField
+                        text: editMode ? oldLon : positionSource.position.coordinate.longitude.toFixed(8)
+                    }
+
+                    Text {
+                        text: qsTr("Place")
+                        font.pixelSize: UIConstants.FONT_DEFAULT
+                    }
+                    TextField {
+                        id: placeField
+                        placeholderText: qsTr("Add place")
+                        maximumLength: 120
+                        validator: RegExpValidator{}
+                        text: editMode ? oldPlace : ""
                     }
                 }
 

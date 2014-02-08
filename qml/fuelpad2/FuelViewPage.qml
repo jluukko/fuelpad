@@ -81,7 +81,10 @@ Page {
                                                        oldNotes: notes,
                                                        oldService: service,
                                                        oldOil: oil,
-                                                       oldTires: tires
+                                                       oldTires: tires,
+                                                       oldLat: latitude,
+                                                       oldLon: longitude,
+                                                       oldPlace: place,
                                                    }).open()
                 }
 

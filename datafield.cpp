@@ -70,6 +70,9 @@ void Datafield::setValueUserUnit(QVariant val, enum fieldtype t)
     case CO2EMISSION:
         value.setValue(val); // @todo Still missing the right conversion
         break;
+    case LATITUDE:
+    case LONGITUDE:
+    case PLACE:
     case NOTE:
         value.setValue(val);
         break;
@@ -116,6 +119,9 @@ QVariant Datafield::getValueUserUnit(void)
     case CO2EMISSION:
         retVal = value; // @todo Calculation missing
         break;
+    case LONGITUDE:
+    case LATITUDE:
+    case PLACE:
     case NOTE:
         retVal = value;
         break;

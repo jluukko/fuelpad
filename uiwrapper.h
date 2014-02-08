@@ -45,10 +45,12 @@ public:
 
     // Exposed to Qml
     Q_INVOKABLE void addFuelEntry(int carid, QString date, double km, double trip, double fill, bool notFull,
-                                  double price, double service, double oil, double tires, QString notes);
+                                  double price, double service, double oil, double tires, double lat, double lon,
+                                  QString place, QString notes);
 
     Q_INVOKABLE void updateFuelEntry(int carid, QString id, QString date, double km, double trip, double fill, bool notFull,
-                                    double price, double service, double oil, double tires, QString notes);
+                                     double price, double service, double oil, double tires, double lat, double lon,
+                                     QString place, QString notes);
 
     Q_INVOKABLE void deleteRecord(QString id);
 

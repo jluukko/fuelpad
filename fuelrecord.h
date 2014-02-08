@@ -42,6 +42,9 @@ private:
     Datafield service;            /* column 8 */
     Datafield oil;                /* column 9 */
     Datafield tires;              /* column 10 */
+    Datafield lat;
+    Datafield lon;
+    Datafield place;
     Datafield notes;             /* column 11 */
     Datafield id;              /* column 12, should be sqlite_int64 */
     UnitSystem unit;
@@ -54,12 +57,14 @@ public:
     void setAllValues(QString Date, double Km,
                       double Trip, double Fill, double Consum, double Price,
                       double Ppl, double Ppt, double Service, double Oil,
-                      double Tires, QString Notes, qlonglong Id);
+                      double Tires, double Latitude, double Longitude, QString Place,
+                      QString Notes, qlonglong Id);
 
     void setAllValuesUserUnit(QString Date, double Km,
                       double Trip, double Fill, double Consum, double Price,
                       double Ppl, double Ppt, double Service, double Oil,
-                      double Tires, QString Notes, qlonglong Id);
+                      double Tires, double Latitude, double Longitude, QString Place,
+                      QString Notes, qlonglong Id);
 
     void setDate(QString Date);
     void setKm(double Km);
@@ -72,6 +77,9 @@ public:
     void setService(double Service);
     void setOil(double Oil);
     void setTires(double Tires);
+    void setLatitude(double Lat);
+    void setLongitude(double Lon);
+    void setPlace(QString Place);
     void setNotes(QString Notes);
     void setId(qlonglong Id);
 
@@ -86,6 +94,9 @@ public:
     QVariant getService(void);
     QVariant getOil(void);
     QVariant getTires(void);
+    QVariant getLatitude(void);
+    QVariant getLongitude(void);
+    QVariant getPlace(void);
 
     QVariant getDateUserUnit(void);
     QVariant getKmUserUnit(void);
