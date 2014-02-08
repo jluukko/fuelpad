@@ -164,7 +164,6 @@ Page {
           }
 
         onAccepted: addDialogAccepted()
-        onRejected: console.log("Dialog: Rejected")
 
         }
 

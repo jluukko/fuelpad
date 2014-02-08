@@ -6,11 +6,9 @@
 var component;
 
 function loadComponent(file, parent, properties) {
-    console.debug("loadComponent starting");
     component = Qt.createComponent(file)
     if (component.status == Component.Ready) {
         var comp = finishCreation(parent, properties);
-        console.debug("loadComponent returning");
         return comp;
     }
     else {
@@ -21,7 +19,6 @@ function loadComponent(file, parent, properties) {
 function finishCreation(parent, properties) {
      if (component.status == Component.Ready) {
          var comp = component.createObject(parent, properties);
-         console.debug("Instantiating component");
          if (comp == null) {
              // Error Handling
              console.log("Error creating object");
