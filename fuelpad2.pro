@@ -44,7 +44,9 @@ SOURCES += main.cpp \
     mysortfilterproxymodel.cpp \
     line.cpp \
     alarmtypedata.cpp \
-    alarmeventdata.cpp
+    alarmeventdata.cpp \
+    geocode.cpp \
+    geocodenominatim.cpp
 HEADERS += \
     database.h \
     databasesqlite.h \
@@ -59,10 +61,14 @@ HEADERS += \
     mysortfilterproxymodel.h \
     line.h \
     alarmtypedata.h \
-    alarmeventdata.h
+    alarmeventdata.h \
+    geocode.h \
+    geocodenominatim.h
 FORMS +=
 QT += sql \
-    declarative
+    declarative \
+    network \
+    xml
 
 # Please do not modify the following two lines. Required for deployment.
 include(deployment.pri)
