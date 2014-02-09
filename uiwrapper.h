@@ -23,18 +23,21 @@
 
 #include <QObject>
 #include <QStandardItemModel>
+#include <QNetworkAccessManager>
 
 #include "database.h"
 #include "cardata.h"
+#include "geocode.h"
 #include "roleitemmodel.h"
 #include "mysortfilterproxymodel.h"
 
 class UiWrapper : public QObject
 {
     Q_OBJECT
+//    Q_PROPERTY(NOTIFY addressReady)
 public:
 
-    /*explicit*/ UiWrapper(Database *db = 0);
+    /*explicit*/ UiWrapper(Database *db = 0, Geocode *gc = 0);
     virtual ~UiWrapper();
 
     MySortFilterProxyModel* getFuelEntryModel(void);
@@ -118,12 +121,26 @@ public:
 
     Q_INVOKABLE QString getCurrencySymbol(void);
 
+    Q_INVOKABLE QString requestAddress(double lat, double lon);
+
+    Q_INVOKABLE QString getAddress(void);
+
     Q_INVOKABLE void addAllRecordsToAlarmEventModel(qlonglong alarmid);
+
+public slots:
+    void replyFinished(void);
+
+signals:
+    void addressReady(void);
+
 
 private:
     Database *dataBase;
     UnitSystem *unitSystem;
     CarData *carData;
+    Geocode *geoCode;
+    QString geoAddress;
+
     RoleItemModel *fuelEntryModel;
     RoleItemModel *carDataModel;
     RoleItemModel *driverDataModel;

@@ -23,6 +23,11 @@
 #include "roleitemmodel.h"
 #include "mysortfilterproxymodel.h"
 
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QUrl>
+
 // For debugging only
 #include <iostream>
 
@@ -141,9 +146,10 @@ struct AlarmEventEntry {
 };
 
 
-UiWrapper::UiWrapper(Database *db)
+UiWrapper::UiWrapper(Database *db, Geocode *gc)
 {
     dataBase = db;
+    geoCode = gc;
     unitSystem = new UnitSystem;
 
     UserConfig config;
@@ -1299,6 +1305,28 @@ QString UiWrapper::getCurrencySymbol(void)
     return unitSystem->getCurrencySymbol();
 }
 
+QString UiWrapper::requestAddress(double lat, double lon)
+{
+    connect(geoCode, SIGNAL(addressReady()),
+            this, SLOT(replyFinished()));
+
+    geoCode->requestAddress(lat,lon);
+
+    return QString("");
+}
+
+void UiWrapper::replyFinished(void)
+{
+    qDebug("Address available");
+    geoAddress = geoCode->getAddress();
+
+    emit addressReady();
+}
+
+QString UiWrapper::getAddress(void)
+{
+    return geoAddress;
+}
 
 #if 0
 void UiWrapper::on_action_Add_record_triggered()

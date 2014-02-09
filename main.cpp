@@ -40,6 +40,8 @@
 #include "uiwrapper.h"
 #include "database.h"
 #include "databasesqlite.h"
+#include "geocode.h"
+#include "geocodenominatim.h"
 
 QString adjustPath(const QString &path)
 {
@@ -74,6 +76,11 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     dataBase = &sqliteDatabase;
 
+    GeocodeNominatim nominatimGeoCode;
+    Geocode *geoCode;
+
+    geoCode = &nominatimGeoCode;
+
 #ifdef MEEGO_EDITION_HARMATTAN
 #warning "Compiling for harmattan"
     QDir dbFileDir = QDir("/home/user");
@@ -87,7 +94,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     dataBase->setCurrentCar(2);
     dataBase->setCurrentDriver(1);
 
-    UiWrapper uiWrapper(dataBase);
+    UiWrapper uiWrapper(dataBase, geoCode);
     MySortFilterProxyModel *fuelEntryModel = uiWrapper.getFuelEntryModel();
     RoleItemModel *carEntryModel = uiWrapper.getCarEntryModel();
     RoleItemModel *driverEntryModel = uiWrapper.getDriverEntryModel();
