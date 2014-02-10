@@ -61,10 +61,11 @@ Page {
                 leftMargin: UIConstants.DEFAULT_MARGIN
                 rightMargin: UIConstants.DEFAULT_MARGIN
             }
-            width: parent.width
+            contentWidth: addDialogGrid.width
+            contentHeight: addDialogGrid.height
             Grid {
                 id: addDialogGrid
-                columns: 2
+                columns: 1
                 spacing: UIConstants.PADDING_MEDIUM
                 Text {
                     text: qsTr("Full name")
@@ -72,6 +73,7 @@ Page {
                 }
                 TextField {
                     id: fullnameField
+                    width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                     placeholderText: qsTr("Full name")
                     maximumLength: 40
                     validator: RegExpValidator{}
@@ -83,6 +85,7 @@ Page {
                 }
                 TextField {
                     id: nicknameField
+                    width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                     placeholderText: qsTr("Nick name")
                     maximumLength: 40
                     validator: RegExpValidator{}

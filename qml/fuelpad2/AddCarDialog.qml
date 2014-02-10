@@ -76,10 +76,11 @@ Page {
                 leftMargin: UIConstants.DEFAULT_MARGIN
                 rightMargin: UIConstants.DEFAULT_MARGIN
             }
-            width: parent.width
+            contentWidth: addDialogGrid.width
+            contentHeight: addDialogGrid.height
             Grid {
                 id: addDialogGrid
-                columns: 2
+                columns: 1
                 spacing: UIConstants.PADDING_MEDIUM
                 Text {
                     text: qsTr("Mark")
@@ -87,6 +88,7 @@ Page {
                 }
                 TextField {
                     id: markField
+                    width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                     placeholderText: qsTr("My car mark")
                     maximumLength: 40
                     validator: RegExpValidator{}
@@ -98,6 +100,7 @@ Page {
                 }
                 TextField {
                     id: modelField
+                    width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                     placeholderText: qsTr("My car model")
                     maximumLength: 40
                     validator: RegExpValidator{}
@@ -109,6 +112,7 @@ Page {
                 }
                 TextField {
                     id: yearField
+                    width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                     placeholderText: qsTr("My car model year")
                     maximumLength: 4
                     validator: IntValidator{bottom: 1800; top: 2100}
@@ -121,6 +125,7 @@ Page {
                 }
                 TextField {
                     id: regnumField
+                    width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                     placeholderText: qsTr("My car registration number")
                     maximumLength: 40
                     validator: RegExpValidator{}
@@ -132,6 +137,7 @@ Page {
                 }
                 TextField {
                     id: notesField
+                    width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                     placeholderText: qsTr("Add notes")
                     maximumLength: 120
                     validator: RegExpValidator{}
