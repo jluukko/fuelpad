@@ -84,7 +84,7 @@ Page {
                                                        oldTires: tires,
                                                        oldLat: latitude,
                                                        oldLon: longitude,
-                                                       oldPlace: place,
+                                                       oldPlace: place
                                                    }).open()
                 }
 

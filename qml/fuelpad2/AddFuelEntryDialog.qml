@@ -23,8 +23,10 @@ import QtQuick 1.1
 import com.nokia.meego 1.1
 import com.nokia.extras 1.1
 import "UIConstants.js" as UIConstants
+import "CommonFuncs.js" as Funcs
 
 Page {
+    id: addFuelEntryDialogPage
     tools: commonTools
 
     property int carId: -1
@@ -46,6 +48,10 @@ Page {
 
     function open() {
         addDialog.open()
+    }
+
+    function addressFound(address) {
+        placeField.text = address;
     }
 
     function launchDateDialogToToday() {
@@ -103,7 +109,7 @@ Page {
             Column{
                 id: column
                 Grid {
-                    columns: 2
+                    columns: 1
                     spacing: UIConstants.PADDING_MEDIUM
 
                     ListButton {
@@ -114,6 +120,7 @@ Page {
                     }
                     TextField {
                         id: dateField
+                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         placeholderText: qsTr("Add date")
                         maximumLength: 10
                         readOnly: true
@@ -125,6 +132,7 @@ Page {
                     }
                     TextField {
                         id: kmField
+                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         placeholderText: qsTr("Add overall km")
                         maximumLength: 8
                         validator: DoubleValidator{bottom: 0.0}
@@ -137,6 +145,7 @@ Page {
                     }
                     TextField {
                         id: tripField
+                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         placeholderText: qsTr("Add trip")
                         maximumLength: 5
                         validator: DoubleValidator{bottom: 0.0}
@@ -149,6 +158,7 @@ Page {
                     }
                     TextField {
                         id: fillField
+                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         placeholderText: qsTr("Add fill")
                         maximumLength: 5
                         validator: DoubleValidator{bottom: 0.0}
@@ -169,6 +179,7 @@ Page {
                     }
                     TextField {
                         id: priceField
+                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         placeholderText: qsTr("Add price")
                         maximumLength: 10
                         validator: DoubleValidator{}
@@ -181,6 +192,7 @@ Page {
                     }
                     TextField {
                         id: notesField
+                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         placeholderText: qsTr("Add notes")
                         maximumLength: 120
                         validator: RegExpValidator{}
@@ -192,6 +204,7 @@ Page {
                     }
                     TextField {
                         id: serviceField
+                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         placeholderText: qsTr("Add service cost")
                         maximumLength: 5
                         validator: DoubleValidator{bottom: 0.0}
@@ -204,6 +217,7 @@ Page {
                     }
                     TextField {
                         id: oilField
+                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         placeholderText: qsTr("Add oil cost")
                         maximumLength: 5
                         validator: DoubleValidator{bottom: 0.0}
@@ -216,6 +230,7 @@ Page {
                     }
                     TextField {
                         id: tiresField
+                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         placeholderText: qsTr("Add tires cost")
                         maximumLength: 5
                         validator: DoubleValidator{bottom: 0.0}
@@ -226,32 +241,39 @@ Page {
                     Text {
                         text: qsTr("Latitude")
                         font.pixelSize: UIConstants.FONT_DEFAULT
+                        visible: false
                     }
                     TextField {
                         id: latField
+                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         text: editMode ? oldLat : positionSource.position.coordinate.latitude.toFixed(8)
+                        visible: false
                     }
 
                     Text {
                         text: qsTr("Longitude")
                         font.pixelSize: UIConstants.FONT_DEFAULT
+                        visible: false
                     }
                     TextField {
                         id: lonField
+                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         text: editMode ? oldLon : positionSource.position.coordinate.longitude.toFixed(8)
+                        visible: false
                     }
 
-                    Text {
-                        text: qsTr("Place")
-                        font.pixelSize: UIConstants.FONT_DEFAULT
+                    ListButton {
+                        text: qsTr("Get address")
+                        onClicked: Funcs.loadComponent("SelectLocationPage.qml",addFuelEntryDialogPage, {}).open()
                     }
-                    TextField {
+                    TextArea {
                         id: placeField
+                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
+                        height: 4*UIConstants.FONT_DEFAULT
                         placeholderText: qsTr("Add place")
-                        maximumLength: 120
-                        validator: RegExpValidator{}
                         text: editMode ? oldPlace : ""
                     }
+
                 }
 
             }

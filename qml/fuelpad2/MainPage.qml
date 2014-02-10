@@ -36,16 +36,10 @@ Page {
         titleBackgroundColor: UIConstants.COLOR_PAGEHEADER_BACKGROUND
     }
 
-//    function showLocation() {
-//        console.log("Lat: ",positionSource.position.coordinate.latitude)
-//        console.log("Lon: ",positionSource.position.coordinate.longitude)
-//    }
-
     PositionSource {
         id: positionSource
         updateInterval: 1000
-        active: true
-//        onPositionChanged: showLocation()
+        active: false
     }
 
     ListView {
