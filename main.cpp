@@ -100,6 +100,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     RoleItemModel *driverEntryModel = uiWrapper.getDriverEntryModel();
     MySortFilterProxyModel *alarmEntryModel = uiWrapper.getAlarmEntryModel();
     MySortFilterProxyModel *alarmEventModel = uiWrapper.getAlarmEventModel();
+    PlotDataModel *statisticsModel = uiWrapper.getStatisticsModel();
 
     // From C++ to Qml
     view.rootContext()->setContextProperty("fuelModel", fuelEntryModel);
@@ -107,6 +108,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view.rootContext()->setContextProperty("driverModel", driverEntryModel);
     view.rootContext()->setContextProperty("alarmTypeModel", alarmEntryModel);
     view.rootContext()->setContextProperty("alarmEventModel", alarmEventModel);
+    view.rootContext()->setContextProperty("statisticsModel", statisticsModel);
     view.rootContext()->setContextProperty("applicationData", &uiWrapper);
 
     // qml source
