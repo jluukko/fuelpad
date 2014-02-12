@@ -31,6 +31,14 @@ Page {
 
     property int carId: -1
 
+    function loadStatisticsPage(dbid) {
+        var today = new Date()
+        var thisyear = Qt.formatDate(today, "yyyy");
+        console.debug("This year: " + thisyear);
+        applicationData.getStatistics(thisyear,2);
+        pageStack.push(Funcs.loadComponent("StatisticsPage.qml",fuelViewPage, {}));
+    }
+
     PageHeader {
         id: applicationHeader
         title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
@@ -264,7 +272,8 @@ Page {
         MenuLayout {
             MenuItem {
                 text: qsTr("Statistics")
-                onClicked: pageStack.push(Funcs.loadComponent("StatisticsPage.qml",fuelViewPage, {}))
+//                onClicked: pageStack.push(Funcs.loadComponent("StatisticsPage.qml",fuelViewPage, {}))
+                onClicked: loadStatisticsPage()
             }
         }
     }
