@@ -145,6 +145,12 @@ struct AlarmEventEntry {
     };
 };
 
+struct StatisticsData {
+    enum StatisticsDataRoles {
+        xRole = Qt::UserRole + 1,
+        yRole
+    };
+};
 
 UiWrapper::UiWrapper(Database *db, Geocode *gc)
 {
@@ -184,6 +190,10 @@ UiWrapper::UiWrapper(Database *db, Geocode *gc)
     createDriverDataModel();
     createAlarmEntryModel();
     createAlarmEventModel();
+    createStatisticsModel();
+
+    // Testing statistic (remove)
+    getStatistics(2012,2);
 }
 
 UiWrapper::~UiWrapper()
@@ -493,6 +503,53 @@ void UiWrapper::addAllRecordsToAlarmEventModel(qlonglong alarmid)
     }
 }
 
+void UiWrapper::addDataToStatisticsModel(PlotDataModel *model, double x, double y)
+{
+//    QStandardItem* it = new QStandardItem();
+//    it->setData(QVariant(x), StatisticsData::xRole);
+//    it->setData(QVariant(y), StatisticsData::yRole);
+//    PlotData* it = new PlotData(x, y);
+    model->appendData(PlotData(x, y));
+}
+
+void UiWrapper::getStatistics(int year, int statSelect)
+{
+    vector<int> month;
+    vector<double> fill;
+    vector<double> trip;
+    vector<double> consum;
+    vector<double> ppl;
+
+    qDebug("Querying year: %d",year);
+
+    statisticsModel->clear();
+    dataBase->getMonthlyData(year, *unitSystem, month, fill, trip, consum, ppl);
+    for (vector<double>::size_type i=0; i < fill.size(); i++) {
+        double data;
+        switch (statSelect) {
+            case 0:
+                data = fill.at(i);
+                break;
+            case 1:
+                data = trip.at(i);
+                break;
+            case 2:
+                data = consum.at(i);
+                break;
+            case 3:
+                data = ppl.at(i);
+                break;
+            default:
+                data = 0.0;
+                break;
+
+        }
+        std::cout << "month = " << month.at(i) << " data = " << data << std::endl;
+        addDataToStatisticsModel(statisticsModel, (double)month.at(i), data);
+    }
+    statisticsModel->sort(0, Qt::AscendingOrder);
+    std::cout << "row count = " << statisticsModel->rowCount() << std::endl;
+}
 
 void UiWrapper::createFuelEntryModel(void)
 {
@@ -632,6 +689,14 @@ void UiWrapper::createAlarmEventModel(void)
 
 }
 
+void UiWrapper::createStatisticsModel(void)
+{
+    PlotDataModel *model = new PlotDataModel();
+
+    statisticsModel = model;
+}
+
+
 MySortFilterProxyModel *UiWrapper::getFuelEntryModel(void)
 {
 //    return mainViewModel;
@@ -656,6 +721,11 @@ MySortFilterProxyModel *UiWrapper::getAlarmEntryModel(void)
 MySortFilterProxyModel *UiWrapper::getAlarmEventModel(void)
 {
     return alarmEventSortModel;
+}
+
+PlotDataModel* UiWrapper::getStatisticsModel(void)
+{
+    return statisticsModel;
 }
 
 void UiWrapper::addFuelEntry(int carid, QString date, double km, double trip, double fill, bool notFull,

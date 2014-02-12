@@ -30,6 +30,7 @@
 #include "geocode.h"
 #include "roleitemmodel.h"
 #include "mysortfilterproxymodel.h"
+#include "plotdatamodel.h"
 
 class UiWrapper : public QObject
 {
@@ -45,6 +46,7 @@ public:
     RoleItemModel* getDriverEntryModel(void);
     MySortFilterProxyModel* getAlarmEntryModel(void);
     MySortFilterProxyModel* getAlarmEventModel(void);
+    PlotDataModel* getStatisticsModel(void);
 
     // Exposed to Qml
     Q_INVOKABLE void addFuelEntry(int carid, QString date, double km, double trip, double fill, bool notFull,
@@ -56,6 +58,8 @@ public:
                                      QString place, QString notes);
 
     Q_INVOKABLE void deleteRecord(QString id);
+
+    Q_INVOKABLE void getStatistics(int year, int statSelect);
 
     Q_INVOKABLE QString getCarMark(int carid);
 
@@ -149,6 +153,7 @@ private:
     MySortFilterProxyModel *sortModel;
     MySortFilterProxyModel *alarmSortModel;
     MySortFilterProxyModel *alarmEventSortModel;
+    PlotDataModel *statisticsModel;
 
     void updateAllModels(void);
     void reReadAllModels(void);
@@ -159,11 +164,13 @@ private:
     void addAllRecordsToFuelEntryModel(QStandardItemModel *model);
     void addAllRecordsToDriverEntryModel(QStandardItemModel *model);
     void addAllRecordsToAlarmEntryModel(QStandardItemModel *model);
+    void addDataToStatisticsModel(PlotDataModel *model, double x, double y);
     void createFuelEntryModel(void);
     void createCarDataModel(void);
     void createDriverDataModel(void);
     void createAlarmEntryModel(void);
     void createAlarmEventModel(void);
+    void createStatisticsModel(void);
 };
 
 #endif // UIWRAPPER_H
