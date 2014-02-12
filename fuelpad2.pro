@@ -46,7 +46,8 @@ SOURCES += main.cpp \
     alarmtypedata.cpp \
     alarmeventdata.cpp \
     geocode.cpp \
-    geocodenominatim.cpp
+    geocodenominatim.cpp \
+    plotdatamodel.cpp
 HEADERS += \
     database.h \
     databasesqlite.h \
@@ -63,7 +64,8 @@ HEADERS += \
     alarmtypedata.h \
     alarmeventdata.h \
     geocode.h \
-    geocodenominatim.h
+    geocodenominatim.h \
+    plotdatamodel.h
 FORMS +=
 QT += sql \
     declarative \
