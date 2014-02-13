@@ -34,9 +34,8 @@ Page {
     function loadStatisticsPage(dbid) {
         var today = new Date()
         var thisyear = Qt.formatDate(today, "yyyy");
-        console.debug("This year: " + thisyear);
         applicationData.getStatistics(thisyear,2);
-        pageStack.push(Funcs.loadComponent("StatisticsPage.qml",fuelViewPage, {}));
+        pageStack.push(Funcs.loadComponent("StatisticsPage.qml",fuelViewPage, {year: thisyear}));
     }
 
     PageHeader {
