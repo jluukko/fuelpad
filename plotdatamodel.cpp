@@ -81,13 +81,47 @@ void PlotDataModel::appendData(const PlotData &item)
     endInsertRows();
 }
 
+void PlotDataModel::appendData(const vector<double> &x, const vector<double> &y)
+{
+    int beginRow = rowCount();
+    int endRow = beginRow + x.size();
+
+    if (x.size() == y.size()) {
+        beginInsertRows(QModelIndex(), beginRow, endRow);
+        for (vector<PlotData>::size_type i=0; i < x.size(); i++) {
+            m_data << PlotData(x.at(i),y.at(i));
+        }
+        endInsertRows();
+        emit dataChanged(PlotDataModel::index(beginRow, 0), PlotDataModel::index(endRow, 0));
+    }
+}
+
+void PlotDataModel::setRowData(const int row, const PlotData &item)
+{
+    if (row >= 0 && row < m_data.count()) {
+        m_data.replace(row,item);
+        const QModelIndex idx = PlotDataModel::index(row, 0);
+        emit dataChanged(idx, idx);
+    }
+}
+
+void PlotDataModel::setRowData(const vector<int> row, const vector<double> &x, const vector<double> &y)
+{
+    for (vector<PlotData>::size_type i=0; i < row.size(); i++) {
+        m_data.replace(row.at(i),PlotData(x.at(i),y.at(i)));
+    }
+    const QModelIndex idx1 = PlotDataModel::index(row.at(0), 0);
+    const QModelIndex idx2 = PlotDataModel::index(row.at(row.size()-1), 0);
+    emit dataChanged(idx1, idx2);
+}
+
 QVariant PlotDataModel::data(const QModelIndex &index, int role) const
 {
     if (index.row() < 0 || index.row() > m_data.count()) {
         return QVariant();
 
         const PlotData &data = m_data[index.row()];
-        if (role = PlotData::xRole) {
+        if (role == PlotData::xRole) {
             return data.xc();
         }
         else if (role == PlotData::yRole) {
@@ -110,5 +144,8 @@ QVariant PlotDataModel::get(int index) const
 }
 
 void PlotDataModel::clear(void) {
+    qDebug("Clearing plot data model");
+    beginResetModel();
     m_data.clear();
+    endResetModel();
 }

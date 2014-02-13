@@ -21,6 +21,9 @@
 #ifndef PLOTDATAMODEL_H
 #define PLOTDATAMODEL_H
 
+#include <vector>
+using namespace std;
+
 #include <QStandardItemModel>
 #include <QStandardItem>
 
@@ -60,6 +63,12 @@ public:
     int rowCount ( const QModelIndex & parent = QModelIndex() ) const;
 
     void appendData(const PlotData &item);
+
+    void appendData(const vector<double> &x, const vector<double> &y);
+
+    void setRowData(const int row, const PlotData &item);
+
+    void setRowData(const vector<int> row, const vector<double> &x, const vector<double> &y);
 
     Q_INVOKABLE QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
