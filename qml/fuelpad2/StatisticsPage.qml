@@ -48,51 +48,51 @@ Page {
     ListModel {
         id: testData
         ListElement {
-            xc: 1
+            xc: 1.0
             yc: 10.222925023141
         }
         ListElement {
-            xc: 2
+            xc: 2.0
             yc: 10.6830122591944
         }
         ListElement {
-            xc: 3
+            xc: 3.0
             yc: 11.6581777023203
         }
         ListElement {
-            xc: 4
+            xc: 4.0
             yc: 10.4933857704684
         }
         ListElement {
-            xc: 5
+            xc: 5.0
             yc: 0.0
         }
         ListElement {
-            xc: 6
+            xc: 6.0
             yc: 9.39358257285841
         }
         ListElement {
-            xc: 7
+            xc: 7.0
             yc: 8.94745635285273
         }
         ListElement {
-            xc: 8
+            xc: 8.0
             yc: 9.16784953867992
         }
         ListElement {
-            xc: 9
+            xc: 9.0
             yc: 10.7719475277497
         }
         ListElement {
-            xc: 10
+            xc: 10.0
             yc: 9.3165821539393
         }
         ListElement {
-            xc: 11
+            xc: 11.0
             yc: 8.97641112047178
         }
         ListElement {
-            xc: 12
+            xc: 12.0
             yc: 9.33869115958668
         }
 
