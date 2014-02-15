@@ -159,7 +159,7 @@ Rectangle {
             x: (datachange || !datachange) ? dataView.model.get(index).xc/(maxX()-minX())*plotWidth*0.9 : 0
             y: 0
             Text {
-                text: dataView.model.get(index).yc
+                text: (datachange || !datachange) ? dataView.model.get(index).yc : 0
                 font.pixelSize: 16
                 y: bar.y
             }
@@ -167,8 +167,8 @@ Rectangle {
             Rectangle {
                 id: bar
                 width: 20
-                height: dataView.model.get(index).yc/(maxY()-minY())*plotHeight
-                y: plotHeight-dataView.model.get(index).yc/(maxY()-minY())*plotHeight
+                height: (datachange || !datachange) ? dataView.model.get(index).yc/(maxY()-minY())*plotHeight : 0
+                y: (datachange || !datachange) ? plotHeight-dataView.model.get(index).yc/(maxY()-minY())*plotHeight : 0
                 color: plot.penColor
             }
         }
