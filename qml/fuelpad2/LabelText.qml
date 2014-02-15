@@ -22,7 +22,7 @@
 import QtQuick 1.1
 import "UIConstants.js" as UIConstants
 
-Rectangle {
+Item {
     id: labelText
     property alias text: text.text
 
