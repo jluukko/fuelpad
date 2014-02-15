@@ -124,7 +124,10 @@ Page {
 
     Column {
         id: contentColumn
-        anchors.top: statisticsHeader.bottom
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            top: statisticsHeader.bottom
+        }
 
         Label {
             id: statisticsLabel
@@ -145,6 +148,7 @@ Page {
 
         ButtonRow {
             id: buttonRow
+            exclusive: false
             anchors.horizontalCenter: parent.horizontalCenter
             Button {
                 text: "Previous"
