@@ -35,7 +35,7 @@ Page {
         var today = new Date()
         var thisyear = Qt.formatDate(today, "yyyy");
         applicationData.getStatistics(thisyear,2);
-        pageStack.push(Funcs.loadComponent("StatisticsPage.qml",fuelViewPage, {year: thisyear}));
+        pageStack.push(Funcs.loadComponent("StatisticsPage.qml",fuelViewPage, {year: thisyear, stattype: 2}));
     }
 
     PageHeader {

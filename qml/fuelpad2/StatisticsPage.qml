@@ -27,15 +27,21 @@ import "UIConstants.js" as UIConstants
 import "CommonFuncs.js" as Funcs
 
 Page {
-    id: statisticPage
+    id: statisticsPage
 //    orientationLock: PageOrientation.LockLandscape
-    tools: commonTools
+    tools: statisticsTools
 
     property int year: 2014
+    property int stattype: 2
 
     function changeYear(dy) {
         year = year + dy;
-        applicationData.getStatistics(year,2);
+        applicationData.getStatistics(year,stattype);
+    }
+
+    function changeStatType(st) {
+        stattype = st
+        applicationData.getStatistics(year,stattype);
     }
 
     PageHeader {
@@ -43,6 +49,24 @@ Page {
         title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
         titleForegroundColor: UIConstants.COLOR_PAGEHEADER_FOREGROUND
         titleBackgroundColor: UIConstants.COLOR_PAGEHEADER_BACKGROUND
+    }
+
+    // workaround https://bugreports.qt-project.org/browse/QTBUG-11403
+    Text { text: qsTr(name) }
+    ListModel {
+        id: statisticsSelectModel
+        ListElement { name: QT_TR_NOOP("Fill") }
+        ListElement { name: QT_TR_NOOP("Trip") }
+        ListElement { name: QT_TR_NOOP("Consumption")}
+        ListElement { name: QT_TR_NOOP("Price/litre")}
+    }
+
+    SelectionDialog {
+        id: statisticsSelectionDialog
+        titleText: "Choose statistics"
+        selectedIndex: stattype
+        model: statisticsSelectModel
+        onSelectedIndexChanged: changeStatType(selectedIndex)
     }
 
     ListModel {
@@ -98,28 +122,65 @@ Page {
 
     }
 
-    Plot {
-        id: plot
+    Column {
+        id: contentColumn
         anchors.top: statisticsHeader.bottom
-        width: parent.width
-        height: 200
-//        data: testData
-        data: statisticsModel
+
+        Label {
+            id: statisticsLabel
+            text: statisticsSelectModel.get(stattype).name + " " + year
+            platformStyle: MyLabelStyleTitle{}
+            anchors {
+                horizontalCenter: parent.horizontalCenter
+            }
+        }
+
+        Plot {
+            id: plot
+            width: parent.width
+            height: 200
+    //        data: testData
+            data: statisticsModel
+        }
+
+        ButtonRow {
+            id: buttonRow
+            anchors.horizontalCenter: parent.horizontalCenter
+            Button {
+                text: "Previous"
+                width: parent.width/2
+                onClicked: changeYear(-1)
+            }
+            Button {
+                text: "Next"
+                width: parent.width/2
+                onClicked: changeYear(+1)
+            }
+        }
     }
 
-    ButtonRow {
-        id: buttonRow
-        anchors.top: plot.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        Button {
-            text: "Previous"
-            width: parent.width/2
-            onClicked: changeYear(-1)
+    ToolBarLayout {
+        id: statisticsTools
+//        visible: false
+        ToolIcon {
+            iconId: "toolbar-back"
+            onClicked: { pageStack.pop(); }
         }
-        Button {
-            text: "Next"
-            width: parent.width/2
-            onClicked: changeYear(+1)
+        ToolIcon {
+            platformIconId: "toolbar-view-menu"
+            anchors.right: (parent === undefined) ? undefined : parent.right
+            onClicked: (statisticsMenu.status === DialogStatus.Closed) ? statisticsMenu.open() : statisticsMenu.close()
+        }
+    }
+
+    Menu {
+        id: statisticsMenu
+        visualParent: pageStack
+        MenuLayout {
+            MenuItem {
+                text: qsTr("Select statistics")
+                onClicked: statisticsSelectionDialog.open()
+            }
         }
     }
 
