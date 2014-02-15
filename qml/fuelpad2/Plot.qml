@@ -159,9 +159,9 @@ Item {
             x: (datachange || !datachange) ? dataView.model.get(index).xc/(maxX()-minX())*plotWidth*0.9 : 0
             y: 0
             Text {
-                text: (datachange || !datachange) ? dataView.model.get(index).yc : 0
+                text: (datachange || !datachange) ? Number(dataView.model.get(index).yc).toFixed(1) : 0
                 font.pixelSize: 16
-                y: bar.y
+                y: bar.y-1.1*font.pixelSize
             }
 
             Rectangle {
