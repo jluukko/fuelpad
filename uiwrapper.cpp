@@ -192,8 +192,6 @@ UiWrapper::UiWrapper(Database *db, Geocode *gc)
     createAlarmEventModel();
     createStatisticsModel();
 
-    // Testing statistic (remove)
-    getStatistics(2012,2);
 }
 
 UiWrapper::~UiWrapper()
@@ -522,33 +520,38 @@ void UiWrapper::getStatistics(int year, int statSelect)
 
     qDebug("Querying year: %d",year);
 
-    statisticsModel->clear();
     dataBase->getMonthlyData(year, *unitSystem, month, fill, trip, consum, ppl);
-    for (vector<double>::size_type i=0; i < fill.size(); i++) {
-        double data;
-        switch (statSelect) {
-            case 0:
-                data = fill.at(i);
-                break;
-            case 1:
-                data = trip.at(i);
-                break;
-            case 2:
-                data = consum.at(i);
-                break;
-            case 3:
-                data = ppl.at(i);
-                break;
-            default:
-                data = 0.0;
-                break;
 
-        }
-        std::cout << "month = " << month.at(i) << " data = " << data << std::endl;
-        addDataToStatisticsModel(statisticsModel, (double)month.at(i), data);
+    vector<double> data;
+    switch (statSelect) {
+    case 0:
+        data = fill;
+        break;
+    case 1:
+        data = trip;
+        break;
+    case 2:
+        data = consum;
+        break;
+    case 3:
+        data = ppl;
+        break;
     }
-    statisticsModel->sort(0, Qt::AscendingOrder);
-    std::cout << "row count = " << statisticsModel->rowCount() << std::endl;
+
+    if (month.size() > 0) {
+        vector<int> rowIndex(12,0);
+        vector<double> x(12,0.0);
+        vector<double> y(12,0.0);
+        for (vector<int>::size_type i=0; i < x.size(); i++) {
+            rowIndex.at(i)=i;
+        }
+        for (vector<int>::size_type i=0; i < month.size(); i++) {
+            x.at(month.at(i)-1) = month.at(i);
+            y.at(month.at(i)-1) = data.at(i);
+        }
+        statisticsModel->setRowData(rowIndex, x, y);
+        statisticsModel->sort(0, Qt::AscendingOrder);
+    }
 }
 
 void UiWrapper::createFuelEntryModel(void)
@@ -694,6 +697,11 @@ void UiWrapper::createStatisticsModel(void)
     PlotDataModel *model = new PlotDataModel();
 
     statisticsModel = model;
+
+    // Preadd zero data to model
+    for (int i=1;i<=12;i++) {
+        statisticsModel->appendData(PlotData(i,0));
+    }
 }
 
 
