@@ -76,7 +76,7 @@ Item {
     }
 
     Connections {
-        target: testView.model
+        target: dataView.model
         onDataChanged: {
             datachange = (datachange == 1) ? 0 : 1
         }
