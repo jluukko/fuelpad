@@ -31,6 +31,7 @@ Rectangle {
     property double plotHeight: 0.6*height
     property color penColor: "blue"
     property alias data: dataView.model
+    property int datachange: 0
 
     opacity: 0.5
 
@@ -72,6 +73,13 @@ Rectangle {
         model: dataView.model
         delegate: testComp
         visible: false
+    }
+
+    Connections {
+        target: testView.model
+        onDataChanged: {
+            datachange = (datachange == 1) ? 0 : 1
+        }
     }
 
     Component {
@@ -148,7 +156,7 @@ Rectangle {
     Component {
         id: barGraph
         Item {
-            x: dataView.model.get(index).xc/(maxX()-minX())*plotWidth*0.9
+            x: (datachange || !datachange) ? dataView.model.get(index).xc/(maxX()-minX())*plotWidth*0.9 : 0
             y: 0
             Text {
                 text: dataView.model.get(index).yc
@@ -167,3 +175,4 @@ Rectangle {
     }
 
 }
+
