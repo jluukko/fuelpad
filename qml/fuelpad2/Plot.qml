@@ -81,38 +81,10 @@ Item {
         delegate: xlabelGraph
     }
 
-    // Test: view data as text
-    ListView {
-        id: testView
-        width: plotWidth
-        height: plotHeight
-        model: dataView.model
-        delegate: testComp
-        visible: false
-    }
-
     Connections {
         target: dataView.model
         onDataChanged: {
             datachange = (datachange == 1) ? 0 : 1
-        }
-    }
-
-    Component {
-        id: testComp
-        Item {
-            height: labelText.height
-            width: parent.width
-            Row {
-                spacing: 10
-                LabelText {
-                    id: labelText
-                    text: dataView.model.get(index).xc
-                }
-                ElementText {
-                    text: dataView.model.get(index).yc
-                }
-            }
         }
     }
 
