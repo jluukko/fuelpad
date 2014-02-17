@@ -37,6 +37,7 @@ Item {
     property double plotHeight: 0.6*height
     property color penColor: "blue"
     property alias data: dataView.model
+    property alias xLabels: xlabelView.model
     property int datachange: 0
 
     opacity: 0.5
@@ -69,6 +70,15 @@ Item {
         height: plotHeight
 //        model: data
         delegate: barGraph
+    }
+
+    ListView {
+        id: xlabelView
+        x: originX
+        y: originY-plotHeight
+        width: plotWidth
+        height: plotHeight
+        delegate: xlabelGraph
     }
 
     // Test: view data as text
@@ -207,6 +217,28 @@ Item {
                 y: (datachange || !datachange) ? plotHeight-ycoord(dataView.model.get(index).yc)*plotHeight : 0
                 color: plot.penColor
             }
+        }
+    }
+
+    Component {
+        id: xlabelGraph
+        Item {
+            x: (index+1)/(xlabelView.model.count-1)*plotWidth*0.9
+            y: (datachange || !datachange) ? plotHeight : 0
+
+            Text {
+                text: name
+                font.pixelSize: 16
+                rotation: -90
+            }
+
+            // Tick marks
+//            Rectangle {
+//                width: 5
+//                height: 10
+//                y: -5
+//                color: plot.penColor
+//            }
         }
     }
 

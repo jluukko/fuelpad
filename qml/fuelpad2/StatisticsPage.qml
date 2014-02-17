@@ -122,6 +122,48 @@ Page {
 
     }
 
+    // workaround https://bugreports.qt-project.org/browse/QTBUG-11403
+    Text { text: qsTr(name) }
+    ListModel {
+        id: monthModel
+        ListElement {
+            name:  QT_TR_NOOP("Jan")
+        }
+        ListElement {
+            name:  QT_TR_NOOP("Feb")
+        }
+        ListElement {
+            name:  QT_TR_NOOP("Mar")
+        }
+        ListElement {
+            name:  QT_TR_NOOP("Apr")
+        }
+        ListElement {
+            name:  QT_TR_NOOP("May")
+        }
+        ListElement {
+            name:  QT_TR_NOOP("Jun")
+        }
+        ListElement {
+            name:  QT_TR_NOOP("Jul")
+        }
+        ListElement {
+            name:  QT_TR_NOOP("Aug")
+        }
+        ListElement {
+            name:  QT_TR_NOOP("Sep")
+        }
+        ListElement {
+            name:  QT_TR_NOOP("Oct")
+        }
+        ListElement {
+            name:  QT_TR_NOOP("Nov")
+        }
+        ListElement {
+            name:  QT_TR_NOOP("Dec")
+        }
+    }
+
     Column {
         id: contentColumn
         anchors {
@@ -146,6 +188,7 @@ Page {
             height: inPortrait ? 400 : 250
     //        data: testData
             data: statisticsModel
+            xLabels: monthModel
             autoscaleX: false
             xMin: 1
             xMax: 12
