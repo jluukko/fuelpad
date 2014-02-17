@@ -517,6 +517,13 @@ void UiWrapper::getStatistics(int year, int statSelect)
     vector<double> trip;
     vector<double> consum;
     vector<double> ppl;
+    vector<int> rowIndex(12,0);
+    vector<double> x(12,0.0);
+    vector<double> y(12,0.0);
+
+    for (vector<int>::size_type i=0; i < x.size(); i++) {
+        rowIndex.at(i)=i;
+    }
 
     qDebug("Querying year: %d",year);
 
@@ -539,19 +546,20 @@ void UiWrapper::getStatistics(int year, int statSelect)
     }
 
     if (month.size() > 0) {
-        vector<int> rowIndex(12,0);
-        vector<double> x(12,0.0);
-        vector<double> y(12,0.0);
-        for (vector<int>::size_type i=0; i < x.size(); i++) {
-            rowIndex.at(i)=i;
-        }
         for (vector<int>::size_type i=0; i < month.size(); i++) {
             x.at(month.at(i)-1) = month.at(i);
             y.at(month.at(i)-1) = data.at(i);
         }
-        statisticsModel->setRowData(rowIndex, x, y);
-        statisticsModel->sort(0, Qt::AscendingOrder);
     }
+    else {
+        for (vector<int>::size_type i=0; i < x.size(); i++) {
+            x.at(i) = i+1;
+            y.at(i) = 0.0;
+        }
+    }
+
+    statisticsModel->setRowData(rowIndex, x, y);
+    statisticsModel->sort(0, Qt::AscendingOrder);
 }
 
 void UiWrapper::createFuelEntryModel(void)
@@ -702,6 +710,7 @@ void UiWrapper::createStatisticsModel(void)
     for (int i=1;i<=12;i++) {
         statisticsModel->appendData(PlotData(i,0));
     }
+
 }
 
 
