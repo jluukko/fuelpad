@@ -55,10 +55,10 @@ Page {
     Text { text: qsTr(name) }
     ListModel {
         id: statisticsSelectModel
-        ListElement { name: QT_TR_NOOP("Fill") }
-        ListElement { name: QT_TR_NOOP("Trip") }
-        ListElement { name: QT_TR_NOOP("Consumption")}
-        ListElement { name: QT_TR_NOOP("Price/litre")}
+        ListElement { name: QT_TR_NOOP("Total monthly fill") }
+        ListElement { name: QT_TR_NOOP("Monthly driving distance") }
+        ListElement { name: QT_TR_NOOP("Monthly consumption")}
+        ListElement { name: QT_TR_NOOP("Monthly average fuel price")}
     }
 
     SelectionDialog {
@@ -126,6 +126,7 @@ Page {
         id: contentColumn
         anchors {
             horizontalCenter: parent.horizontalCenter
+            bottom: parent.bottom
             top: statisticsHeader.bottom
         }
 
@@ -135,21 +136,27 @@ Page {
             platformStyle: MyLabelStyleTitle{}
             anchors {
                 horizontalCenter: parent.horizontalCenter
+                top: parent.top
             }
         }
 
         Plot {
             id: plot
             width: parent.width
-            height: 200
+            height: inPortrait ? 400 : 250
     //        data: testData
             data: statisticsModel
+            autoscaleX: false
+            xMin: 1
+            xMax: 12
         }
 
         ButtonRow {
             id: buttonRow
             exclusive: false
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors {
+                horizontalCenter: parent.horizontalCenter
+            }
             Button {
                 text: "Previous"
                 width: parent.width/2
