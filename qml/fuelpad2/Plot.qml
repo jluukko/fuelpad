@@ -25,6 +25,12 @@ import QtQuick 1.1
 Item {
     id: plot
 
+    property bool autoscaleX: true
+    property bool autoscaleY: true
+    property double xMin
+    property double xMax
+    property double yMin
+    property double yMax
     property double originX: 0.2*width
     property double originY: 0.8*height
     property double plotWidth: 0.6*width
@@ -153,10 +159,40 @@ Item {
         return minVal;
     }
 
+    function xcoord(xval) {
+        var xscale;
+        if (autoscaleX) {
+            xscale = maxX()-minX();
+        }
+        else {
+            xscale = xMax-xMin;
+        }
+        return xval/xscale;
+    }
+
+    function ycoord(yval) {
+        var yscale;
+        var retVal;
+        if (autoscaleY) {
+            yscale = maxY()-minY();
+        }
+        else {
+            yscale = yMax-yMin;
+        }
+        if (yscale == 0) {
+            retVal = 0;
+        }
+        else {
+            retVal = yval/yscale;
+        }
+
+        return retVal;
+    }
+
     Component {
         id: barGraph
         Item {
-            x: (datachange || !datachange) ? dataView.model.get(index).xc/(maxX()-minX())*plotWidth*0.9 : 0
+            x: (datachange || !datachange) ? xcoord(dataView.model.get(index).xc)*plotWidth*0.9 : 0
             y: 0
             Text {
                 text: (datachange || !datachange) ? Number(dataView.model.get(index).yc).toFixed(1) : 0
@@ -167,8 +203,8 @@ Item {
             Rectangle {
                 id: bar
                 width: 20
-                height: (datachange || !datachange) ? dataView.model.get(index).yc/(maxY()-minY())*plotHeight : 0
-                y: (datachange || !datachange) ? plotHeight-dataView.model.get(index).yc/(maxY()-minY())*plotHeight : 0
+                height: (datachange || !datachange) ? ycoord(dataView.model.get(index).yc)*plotHeight : 0
+                y: (datachange || !datachange) ? plotHeight-ycoord(dataView.model.get(index).yc)*plotHeight : 0
                 color: plot.penColor
             }
         }
