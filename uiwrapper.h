@@ -27,6 +27,7 @@
 
 #include "database.h"
 #include "cardata.h"
+#include "userconfig.h"
 #include "geocode.h"
 #include "roleitemmodel.h"
 #include "mysortfilterproxymodel.h"
@@ -49,6 +50,8 @@ public:
     PlotDataModel* getStatisticsModel(void);
 
     // Exposed to Qml
+    Q_INVOKABLE void saveConfig(void);
+
     Q_INVOKABLE void addFuelEntry(int carid, QString date, double km, double trip, double fill, bool notFull,
                                   double price, double service, double oil, double tires, double lat, double lon,
                                   QString place, QString notes);
@@ -142,6 +145,7 @@ private:
     Database *dataBase;
     UnitSystem *unitSystem;
     CarData *carData;
+    UserConfig userConfig;
     Geocode *geoCode;
     QString geoAddress;
 

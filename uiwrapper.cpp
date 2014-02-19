@@ -19,7 +19,6 @@
  */
 
 #include "uiwrapper.h"
-#include "userconfig.h"
 #include "roleitemmodel.h"
 #include "mysortfilterproxymodel.h"
 
@@ -158,20 +157,18 @@ UiWrapper::UiWrapper(Database *db, Geocode *gc)
     geoCode = gc;
     unitSystem = new UnitSystem;
 
-    UserConfig config;
-
     // Read data from config
 
 //    unitSystem->setMainUnit(UnitSystem::SI);
 //    unitSystem->setIndividualUnit(false);
-    config.settings.beginGroup("Unit");
-    unitSystem->setMainUnit((enum UnitSystem::unit)config.settings.value("UnitSystem", (int)UnitSystem::SI).toInt());
-    unitSystem->setIndividualUnit(config.settings.value("IndividualUnit", false).toBool());
-    unitSystem->setLengthUnit((enum UnitSystem::unit)config.settings.value("LengthUnit", (int)UnitSystem::SI).toInt());
-    unitSystem->setVolumeUnit((enum UnitSystem::unit)config.settings.value("VolumeUnit", (int)UnitSystem::SI).toInt());
-    unitSystem->setConsumeUnit((enum UnitSystem::unit)config.settings.value("ConsumeUnit", (int)UnitSystem::SI).toInt());
-    unitSystem->setMassUnit((enum UnitSystem::unit)config.settings.value("MassUnit", (int)UnitSystem::SI).toInt());
-    config.settings.endGroup();
+    userConfig.settings.beginGroup("Unit");
+    unitSystem->setMainUnit((enum UnitSystem::unit)userConfig.settings.value("UnitSystem", (int)UnitSystem::SI).toInt());
+    unitSystem->setIndividualUnit(userConfig.settings.value("IndividualUnit", false).toBool());
+    unitSystem->setLengthUnit((enum UnitSystem::unit)userConfig.settings.value("LengthUnit", (int)UnitSystem::SI).toInt());
+    unitSystem->setVolumeUnit((enum UnitSystem::unit)userConfig.settings.value("VolumeUnit", (int)UnitSystem::SI).toInt());
+    unitSystem->setConsumeUnit((enum UnitSystem::unit)userConfig.settings.value("ConsumeUnit", (int)UnitSystem::SI).toInt());
+    unitSystem->setMassUnit((enum UnitSystem::unit)userConfig.settings.value("MassUnit", (int)UnitSystem::SI).toInt());
+    userConfig.settings.endGroup();
 
     // For testing
 //    unitSystem->setMainUnit(UnitSystem::US);
@@ -181,8 +178,8 @@ UiWrapper::UiWrapper(Database *db, Geocode *gc)
 //    unitSystem->setMassUnit(UnitSystem::US);
 
     // Comment out since settings don't seem to work with simulator
-//    db->setCurrentCar(config.settings.value("CurrentCar",1).toInt());
-//    db->setCurrentDriver(config.settings.value("CurrentDriver",1).toInt());
+//    db->setCurrentCar(userConfig.settings.value("CurrentCar",1).toInt());
+//    db->setCurrentDriver(userConfig.settings.value("CurrentDriver",1).toInt());
 
     // Create models needed in Qml
     createFuelEntryModel();
@@ -196,6 +193,7 @@ UiWrapper::UiWrapper(Database *db, Geocode *gc)
 
 UiWrapper::~UiWrapper()
 {
+    saveConfig();
     delete unitSystem;
     delete sortModel;
 }
@@ -327,6 +325,18 @@ static void addRecordToAlarmEventModel(QStandardItemModel *model, AlarmeventData
     QStandardItem* it = new QStandardItem();
     setDataToAlarmEventModel(it, data);
     model->appendRow(it);
+}
+
+void UiWrapper::saveConfig(void)
+{
+    userConfig.settings.beginGroup("Unit");
+    userConfig.settings.setValue("UnitSystem",(int)unitSystem->getMainUnit());
+    userConfig.settings.setValue("IndividualUnit", (bool)unitSystem->getIndividualUnit());
+    userConfig.settings.setValue("LengthUnit", (int)unitSystem->getLengthUnit());
+    userConfig.settings.setValue("VolumeUnit", (int)unitSystem->getVolumeUnit());
+    userConfig.settings.setValue("ConsumeUnit", (int)unitSystem->getConsumeUnit());
+    userConfig.settings.setValue("MassUnit", (int)unitSystem->getMassUnit());
+    userConfig.settings.endGroup();
 }
 
 void UiWrapper::updateAllModels(void)
