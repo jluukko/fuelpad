@@ -99,6 +99,10 @@ void UnitSystem::setCurrencySymbol(QString symbol)
     currency = symbol;
 }
 
+UnitSystem::unit UnitSystem::getMainUnit(void)
+{
+    return mainUnit;
+}
 
 UnitSystem::unit UnitSystem::getLengthUnit(void)
 {
@@ -120,6 +124,10 @@ UnitSystem::unit UnitSystem::getMassUnit(void)
     return massUnit;
 }
 
+bool UnitSystem::getIndividualUnit(void)
+{
+    return individualUnit;
+}
 
 double UnitSystem::getLengthConversionFactor(void)
 {

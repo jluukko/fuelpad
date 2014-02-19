@@ -51,10 +51,13 @@ public:
     void setIndividualUnit(bool individual);
     void setDateFormatString(int index);
     void setCurrencySymbol(QString symbol);
+    UnitSystem::unit getMainUnit(void);
     UnitSystem::unit getLengthUnit(void);
     UnitSystem::unit getVolumeUnit(void);
     UnitSystem::unit getConsumeUnit(void);
     UnitSystem::unit getMassUnit(void);
+    bool getIndividualUnit(void);
+
     double getLengthConversionFactor(void);
     double getVolumeConversionFactor(void);
     double getMassConversionFactor(void);
