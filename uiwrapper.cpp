@@ -1377,6 +1377,16 @@ void UiWrapper::setConsumeUnit(int unit)
 // Units
 //
 //-------------------------------------------------------------------
+int UiWrapper::getMainUnit(void)
+{
+    return unitSystem->getMainUnit();
+}
+
+bool UiWrapper::getIndividualUnit(void)
+{
+    return unitSystem->getIndividualUnit();
+}
+
 int UiWrapper::getLengthUnit(void)
 {
     return unitSystem->getLengthUnit();

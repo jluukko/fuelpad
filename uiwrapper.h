@@ -118,6 +118,10 @@ public:
 
     Q_INVOKABLE void setConsumeUnit(int unit);
 
+    Q_INVOKABLE int getMainUnit(void);
+
+    Q_INVOKABLE bool getIndividualUnit(void);
+
     Q_INVOKABLE int getLengthUnit(void);
 
     Q_INVOKABLE int getMassUnit(void);
