@@ -29,8 +29,13 @@ Page {
     tools: commonTools
 
     function setMainUnit(index) {
-        var check = individualUnit.checked
+        var check = applicationData.getIndividualUnit()
         applicationData.setMainUnit(index, check)
+    }
+
+    function setIndividualUnit(checked) {
+        var mainUnit = mainUnitSelector.selectedIndex
+        applicationData.setMainUnit(mainUnit, checked)
     }
 
     // workaround https://bugreports.qt-project.org/browse/QTBUG-11403
@@ -56,11 +61,11 @@ Page {
 
         spacing: UIConstants.PADDING_MEDIUM
 
-        // todo Get selectedIndex from global settings
         TouchSelector {
+            id: mainUnitSelector
             buttonText: qsTr("Unit system")
             titleText: qsTr("Select unit system")
-            selectedIndex: 0
+            selectedIndex: applicationData.getMainUnit()
             model: unitModel
             onSelected: setMainUnit(selectedIndex)
         }
@@ -71,10 +76,10 @@ Page {
                 text: "Select units individually"
             }
 
-            // todo Get checked from global settings
             Switch {
                 id: individualUnit
-                checked: false
+                checked: applicationData.getIndividualUnit()
+                onCheckedChanged: setIndividualUnit(checked)
             }
         }
 
@@ -83,7 +88,7 @@ Page {
             visible: individualUnit.checked
             buttonText: qsTr("Unit system for length")
             titleText: qsTr("Select unit system")
-            selectedIndex: 0
+            selectedIndex: applicationData.getLengthUnit()
             model: unitModel
             onSelected: applicationData.setLengthUnit(selectedIndex)
         }
@@ -92,7 +97,7 @@ Page {
             visible: individualUnit.checked
             buttonText: qsTr("Unit system for volume")
             titleText: qsTr("Select unit system")
-            selectedIndex: 0
+            selectedIndex: applicationData.getVolumeUnit()
             model: unitModel
             onSelected: applicationData.setVolumeUnit(selectedIndex)
         }
@@ -101,7 +106,7 @@ Page {
             visible: individualUnit.checked
             buttonText: qsTr("Unit system for mass")
             titleText: qsTr("Select unit system")
-            selectedIndex: 0
+            selectedIndex: applicationData.getMassUnit()
             model: unitModel
             onSelected: applicationData.setMassUnit(selectedIndex)
         }
@@ -110,7 +115,7 @@ Page {
             visible: individualUnit.checked
             buttonText: qsTr("Unit system for consumption")
             titleText: qsTr("Select unit system")
-            selectedIndex: 0
+            selectedIndex: applicationData.getConsumeUnit()
             model: unitModel
             onSelected: applicationData.setConsumeUnit(selectedIndex)
         }
