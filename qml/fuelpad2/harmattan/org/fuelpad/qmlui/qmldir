@@ -1,0 +1,21 @@
+module org.fuelpad.qmlui
+FPButton 1.0 FPButton.qml
+FPButtonRow 1.0 FPButtonRow.qml
+FPButtonStyle 1.0 FPButtonStyle.qml
+FPDialog 1.0 FPDialog.qml
+FPLabel 1.0 FPLabel.qml
+FPLabelStyle 1.0 FPLabelStyle.qml
+FPListButton 1.0 FPListButton.qml
+FPMenu 1.0 FPMenu.qml
+FPMenuItem 1.0 FPMenuItem.qml
+FPMenuLayout 1.0 FPMenuLayout.qml
+FPPage 1.0 FPPage.qml
+FPPageStackWindow 1.0 FPPageStackWindow.qml
+FPScrollDecorator 1.0 FPScrollDecorator.qml
+FPSelectionDialog 1.0 FPSelectionDialog.qml
+FPSheet 1.0 FPSheet.qml
+FPSwitch 1.0 FPSwitch.qml
+FPTextArea 1.0 FPTextArea.qml
+FPTextField 1.0 FPTextField.qml
+FPToolBarLayout 1.0 FPToolBarLayout.qml
+FPToolIcon 1.0 FPToolIcon.qml
