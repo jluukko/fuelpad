@@ -111,8 +111,13 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     view.rootContext()->setContextProperty("statisticsModel", statisticsModel);
     view.rootContext()->setContextProperty("applicationData", &uiWrapper);
 
+    // Where to find the UI abstraction layer
+    view.engine()->addImportPath(QUrl::fromLocalFile(adjustPath("qml/fuelpad2/harmattan")).path());
+
     // qml source
     view.setSource(QUrl::fromLocalFile(adjustPath("qml/fuelpad2/main.qml")));
+
+    qDebug("qml import path: %s",view.engine()->importPathList().join(":").toStdString().c_str());
 
     // qml quit signal to c++ signal?
     QObject::connect(view.engine(), SIGNAL(quit()), &app, SLOT(quit()));

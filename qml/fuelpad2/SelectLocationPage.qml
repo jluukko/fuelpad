@@ -20,12 +20,12 @@
 
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
-import com.nokia.meego 1.1
+import org.fuelpad.qmlui 1.0
 import "UIConstants.js" as UIConstants
 import "CommonFuncs.js" as Funcs
 import "CommonUnits.js" as Units
 
-Page {
+FPPage {
     id: selectLocationPage
 
     function open() {
@@ -78,69 +78,69 @@ Page {
                     columns: 2
                     spacing: UIConstants.PADDING_MEDIUM
 
-                    Label {
+                    FPLabel {
                         text: qsTr("Enable GPS")
                     }
 
                     // todo Get checked from global settings
-                    Switch {
+                    FPSwitch {
                         id: enableGPS
                         checked: positionSource.active
                         onCheckedChanged: toggleGPS()
                     }
 
-                    Label {
+                    FPLabel {
                         text: qsTr("Latitude")
                         font.pixelSize: UIConstants.FONT_DEFAULT
                     }
-                    Label {
+                    FPLabel {
                         id: latField
                         text: positionSource.position.coordinate.latitude.toFixed(8)
                     }
 
-                    Label {
+                    FPLabel {
                         text: qsTr("Longitude")
                         font.pixelSize: UIConstants.FONT_DEFAULT
                     }
-                    Label {
+                    FPLabel {
                         id: lonField
                         text: positionSource.position.coordinate.longitude.toFixed(8)
                     }
 
-                    Label {
+                    FPLabel {
                         text: qsTr("Position valid")
                     }
 
-                    Label {
+                    FPLabel {
                         text: (positionSource.position.latitudeValid && positionSource.position.longitudeValid) ?
                                   qsTr("valid") : qsTr("invalid")
                     }
 
-                    Label {
+                    FPLabel {
                         text: qsTr("Horizontal accuracy")
                     }
 
-                    Label {
+                    FPLabel {
                         text: positionSource.position.horizontalAccuracy.toFixed(1)
                     }
 
-                    Label {
+                    FPLabel {
                         text: qsTr("Vertical accuracy")
                     }
 
-                    Label {
+                    FPLabel {
                         text: positionSource.position.verticalAccuracy.toFixed(1)
                     }
 
                 }
 
-                Button {
+                FPButton {
 //                    anchors.horizontalCenter: locationDialog.horizontalCenter
                     text: qsTr("Retrieve address")
                     onClicked: applicationData.requestAddress(latField.text, lonField.text)
                 }
 
-                TextArea {
+                FPTextArea {
                     id: placeField
                     width: locationDialog.width-2*UIConstants.DEFAULT_MARGIN
                     height: 4*UIConstants.FONT_DEFAULT
@@ -150,14 +150,14 @@ Page {
 
             }
         }
-        buttons: ButtonRow {
-            style: ButtonStyle { }
+        buttons: FPButtonRow {
+            style: FPButtonStyle { }
             anchors.horizontalCenter: parent.horizontalCenter
-            Button {
+            FPButton {
                 text: qsTr("Apply")
                 onClicked: locationDialog.accept()
             }
-            Button {
+            FPButton {
                 text: qsTr("Cancel");
                 onClicked: locationDialog.cancel()
             }

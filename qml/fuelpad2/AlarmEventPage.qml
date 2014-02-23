@@ -20,12 +20,12 @@
 
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
-import com.nokia.meego 1.1
+import org.fuelpad.qmlui 1.0
 import "UIConstants.js" as UIConstants
 import "CommonFuncs.js" as Funcs
 import "CommonUnits.js" as Units
 
-Page {
+FPPage {
     id: alarmEventPage
     tools: alarmEventTools
 
@@ -56,7 +56,7 @@ Page {
         clip: true
     }
 
-    ScrollDecorator {
+    FPScrollDecorator {
         flickableItem: listView
     }
 
@@ -108,7 +108,7 @@ Page {
                             + (theme.inverted ? "-inverse" : "");
                 }
 
-                Label {
+                FPLabel {
                     id: headerText
                     text: date + ": " + km.toFixed(0) + " " + Units.getLengthUnit()
                     platformStyle: MyLabelStyleTitle{}
@@ -189,14 +189,14 @@ Page {
         }
     }
 
-    ToolBarLayout {
+    FPToolBarLayout {
         id: alarmEventTools
         visible: false
-        ToolIcon {
+        FPToolIcon {
             iconId: "toolbar-back"
             onClicked: { pageStack.pop(); }
         }
-        ToolIcon {
+        FPToolIcon {
             iconId: "toolbar-add"
             onClicked: Funcs.loadComponent("AddAlarmEventDialog.qml",mainPage, {"editMode": false}).open()
         }

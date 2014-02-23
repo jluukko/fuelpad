@@ -20,7 +20,7 @@
 
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
-import com.nokia.meego 1.1
+import org.fuelpad.qmlui 1.0
 import "UIConstants.js" as UIConstants
 
 Item {
@@ -43,7 +43,7 @@ Item {
         color: UIConstants.COLOR_SELECT
     }
 
-    SelectionDialog {
+    FPSelectionDialog {
         id: selectionDialog
         titleText: titleText
         selectedIndex: selectedIndex
@@ -55,13 +55,13 @@ Item {
         id: content
         width: parent.width
 
-        Label {
+        FPLabel {
             id: button
             text: buttonText
             font.bold: true
         }
 
-        Label {
+        FPLabel {
             id: value
             text: selectionDialog.model.get(selectedIndex).name
         }

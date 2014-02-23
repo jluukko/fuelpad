@@ -20,11 +20,10 @@
 
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
-import com.nokia.meego 1.1
-import com.nokia.extras 1.1
+import org.fuelpad.qmlui 1.0
 import "UIConstants.js" as UIConstants
 
-Page {
+FPPage {
     tools: commonTools
 
     property bool editMode: false
@@ -71,7 +70,7 @@ Page {
                     text: qsTr("Full name")
                     font.pixelSize: UIConstants.FONT_DEFAULT
                 }
-                TextField {
+                FPTextField {
                     id: fullnameField
                     width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                     placeholderText: qsTr("Full name")
@@ -83,7 +82,7 @@ Page {
                     text: qsTr("Nick name")
                     font.pixelSize: UIConstants.FONT_DEFAULT
                 }
-                TextField {
+                FPTextField {
                     id: nicknameField
                     width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                     placeholderText: qsTr("Nick name")
@@ -95,14 +94,14 @@ Page {
 
         }
 
-        buttons: ButtonRow {
-            style: ButtonStyle { }
+        buttons: FPButtonRow {
+            style: FPButtonStyle { }
             anchors.horizontalCenter: parent.horizontalCenter
-            Button {
+            FPButton {
                 text: editMode ? qsTr("Apply") : qsTr("Add");
                 onClicked: addDialog.accept()
             }
-            Button {
+            FPButton {
                 text: qsTr("Cancel");
                 onClicked: addDialog.cancel()
             }

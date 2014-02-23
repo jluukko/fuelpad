@@ -20,12 +20,11 @@
 
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
-import com.nokia.meego 1.1
-import com.nokia.extras 1.1
+import org.fuelpad.qmlui 1.0
 import "UIConstants.js" as UIConstants
 import "CommonFuncs.js" as Funcs
 
-Page {
+FPPage {
     id: addFuelEntryDialogPage
     tools: commonTools
 
@@ -81,7 +80,7 @@ Page {
         }
     }
 
-    DatePickerDialog {
+    FPDatePickerDialog {
         id: dateDialog
         titleText: qsTr("Entry date")
         acceptButtonText: qsTr("OK")
@@ -112,13 +111,13 @@ Page {
                     columns: 1
                     spacing: UIConstants.PADDING_MEDIUM
 
-                    ListButton {
+                    FPListButton {
                          id: dateButton
                          text: qsTr("Pick date")
                          width: text.width
                          onClicked: launchDateDialogToToday()
                     }
-                    TextField {
+                    FPTextField {
                         id: dateField
                         width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         placeholderText: qsTr("Add date")
@@ -130,7 +129,7 @@ Page {
                         text: qsTr("Km")
                         font.pixelSize: UIConstants.FONT_DEFAULT
                     }
-                    TextField {
+                    FPTextField {
                         id: kmField
                         width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         placeholderText: qsTr("Add overall km")
@@ -143,7 +142,7 @@ Page {
                         text: qsTr("Trip")
                         font.pixelSize: UIConstants.FONT_DEFAULT
                     }
-                    TextField {
+                    FPTextField {
                         id: tripField
                         width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         placeholderText: qsTr("Add trip")
@@ -156,7 +155,7 @@ Page {
                         text: qsTr("Fill")
                         font.pixelSize: UIConstants.FONT_DEFAULT
                     }
-                    TextField {
+                    FPTextField {
                         id: fillField
                         width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         placeholderText: qsTr("Add fill")
@@ -169,7 +168,7 @@ Page {
                         text: qsTr("Not full fill")
                         font.pixelSize: UIConstants.FONT_DEFAULT
                     }
-                    Switch {
+                    FPSwitch {
                         id: notFullFill
                         checked: editMode ? oldNotFull : false
                     }
@@ -177,7 +176,7 @@ Page {
                         text: qsTr("Price")
                         font.pixelSize: UIConstants.FONT_DEFAULT
                     }
-                    TextField {
+                    FPTextField {
                         id: priceField
                         width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         placeholderText: qsTr("Add price")
@@ -190,7 +189,7 @@ Page {
                         text: qsTr("Notes")
                         font.pixelSize: UIConstants.FONT_DEFAULT
                     }
-                    TextField {
+                    FPTextField {
                         id: notesField
                         width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         placeholderText: qsTr("Add notes")
@@ -202,7 +201,7 @@ Page {
                         text: qsTr("Service")
                         font.pixelSize: UIConstants.FONT_DEFAULT
                     }
-                    TextField {
+                    FPTextField {
                         id: serviceField
                         width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         placeholderText: qsTr("Add service cost")
@@ -215,7 +214,7 @@ Page {
                         text: qsTr("Oil")
                         font.pixelSize: UIConstants.FONT_DEFAULT
                     }
-                    TextField {
+                    FPTextField {
                         id: oilField
                         width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         placeholderText: qsTr("Add oil cost")
@@ -228,7 +227,7 @@ Page {
                         text: qsTr("Tires")
                         font.pixelSize: UIConstants.FONT_DEFAULT
                     }
-                    TextField {
+                    FPTextField {
                         id: tiresField
                         width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         placeholderText: qsTr("Add tires cost")
@@ -243,7 +242,7 @@ Page {
                         font.pixelSize: UIConstants.FONT_DEFAULT
                         visible: false
                     }
-                    TextField {
+                    FPTextField {
                         id: latField
                         width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         text: editMode ? oldLat : positionSource.position.coordinate.latitude.toFixed(8)
@@ -255,18 +254,18 @@ Page {
                         font.pixelSize: UIConstants.FONT_DEFAULT
                         visible: false
                     }
-                    TextField {
+                    FPTextField {
                         id: lonField
                         width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         text: editMode ? oldLon : positionSource.position.coordinate.longitude.toFixed(8)
                         visible: false
                     }
 
-                    ListButton {
+                    FPListButton {
                         text: qsTr("Get address")
                         onClicked: Funcs.loadComponent("SelectLocationPage.qml",addFuelEntryDialogPage, {}).open()
                     }
-                    TextArea {
+                    FPTextArea {
                         id: placeField
                         width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                         height: 4*UIConstants.FONT_DEFAULT
@@ -279,14 +278,14 @@ Page {
             }
         }
 
-        buttons: ButtonRow {
-            style: ButtonStyle { }
+        buttons: FPButtonRow {
+            style: FPButtonStyle { }
             anchors.horizontalCenter: parent.horizontalCenter
-            Button {
+            FPButton {
                 text: editMode ? qsTr("Apply") : qsTr("Add");
                 onClicked: addDialog.accept()
             }
-            Button {
+            FPButton {
                 text: qsTr("Cancel");
                 onClicked: addDialog.cancel()
             }

@@ -19,13 +19,13 @@
  */
 
 import QtQuick 1.1
-import com.nokia.meego 1.1
+import org.fuelpad.qmlui 1.0
 import QtMobility.location 1.2
 import "UIConstants.js" as UIConstants
 import "CommonFuncs.js" as Funcs
 import "CommonUnits.js" as Units
 
-Page {
+FPPage {
     id: mainPage
     tools: commonTools
 
@@ -57,7 +57,7 @@ Page {
         clip: true
     }
 
-    ScrollDecorator {
+    FPScrollDecorator {
         flickableItem: carListView
     }
 
@@ -91,7 +91,7 @@ Page {
                 source: "image://theme/icon-m-common-drilldown-arrow"
                         + (theme.inverted ? "-inverse" : "");
             }
-            Label {
+            FPLabel {
                 id: carNameText
                 text: mark + " " + carmodel
                 platformStyle: MyLabelStyleTitle{}
@@ -152,7 +152,7 @@ Page {
         }
     }
 
-    Button{
+    FPButton {
         id: button1
         anchors {
             horizontalCenter: parent.horizontalCenter
@@ -163,7 +163,7 @@ Page {
         onClicked: pageStack.push(Funcs.loadComponent("RemindersPage.qml",mainPage, {}))
         width: parent.width-50
     }
-    Button{
+    FPButton {
         id: button4
         anchors {
             horizontalCenter: parent.horizontalCenter

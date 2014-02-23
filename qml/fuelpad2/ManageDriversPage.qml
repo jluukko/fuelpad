@@ -20,11 +20,13 @@
 
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
-import com.nokia.meego 1.1
+import org.fuelpad.qmlui 1.0
+//import "harmattan/org/fuelpad/qmlui/DialogStatus.js" as DialogStatus
+import "DialogStatus.js" as DialogStatus
 import "UIConstants.js" as UIConstants
 import "CommonFuncs.js" as Funcs
 
-Page {
+FPPage {
     tools: manageDriversTools
 
     PageHeader {
@@ -49,7 +51,7 @@ Page {
         clip: true
     }
 
-    ScrollDecorator {
+    FPScrollDecorator {
         flickableItem: listView
     }
 
@@ -95,7 +97,7 @@ Page {
                             + (theme.inverted ? "-inverse" : "");
                 }
 
-                Label {
+                FPLabel {
                     id: driverNameText
                     text: nickname
                     platformStyle: MyLabelStyleTitle{}
@@ -135,18 +137,18 @@ Page {
         }
     }
 
-    ToolBarLayout {
+    FPToolBarLayout {
         id: manageDriversTools
         visible: false
-        ToolIcon {
+        FPToolIcon {
             iconId: "toolbar-back"
             onClicked: { pageStack.pop(); }
         }
-        ToolIcon {
+        FPToolIcon {
             iconId: "toolbar-add"
             onClicked: Funcs.loadComponent("AddDriverDialog.qml",mainPage, {}).open()
         }
-//        ToolIcon {
+//        FPToolIcon {
 //            platformIconId: "toolbar-view-menu"
 //            anchors.right: (parent === undefined) ? undefined : parent.right
 //            onClicked: (fuelViewMenu.status === DialogStatus.Closed) ? fuelViewMenu.open() : fuelViewMenu.close()

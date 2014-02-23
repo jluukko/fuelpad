@@ -20,10 +20,12 @@
 
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
-import com.nokia.meego 1.1
+import org.fuelpad.qmlui 1.0
+//import "harmattan/org/fuelpad/qmlui/DialogStatus.js" as DialogStatus
+import "DialogStatus.js" as DialogStatus
 import "CommonFuncs.js" as Funcs
 
-PageStackWindow {
+FPPageStackWindow {
     id: appWindow
 
     initialPage: MainPage{}
@@ -34,44 +36,44 @@ PageStackWindow {
         id: mainPage
     }
 
-    ToolBarLayout {
+    FPToolBarLayout {
         id: commonTools
         visible: false
         z: 99
-        ToolIcon {
+        FPToolIcon {
             iconId: "toolbar-back"
             visible: pageStack.depth > 1
             onClicked: { pageStack.pop(); }
         }
-        ToolIcon {
+        FPToolIcon {
             iconId: "toolbar-settings"
             visible: pageStack.depth == 1
             onClicked: pageStack.push(Funcs.loadComponent("SettingsPage.qml",mainPage, {}))
         }
-        ToolIcon {
+        FPToolIcon {
             platformIconId: "toolbar-view-menu"
             anchors.right: (parent === undefined) ? undefined : parent.right
             onClicked: (myMenu.status === DialogStatus.Closed) ? myMenu.open() : myMenu.close()
         }
     }
 
-    Menu {
+    FPMenu {
         id: myMenu
         visualParent: pageStack
-        MenuLayout {
-            MenuItem {
+        FPMenuLayout {
+            FPMenuItem {
                 text: qsTr("Settings")
                 onClicked: pageStack.push(Funcs.loadComponent("SettingsPage.qml",mainPage, {}))
             }
-            MenuItem {
+            FPMenuItem {
                 text: qsTr("Manage cars")
                 onClicked: pageStack.push(Funcs.loadComponent("ManageCarsPage.qml",mainPage, {}))
             }
-            MenuItem {
+            FPMenuItem {
                 text: qsTr("Manage drivers")
                 onClicked: pageStack.push(Funcs.loadComponent("ManageDriversPage.qml",mainPage, {}))
             }
-            MenuItem {
+            FPMenuItem {
                 text: qsTr("About")
                 onClicked: Funcs.loadComponent("AboutDialog.qml",mainPage, {}).open()
             }

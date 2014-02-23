@@ -20,7 +20,7 @@
 
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
-import com.nokia.meego 1.1
+import org.fuelpad.qmlui 1.0
 
 Item {
     id: deleteFuelEntryDialog
@@ -30,7 +30,7 @@ Item {
         deleteQuery.open()
     }
 
-    QueryDialog {
+    FPQueryDialog {
         id: deleteQuery
         titleText: qsTr("Delete record?")
         message: qsTr("Delete the selected record?")

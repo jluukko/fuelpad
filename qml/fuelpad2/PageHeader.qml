@@ -20,7 +20,8 @@
 
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
-import com.nokia.meego 1.1
+import org.fuelpad.qmlui 1.0
+
 import "UIConstants.js" as UIConstants
 
 Rectangle {
@@ -37,7 +38,7 @@ Rectangle {
 
     height: UIConstants.HEADER_DEFAULT_HEIGHT_PORTRAIT
 
-    Label {
+    FPLabel {
         id: title
         anchors {
             left: parent.left

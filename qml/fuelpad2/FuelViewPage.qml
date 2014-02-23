@@ -20,12 +20,15 @@
 
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
-import com.nokia.meego 1.1
+import org.fuelpad.qmlui 1.0
+//import "harmattan/org/fuelpad/qmlui/DialogStatus.js" as DialogStatus
+import "DialogStatus.js" as DialogStatus
+
 import "UIConstants.js" as UIConstants
 import "CommonFuncs.js" as Funcs
 import "CommonUnits.js" as Units
 
-Page {
+FPPage {
     id: fuelViewPage
     tools: fuelViewTools
 
@@ -60,7 +63,7 @@ Page {
         clip: true
     }
 
-    ScrollDecorator {
+    FPScrollDecorator {
         flickableItem: listView
     }
 
@@ -118,7 +121,7 @@ Page {
                             + (theme.inverted ? "-inverse" : "");
                 }
 
-                Label {
+                FPLabel {
                     id: dateText
                     text: date + ": " + km.toFixed(0) + " " + Units.getLengthUnit() + " " + price.toFixed(2)
                           + applicationData.getCurrencySymbol()
@@ -247,29 +250,29 @@ Page {
         }
     }
 
-    ToolBarLayout {
+    FPToolBarLayout {
         id: fuelViewTools
         visible: false
-        ToolIcon {
+        FPToolIcon {
             iconId: "toolbar-back"
             onClicked: { pageStack.pop(); }
         }
-        ToolIcon {
+        FPToolIcon {
             iconId: "toolbar-add"
             onClicked: Funcs.loadComponent("AddFuelEntryDialog.qml",mainPage, {carId: carId}).open()
         }
-        ToolIcon {
+        FPToolIcon {
             platformIconId: "toolbar-view-menu"
             anchors.right: (parent === undefined) ? undefined : parent.right
             onClicked: (fuelViewMenu.status === DialogStatus.Closed) ? fuelViewMenu.open() : fuelViewMenu.close()
         }
     }
 
-    Menu {
+    FPMenu {
         id: fuelViewMenu
         visualParent: pageStack
-        MenuLayout {
-            MenuItem {
+        FPMenuLayout {
+            FPMenuItem {
                 text: qsTr("Statistics")
 //                onClicked: pageStack.push(Funcs.loadComponent("StatisticsPage.qml",fuelViewPage, {}))
                 onClicked: loadStatisticsPage()

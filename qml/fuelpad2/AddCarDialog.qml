@@ -20,11 +20,10 @@
 
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
-import com.nokia.meego 1.1
-import com.nokia.extras 1.1
+import org.fuelpad.qmlui 1.0
 import "UIConstants.js" as UIConstants
 
-Page {
+FPPage {
     tools: commonTools
 
     property bool editMode: false
@@ -86,7 +85,7 @@ Page {
                     text: qsTr("Mark")
                     font.pixelSize: UIConstants.FONT_DEFAULT
                 }
-                TextField {
+                FPTextField {
                     id: markField
                     width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                     placeholderText: qsTr("My car mark")
@@ -98,7 +97,7 @@ Page {
                     text: qsTr("Model")
                     font.pixelSize: UIConstants.FONT_DEFAULT
                 }
-                TextField {
+                FPTextField {
                     id: modelField
                     width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                     placeholderText: qsTr("My car model")
@@ -110,7 +109,7 @@ Page {
                     text: qsTr("Model year")
                     font.pixelSize: UIConstants.FONT_DEFAULT
                 }
-                TextField {
+                FPTextField {
                     id: yearField
                     width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                     placeholderText: qsTr("My car model year")
@@ -123,7 +122,7 @@ Page {
                     text: qsTr("Registration number")
                     font.pixelSize: UIConstants.FONT_DEFAULT
                 }
-                TextField {
+                FPTextField {
                     id: regnumField
                     width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                     placeholderText: qsTr("My car registration number")
@@ -135,7 +134,7 @@ Page {
                     text: qsTr("Notes")
                     font.pixelSize: UIConstants.FONT_DEFAULT
                 }
-                TextField {
+                FPTextField {
                     id: notesField
                     width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
                     placeholderText: qsTr("Add notes")
@@ -156,14 +155,14 @@ Page {
 
         }
 
-        buttons: ButtonRow {
-            platformStyle: ButtonStyle { }
+        buttons: FPButtonRow {
+            platformStyle: FPButtonStyle { }
             anchors.horizontalCenter: parent.horizontalCenter
-            Button {
+            FPButton {
                 text: editMode ? qsTr("Apply") : qsTr("Add");
                 onClicked: addDialog.accept()
             }
-            Button {
+            FPButton {
                 text: qsTr("Cancel");
                 onClicked: addDialog.cancel()
             }

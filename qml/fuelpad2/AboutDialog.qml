@@ -20,18 +20,17 @@
 
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
-import com.nokia.meego 1.1
-import com.nokia.extras 1.1
+import org.fuelpad.qmlui 1.0
 import "UIConstants.js" as UIConstants
 
-Page {
+FPPage {
     tools: commonTools
 
     function open() {
         aboutDialog.open()
     }
 
-    Dialog {
+    FPDialog {
         id: aboutDialog
 
         width: parent.width
@@ -72,10 +71,10 @@ Page {
             }
         }
 
-        buttons: ButtonRow {
-            style: ButtonStyle { }
+        buttons: FPButtonRow {
+            style: FPButtonStyle { }
             anchors.horizontalCenter: parent.horizontalCenter
-            Button {
+            FPButton {
                 text: qsTr("Close")
                 onClicked: aboutDialog.accept()
             }

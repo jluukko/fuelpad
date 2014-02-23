@@ -20,11 +20,10 @@
 
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
-import com.nokia.meego 1.1
-import com.nokia.extras 1.1
+import org.fuelpad.qmlui 1.0
 import "UIConstants.js" as UIConstants
 
-Page {
+FPPage {
     tools: commonTools
 
     property bool editMode: false
@@ -67,7 +66,7 @@ Page {
         }
     }
 
-    DatePickerDialog {
+    FPDatePickerDialog {
         id: dateDialog
         titleText: qsTr("Event date")
         acceptButtonText: qsTr("OK")
@@ -95,13 +94,13 @@ Page {
                 columns: 2
                 spacing: UIConstants.PADDING_MEDIUM
 
-                ListButton {
+                FPListButton {
                      id: dateButton
                      text: qsTr("Pick date")
                      width: text.width
                      onClicked: launchDateDialogToToday()
                 }
-                TextField {
+                FPTextField {
                     id: dateField
                     placeholderText: qsTr("Add date")
                     maximumLength: 10
@@ -113,7 +112,7 @@ Page {
                     text: qsTr("Km")
                     font.pixelSize: UIConstants.FONT_DEFAULT
                 }
-                TextField {
+                FPTextField {
                     id: kmField
                     placeholderText: qsTr("Add event km")
                     maximumLength: 8
@@ -126,7 +125,7 @@ Page {
                     text: qsTr("Service")
                     font.pixelSize: UIConstants.FONT_DEFAULT
                 }
-                TextField {
+                FPTextField {
                     id: serviceField
                     placeholderText: qsTr("Add service cost")
                     maximumLength: 5
@@ -139,7 +138,7 @@ Page {
                     text: qsTr("Oil")
                     font.pixelSize: UIConstants.FONT_DEFAULT
                 }
-                TextField {
+                FPTextField {
                     id: oilField
                     placeholderText: qsTr("Add oil cost")
                     maximumLength: 5
@@ -152,7 +151,7 @@ Page {
                     text: qsTr("Tires")
                     font.pixelSize: UIConstants.FONT_DEFAULT
                 }
-                TextField {
+                FPTextField {
                     id: tiresField
                     placeholderText: qsTr("Add tires cost")
                     maximumLength: 5
@@ -165,7 +164,7 @@ Page {
                     text: qsTr("Notes")
                     font.pixelSize: UIConstants.FONT_DEFAULT
                 }
-                TextField {
+                FPTextField {
                     id: notesField
                     placeholderText: qsTr("Add notes")
                     maximumLength: 120
@@ -176,14 +175,14 @@ Page {
 
         }
 
-        buttons: ButtonRow {
-            platformStyle: ButtonStyle { }
+        buttons: FPButtonRow {
+            platformStyle: FPButtonStyle { }
             anchors.horizontalCenter: parent.horizontalCenter
-            Button {
+            FPButton {
                 text: editMode ? qsTr("Apply") : qsTr("Add");
                 onClicked: addDialog.accept()
             }
-            Button {
+            FPButton {
                 text: qsTr("Cancel");
                 onClicked: addDialog.cancel()
             }

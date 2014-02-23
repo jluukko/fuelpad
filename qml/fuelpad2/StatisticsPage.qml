@@ -21,12 +21,13 @@
 import CustomComponents 1.0
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
-
-import com.nokia.meego 1.1
+import org.fuelpad.qmlui 1.0
+//import "harmattan/org/fuelpad/qmlui/DialogStatus.js" as DialogStatus
+import "DialogStatus.js" as DialogStatus
 import "UIConstants.js" as UIConstants
 import "CommonFuncs.js" as Funcs
 
-Page {
+FPPage {
     id: statisticsPage
 //    orientationLock: PageOrientation.LockLandscape
     tools: statisticsTools
@@ -61,7 +62,7 @@ Page {
         ListElement { name: QT_TR_NOOP("Monthly average fuel price")}
     }
 
-    SelectionDialog {
+    FPSelectionDialog {
         id: statisticsSelectionDialog
         titleText: "Choose statistics"
         selectedIndex: stattype
@@ -172,7 +173,7 @@ Page {
             top: statisticsHeader.bottom
         }
 
-        Label {
+        FPLabel {
             id: statisticsLabel
             text: statisticsSelectModel.get(stattype).name + " " + year
             platformStyle: MyLabelStyleTitle{}
@@ -194,18 +195,18 @@ Page {
             xMax: 12
         }
 
-        ButtonRow {
+        FPButtonRow {
             id: buttonRow
             exclusive: false
             anchors {
                 horizontalCenter: parent.horizontalCenter
             }
-            Button {
+            FPButton {
                 text: "Previous"
                 width: parent.width/2
                 onClicked: changeYear(-1)
             }
-            Button {
+            FPButton {
                 text: "Next"
                 width: parent.width/2
                 onClicked: changeYear(+1)
@@ -213,25 +214,25 @@ Page {
         }
     }
 
-    ToolBarLayout {
+    FPToolBarLayout {
         id: statisticsTools
 //        visible: false
-        ToolIcon {
+        FPToolIcon {
             iconId: "toolbar-back"
             onClicked: { pageStack.pop(); }
         }
-        ToolIcon {
+        FPToolIcon {
             platformIconId: "toolbar-view-menu"
             anchors.right: (parent === undefined) ? undefined : parent.right
             onClicked: (statisticsMenu.status === DialogStatus.Closed) ? statisticsMenu.open() : statisticsMenu.close()
         }
     }
 
-    Menu {
+    FPMenu {
         id: statisticsMenu
         visualParent: pageStack
-        MenuLayout {
-            MenuItem {
+        FPMenuLayout {
+            FPMenuItem {
                 text: qsTr("Select statistics")
                 onClicked: statisticsSelectionDialog.open()
             }
