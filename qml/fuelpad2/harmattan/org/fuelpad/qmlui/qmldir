@@ -2,6 +2,7 @@ module org.fuelpad.qmlui
 FPButton 1.0 FPButton.qml
 FPButtonRow 1.0 FPButtonRow.qml
 FPButtonStyle 1.0 FPButtonStyle.qml
+FPDatePickerDialog 1.0 FPDatePickerDialog.qml
 FPDialog 1.0 FPDialog.qml
 FPLabel 1.0 FPLabel.qml
 FPLabelStyle 1.0 FPLabelStyle.qml
