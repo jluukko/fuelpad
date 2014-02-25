@@ -27,8 +27,6 @@
 
 #include <qplatformdefs.h> // MEEGO_EDITION_HARMATTAN
 
-#include <iostream>
-
 //-------------------------------------------
 // Qml custom elements
 //-------------------------------------------
@@ -67,19 +65,16 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     QDeclarativeView view;
-//    QObject *object;
 
     qmlRegisterType<Line>("CustomComponents", 1, 0, "Line");
 
+    //-------------------------------------------
+    // Setup database
+    //-------------------------------------------
     DatabaseSqlite sqliteDatabase;
     Database *dataBase;
 
     dataBase = &sqliteDatabase;
-
-    GeocodeNominatim nominatimGeoCode;
-    Geocode *geoCode;
-
-    geoCode = &nominatimGeoCode;
 
 #ifdef MEEGO_EDITION_HARMATTAN
 #warning "Compiling for harmattan"
@@ -91,9 +86,17 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 #endif
     dataBase->openConnection();
 
-    dataBase->setCurrentCar(2);
-    dataBase->setCurrentDriver(1);
+    //-------------------------------------------
+    // Setup geocoding: use OpenStreetMap Nominatim
+    //-------------------------------------------
+    GeocodeNominatim nominatimGeoCode;
+    Geocode *geoCode;
 
+    geoCode = &nominatimGeoCode;
+
+    //-------------------------------------------
+    // Setup C++ UI wrapper and expose its data to QML
+    //-------------------------------------------
     UiWrapper uiWrapper(dataBase, geoCode);
     MySortFilterProxyModel *fuelEntryModel = uiWrapper.getFuelEntryModel();
     RoleItemModel *carEntryModel = uiWrapper.getCarEntryModel();
