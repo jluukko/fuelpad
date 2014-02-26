@@ -73,7 +73,7 @@ QT += sql \
     xml
 
 # Please do not modify the following two lines. Required for deployment.
-include(deployment.pri)
+include(qmlapplicationviewer/qmlapplicationviewer.pri)
 qtcAddDeployment()
 
 OTHER_FILES += \
@@ -89,9 +89,3 @@ OTHER_FILES += \
     qtc_packaging/debian_fremantle/control \
     qtc_packaging/debian_fremantle/compat \
     qtc_packaging/debian_fremantle/changelog
-
-contains(MEEGO_EDITION,harmattan) {
-    icon.files = fuelpad2.png
-    icon.path = /usr/share/icons/hicolor/80x80/apps
-    INSTALLS += icon
-}

@@ -4,7 +4,7 @@ Version=1.0
 Type=Application
 Terminal=false
 Name=Fuelpad2
-Exec=/opt/fuelpad2/bin/fuelpad2
+Exec=/usr/bin/invoker --type=d -s /opt/fuelpad2/bin/fuelpad2
 Icon=/usr/share/icons/hicolor/80x80/apps/fuelpad280.png
 X-Window-Icon=
 X-HildonDesk-ShowInToolbar=true

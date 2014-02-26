@@ -1,7 +1,7 @@
 /*
  * This file is part of Fuelpad.
  *
- * Copyright (C) 2007-2012 Julius Luukko <julle.luukko@quicknet.inet.fi>
+ * Copyright (C) 2007-2012,2014 Julius Luukko <julle.luukko@quicknet.inet.fi>
  *
  * Fuelpad is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,8 @@
  */
 
 #include <QtGui/QApplication>
-#include <QtDeclarative/QDeclarativeView>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeContext>
+#include <QtDeclarative>
+#include "qmlapplicationviewer.h"
 #include <QGraphicsObject>
 #include <QDir>
 
@@ -41,30 +40,10 @@
 #include "geocode.h"
 #include "geocodenominatim.h"
 
-QString adjustPath(const QString &path)
-{
-#ifdef Q_OS_UNIX
-#ifdef Q_OS_MAC
-    if (!QDir::isAbsolutePath(path))
-        return QCoreApplication::applicationDirPath()
-                + QLatin1String("/../Resources/") + path;
-#else
-    QString pathInInstallDir;
-    const QString applicationDirPath = QCoreApplication::applicationDirPath();
-    pathInInstallDir = QString::fromAscii("%1/../%2").arg(applicationDirPath, path);
-
-    if (QFileInfo(pathInInstallDir).exists())
-        return pathInInstallDir;
-#endif
-#endif
-    return path;
-}
-
-
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
-    QDeclarativeView view;
+    QScopedPointer<QApplication> app(createApplication(argc, argv));
+    QmlApplicationViewer viewer;
 
     qmlRegisterType<Line>("CustomComponents", 1, 0, "Line");
 
@@ -106,35 +85,22 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     PlotDataModel *statisticsModel = uiWrapper.getStatisticsModel();
 
     // From C++ to Qml
-    view.rootContext()->setContextProperty("fuelModel", fuelEntryModel);
-    view.rootContext()->setContextProperty("carModel", carEntryModel);
-    view.rootContext()->setContextProperty("driverModel", driverEntryModel);
-    view.rootContext()->setContextProperty("alarmTypeModel", alarmEntryModel);
-    view.rootContext()->setContextProperty("alarmEventModel", alarmEventModel);
-    view.rootContext()->setContextProperty("statisticsModel", statisticsModel);
-    view.rootContext()->setContextProperty("applicationData", &uiWrapper);
+    viewer.rootContext()->setContextProperty("fuelModel", fuelEntryModel);
+    viewer.rootContext()->setContextProperty("carModel", carEntryModel);
+    viewer.rootContext()->setContextProperty("driverModel", driverEntryModel);
+    viewer.rootContext()->setContextProperty("alarmTypeModel", alarmEntryModel);
+    viewer.rootContext()->setContextProperty("alarmEventModel", alarmEventModel);
+    viewer.rootContext()->setContextProperty("statisticsModel", statisticsModel);
+    viewer.rootContext()->setContextProperty("applicationData", &uiWrapper);
 
     // Where to find the UI abstraction layer
-    view.engine()->addImportPath(QUrl::fromLocalFile(adjustPath("qml/fuelpad2/harmattan")).path());
+    viewer.addImportPath("qml/fuelpad2/harmattan");
+    qDebug("qml import path: %s",viewer.engine()->importPathList().join(":").toStdString().c_str());
+    viewer.setOrientation(QmlApplicationViewer::ScreenOrientationAuto);
 
     // qml source
-    view.setSource(QUrl::fromLocalFile(adjustPath("qml/fuelpad2/main.qml")));
+    viewer.setMainQmlFile(QLatin1String("qml/fuelpad2/main.qml"));
+    viewer.showExpanded();
 
-    qDebug("qml import path: %s",view.engine()->importPathList().join(":").toStdString().c_str());
-
-    // qml quit signal to c++ signal?
-    QObject::connect(view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
-
-    view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
-
-    // show the qml view
-#if defined(Q_OS_SYMBIAN) || defined(MEEGO_EDITION_HARMATTAN) || defined(Q_WS_SIMULATOR)
-    view.showFullScreen();
-#elif defined(Q_WS_MAEMO_5)
-    view.showMaximized();
-#else
-    view.show();
-#endif
-
-    return app.exec();
+    return app->exec();
 }
