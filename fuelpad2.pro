@@ -30,7 +30,7 @@ CONFIG += qdeclarative-boostable
 # Add dependency to Symbian components
 # CONFIG += qt-components
 
-SOURCES += main.cpp
+SOURCES += harmattan/main.cpp
 FORMS +=
 QT += declarative
 
