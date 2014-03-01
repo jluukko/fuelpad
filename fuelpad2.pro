@@ -30,49 +30,11 @@ CONFIG += qdeclarative-boostable
 # Add dependency to Symbian components
 # CONFIG += qt-components
 
-SOURCES += main.cpp \
-    engine/database.cpp \
-    engine/databasesqlite.cpp \
-    engine/fuelrecord.cpp \
-    engine/datafield.cpp \
-    engine/unitsystem.cpp \
-    engine/cardata.cpp \
-    engine/userconfig.cpp \
-    engine/driverdata.cpp \
-    engine/roleitemmodel.cpp \
-    engine/uiwrapper.cpp \
-    engine/mysortfilterproxymodel.cpp \
-    engine/line.cpp \
-    engine/alarmtypedata.cpp \
-    engine/alarmeventdata.cpp \
-    engine/geocode.cpp \
-    engine/geocodenominatim.cpp \
-    engine/plotdatamodel.cpp
-HEADERS += \
-    engine/database.h \
-    engine/databasesqlite.h \
-    engine/fuelrecord.h \
-    engine/datafield.h \
-    engine/unitsystem.h \
-    engine/cardata.h \
-    engine/userconfig.h \
-    engine/driverdata.h \
-    engine/roleitemmodel.h \
-    engine/uiwrapper.h \
-    engine/mysortfilterproxymodel.h \
-    engine/line.h \
-    engine/alarmtypedata.h \
-    engine/alarmeventdata.h \
-    engine/geocode.h \
-    engine/geocodenominatim.h \
-    engine/plotdatamodel.h
+SOURCES += main.cpp
 FORMS +=
-QT += sql \
-    declarative \
-    network \
-    xml
+QT += declarative
 
-INCLUDEPATH += engine
+include(engine/engine.pri)
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)

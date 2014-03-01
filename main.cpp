@@ -21,77 +21,18 @@
 #include <QtGui/QApplication>
 #include <QtDeclarative>
 #include "qmlapplicationviewer.h"
-#include <QGraphicsObject>
-#include <QDir>
-
-#include <qplatformdefs.h> // MEEGO_EDITION_HARMATTAN
-
-//-------------------------------------------
-// Qml custom elements
-//-------------------------------------------
-#include "line.h"
 
 //-------------------------------------------
 // Application includes
 //-------------------------------------------
-#include "uiwrapper.h"
-#include "database.h"
-#include "databasesqlite.h"
-#include "geocode.h"
-#include "geocodenominatim.h"
+#include "uiengine.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     QScopedPointer<QApplication> app(createApplication(argc, argv));
     QmlApplicationViewer viewer;
 
-    qmlRegisterType<Line>("CustomComponents", 1, 0, "Line");
-
-    //-------------------------------------------
-    // Setup database
-    //-------------------------------------------
-    DatabaseSqlite sqliteDatabase;
-    Database *dataBase;
-
-    dataBase = &sqliteDatabase;
-
-#ifdef MEEGO_EDITION_HARMATTAN
-#warning "Compiling for harmattan"
-    QDir dbFileDir = QDir("/home/user");
-    dbFileDir.mkdir(QString(".fuelpad"));
-    dataBase->setFileName((dbFileDir.path() + QString("/fuelpad.db")).toStdString());
-#else
-    dataBase->setFileName("fuelpad.db");
-#endif
-    dataBase->openConnection();
-
-    //-------------------------------------------
-    // Setup geocoding: use OpenStreetMap Nominatim
-    //-------------------------------------------
-    GeocodeNominatim nominatimGeoCode;
-    Geocode *geoCode;
-
-    geoCode = &nominatimGeoCode;
-
-    //-------------------------------------------
-    // Setup C++ UI wrapper and expose its data to QML
-    //-------------------------------------------
-    UiWrapper uiWrapper(dataBase, geoCode);
-    MySortFilterProxyModel *fuelEntryModel = uiWrapper.getFuelEntryModel();
-    RoleItemModel *carEntryModel = uiWrapper.getCarEntryModel();
-    RoleItemModel *driverEntryModel = uiWrapper.getDriverEntryModel();
-    MySortFilterProxyModel *alarmEntryModel = uiWrapper.getAlarmEntryModel();
-    MySortFilterProxyModel *alarmEventModel = uiWrapper.getAlarmEventModel();
-    PlotDataModel *statisticsModel = uiWrapper.getStatisticsModel();
-
-    // From C++ to Qml
-    viewer.rootContext()->setContextProperty("fuelModel", fuelEntryModel);
-    viewer.rootContext()->setContextProperty("carModel", carEntryModel);
-    viewer.rootContext()->setContextProperty("driverModel", driverEntryModel);
-    viewer.rootContext()->setContextProperty("alarmTypeModel", alarmEntryModel);
-    viewer.rootContext()->setContextProperty("alarmEventModel", alarmEventModel);
-    viewer.rootContext()->setContextProperty("statisticsModel", statisticsModel);
-    viewer.rootContext()->setContextProperty("applicationData", &uiWrapper);
+    UiEngine uiEngine(viewer);
 
     // Where to find the UI abstraction layer
     viewer.addImportPath("qml/fuelpad2/harmattan");
