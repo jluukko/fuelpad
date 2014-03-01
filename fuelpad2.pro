@@ -31,46 +31,48 @@ CONFIG += qdeclarative-boostable
 # CONFIG += qt-components
 
 SOURCES += main.cpp \
-    database.cpp \
-    databasesqlite.cpp \
-    fuelrecord.cpp \
-    datafield.cpp \
-    unitsystem.cpp \
-    cardata.cpp \
-    userconfig.cpp \
-    driverdata.cpp \
-    roleitemmodel.cpp \
-    uiwrapper.cpp \
-    mysortfilterproxymodel.cpp \
-    line.cpp \
-    alarmtypedata.cpp \
-    alarmeventdata.cpp \
-    geocode.cpp \
-    geocodenominatim.cpp \
-    plotdatamodel.cpp
+    engine/database.cpp \
+    engine/databasesqlite.cpp \
+    engine/fuelrecord.cpp \
+    engine/datafield.cpp \
+    engine/unitsystem.cpp \
+    engine/cardata.cpp \
+    engine/userconfig.cpp \
+    engine/driverdata.cpp \
+    engine/roleitemmodel.cpp \
+    engine/uiwrapper.cpp \
+    engine/mysortfilterproxymodel.cpp \
+    engine/line.cpp \
+    engine/alarmtypedata.cpp \
+    engine/alarmeventdata.cpp \
+    engine/geocode.cpp \
+    engine/geocodenominatim.cpp \
+    engine/plotdatamodel.cpp
 HEADERS += \
-    database.h \
-    databasesqlite.h \
-    fuelrecord.h \
-    datafield.h \
-    unitsystem.h \
-    cardata.h \
-    userconfig.h \
-    driverdata.h \
-    roleitemmodel.h \
-    uiwrapper.h \
-    mysortfilterproxymodel.h \
-    line.h \
-    alarmtypedata.h \
-    alarmeventdata.h \
-    geocode.h \
-    geocodenominatim.h \
-    plotdatamodel.h
+    engine/database.h \
+    engine/databasesqlite.h \
+    engine/fuelrecord.h \
+    engine/datafield.h \
+    engine/unitsystem.h \
+    engine/cardata.h \
+    engine/userconfig.h \
+    engine/driverdata.h \
+    engine/roleitemmodel.h \
+    engine/uiwrapper.h \
+    engine/mysortfilterproxymodel.h \
+    engine/line.h \
+    engine/alarmtypedata.h \
+    engine/alarmeventdata.h \
+    engine/geocode.h \
+    engine/geocodenominatim.h \
+    engine/plotdatamodel.h
 FORMS +=
 QT += sql \
     declarative \
     network \
     xml
+
+INCLUDEPATH += engine
 
 # Please do not modify the following two lines. Required for deployment.
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
