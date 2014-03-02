@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+X-Nemo-Application-Type=silica-qt5
+Name=fuelpad2-sailfish
+Icon=fuelpad2-sailfish
+Exec=fuelpad2-sailfish
+
