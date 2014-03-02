@@ -38,11 +38,15 @@ public:
       */
     RoleItemModel(const QHash<int, QByteArray> &roleNames);
 
-
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    QHash<int, QByteArray> roleNames() const;
+#endif
     // Extract data from items in model as variant map
     // e.g. { "bookTitle" : QVariant("Bible"), "year" : QVariant(-2000) }
     static QVariantMap getModelData(const QAbstractItemModel *mdl, int row);
 
+private:
+    QHash<int, QByteArray> m_roleNames;
 };
 
 #endif // ROLEITEMMODEL_H

@@ -51,16 +51,25 @@ double PlotData::yc(void) const
 PlotDataModel::PlotDataModel(QObject *parent)
     : QAbstractListModel(parent)
 {
-    QHash<int, QByteArray> roleNames;
-    roleNames[PlotData::xRole] =  "xc";
-    roleNames[PlotData::yRole] = "yc";
+    m_roleNames[PlotData::xRole] =  "xc";
+    m_roleNames[PlotData::yRole] = "yc";
 
-    setRoleNames(roleNames);
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    setRoleNames(m_roleNames);
+#endif
 }
 
 PlotDataModel::~PlotDataModel(void)
 {
 }
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+QHash<int, QByteArray> PlotDataModel::roleNames() const
+{
+    return m_roleNames;
+}
+#endif
+
 
 int PlotDataModel::count(void) const
 {

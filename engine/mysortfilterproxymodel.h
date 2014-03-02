@@ -29,6 +29,10 @@ class MySortFilterProxyModel : public QSortFilterProxyModel
     Q_OBJECT
 public:
     explicit MySortFilterProxyModel(QObject *parent, const QHash<int, QByteArray> &roleNames);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    QHash<int, QByteArray> roleNames() const;
+#endif
+
     void beginResetModel();
     void endResetModel();
 
@@ -39,7 +43,10 @@ protected:
 signals:
     
 public slots:
-    
+
+private:
+    QHash<int, QByteArray> m_roleNames;
+
 };
 
 #endif // MYSORTFILTERPROXYMODEL_H

@@ -58,6 +58,10 @@ public:
     PlotDataModel(QObject *parent = 0);
     virtual ~PlotDataModel(void);
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    QHash<int, QByteArray> roleNames() const;
+#endif
+
     int count(void) const;
 
     int rowCount ( const QModelIndex & parent = QModelIndex() ) const;
@@ -78,6 +82,7 @@ public:
 
 private:
      QList<PlotData> m_data;
+     QHash<int, QByteArray> m_roleNames;
 
 signals:
     void countChanged();

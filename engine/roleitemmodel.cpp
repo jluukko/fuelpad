@@ -69,8 +69,18 @@ ctx->setContextProperty("mdlLinks", m_linksmodel);
 
 RoleItemModel::RoleItemModel(const QHash<int, QByteArray> &roleNames)
 {
-    setRoleNames(roleNames);
+    m_roleNames = roleNames;
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+    setRoleNames(m_roleNames);
+#endif
 }
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+QHash<int, QByteArray> RoleItemModel::roleNames() const
+{
+    return m_roleNames;
+}
+#endif
 
 QVariantMap RoleItemModel::getModelData(const QAbstractItemModel* mdl, int row)
 {
