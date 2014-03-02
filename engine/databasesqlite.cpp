@@ -39,7 +39,7 @@
 
 bool DatabaseSqlite::create_database(void)
 {
-    bool failure = FALSE;
+    bool failure = false;
 
     QSqlQuery query;
 
@@ -132,7 +132,7 @@ bool DatabaseSqlite::create_database(void)
 
 bool DatabaseSqlite::create_drivinglog_tables(void)
 {
-    bool failure = FALSE;
+    bool failure = false;
 
     QSqlQuery query;
 
@@ -173,7 +173,7 @@ bool DatabaseSqlite::create_drivinglog_tables(void)
 
 bool DatabaseSqlite::add_location_fields(void)
 {
-    bool failure = FALSE;
+    bool failure = false;
 
     QSqlQuery query;
 
