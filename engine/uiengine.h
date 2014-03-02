@@ -21,10 +21,6 @@
 #ifndef UIENGINE_H
 #define UIENGINE_H
 
-#include <QtDeclarative/QDeclarativeView>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeContext>
-
 #include "uiwrapper.h"
 #include "database.h"
 #include "databasesqlite.h"
@@ -34,8 +30,17 @@
 class UiEngine
 {
 public:
-    UiEngine(QDeclarativeView &viewer);
+    UiEngine(void);
     ~UiEngine(void);
+
+    UiWrapper* getApplicationData(void);
+    MySortFilterProxyModel *getFuelEntryModel(void);
+    RoleItemModel *getCarEntryModel(void);
+    RoleItemModel *getDriverEntryModel(void);
+    MySortFilterProxyModel *getAlarmEntryModel(void);
+    MySortFilterProxyModel *getAlarmEventModel(void);
+    PlotDataModel *getStatisticsModel(void);
+
 private:
     DatabaseSqlite sqliteDatabase;
     Database *dataBase;

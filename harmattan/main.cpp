@@ -32,7 +32,16 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QScopedPointer<QApplication> app(createApplication(argc, argv));
     QmlApplicationViewer viewer;
 
-    UiEngine uiEngine(viewer);
+    UiEngine uiEngine;
+
+    // From C++ to Qml
+    viewer.rootContext()->setContextProperty("fuelModel", uiEngine.getFuelEntryModel());
+    viewer.rootContext()->setContextProperty("carModel", uiEngine.getCarEntryModel());
+    viewer.rootContext()->setContextProperty("driverModel", uiEngine.getDriverEntryModel());
+    viewer.rootContext()->setContextProperty("alarmTypeModel", uiEngine.getAlarmEntryModel());
+    viewer.rootContext()->setContextProperty("alarmEventModel", uiEngine.getAlarmEventModel());
+    viewer.rootContext()->setContextProperty("statisticsModel", uiEngine.getStatisticsModel());
+    viewer.rootContext()->setContextProperty("applicationData", uiEngine.getApplicationData());
 
     // Where to find the UI abstraction layer
     viewer.addImportPath("qml/fuelpad2/harmattan");

@@ -29,7 +29,7 @@
 
 #include <qplatformdefs.h> // MEEGO_EDITION_HARMATTAN
 
-UiEngine::UiEngine(QDeclarativeView &viewer)
+UiEngine::UiEngine(void)
 {
     qmlRegisterType<Line>("CustomComponents", 1, 0, "Line");
 
@@ -54,18 +54,44 @@ UiEngine::UiEngine(QDeclarativeView &viewer)
     alarmEventModel = uiWrapper->getAlarmEventModel();
     statisticsModel = uiWrapper->getStatisticsModel();
 
-    // From C++ to Qml
-    viewer.rootContext()->setContextProperty("fuelModel", fuelEntryModel);
-    viewer.rootContext()->setContextProperty("carModel", carEntryModel);
-    viewer.rootContext()->setContextProperty("driverModel", driverEntryModel);
-    viewer.rootContext()->setContextProperty("alarmTypeModel", alarmEntryModel);
-    viewer.rootContext()->setContextProperty("alarmEventModel", alarmEventModel);
-    viewer.rootContext()->setContextProperty("statisticsModel", statisticsModel);
-    viewer.rootContext()->setContextProperty("applicationData", uiWrapper);
-
 }
 
 UiEngine::~UiEngine(void)
 {
     delete uiWrapper;
+}
+
+UiWrapper* UiEngine::getApplicationData(void)
+{
+    return uiWrapper;
+}
+
+MySortFilterProxyModel* UiEngine::getFuelEntryModel(void)
+{
+    return fuelEntryModel;
+}
+
+RoleItemModel* UiEngine::getCarEntryModel(void)
+{
+    return carEntryModel;
+}
+
+RoleItemModel* UiEngine::getDriverEntryModel(void)
+{
+    return driverEntryModel;
+}
+
+MySortFilterProxyModel* UiEngine::getAlarmEntryModel(void)
+{
+    return alarmEntryModel;
+}
+
+MySortFilterProxyModel* UiEngine::getAlarmEventModel(void)
+{
+    return alarmEventModel;
+}
+
+PlotDataModel* UiEngine::getStatisticsModel(void)
+{
+    return statisticsModel;
 }

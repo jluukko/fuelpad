@@ -34,10 +34,19 @@ int main(int argc, char *argv[])
     QGuiApplication *app = SailfishApp::application(argc, argv);
     QQuickView *view = SailfishApp::createView();
 
-    UiEngine uiEngine(*view);
+    UiEngine uiEngine;
 
-    view->addImportPath("qml/fuelpad2/sailfish");
-    qDebug("qml import path: %s",viewer.engine()->importPathList().join(":").toStdString().c_str());
+    // From C++ to Qml
+    view->rootContext()->setContextProperty("fuelModel", uiEngine.getFuelEntryModel());
+    view->rootContext()->setContextProperty("carModel", uiEngine.getCarEntryModel());
+    view->rootContext()->setContextProperty("driverModel", uiEngine.getDriverEntryModel());
+    view->rootContext()->setContextProperty("alarmTypeModel", uiEngine.getAlarmEntryModel());
+    view->rootContext()->setContextProperty("alarmEventModel", uiEngine.getAlarmEventModel());
+    view->rootContext()->setContextProperty("statisticsModel", uiEngine.getStatisticsModel());
+    view->rootContext()->setContextProperty("applicationData", uiEngine.getApplicationData());
+
+    view->engine()->addImportPath("qml/fuelpad2/sailfish");
+    qDebug("qml import path: %s",view->engine()->importPathList().join(":").toStdString().c_str());
 
     view->setSource(SailfishApp::pathTo("qml/sailfish-moro.qml"));
     view->showFullScreen();
