@@ -10,7 +10,10 @@ TARGET = fuelpad2-sailfish
 
 CONFIG += sailfishapp
 
-SOURCES += sailfish/main.cpp
+SOURCES += sailfish/main.cpp \
+   sailfish/line.cpp
+
+INCLUDEPATH += sailfish
 
 include(engine/engine.pri)
 

@@ -75,7 +75,7 @@ symbian {
     }
 } else:unix {
     maemo5 {
-        desktopfile.files = $${TARGET}_maemo5.desktop
+        desktopfile.files = $${TARGET}.desktop
         desktopfile.path = /usr/share/applications/hildon
         icon.files = $${TARGET}64.png
         icon.path = /usr/share/icons/hicolor/64x64/apps

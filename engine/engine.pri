@@ -10,7 +10,6 @@ SOURCES += \
     $$PWD/roleitemmodel.cpp \
     $$PWD/uiwrapper.cpp \
     $$PWD/mysortfilterproxymodel.cpp \
-    $$PWD/line.cpp \
     $$PWD/alarmtypedata.cpp \
     $$PWD/alarmeventdata.cpp \
     $$PWD/geocode.cpp \
@@ -29,7 +28,6 @@ HEADERS += \
     $$PWD/roleitemmodel.h \
     $$PWD/uiwrapper.h \
     $$PWD/mysortfilterproxymodel.h \
-    $$PWD/line.h \
     $$PWD/alarmtypedata.h \
     $$PWD/alarmeventdata.h \
     $$PWD/geocode.h \
