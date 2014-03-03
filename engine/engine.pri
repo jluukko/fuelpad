@@ -34,7 +34,7 @@ HEADERS += \
     $$PWD/geocodenominatim.h \
     $$PWD/plotdatamodel.h \
     $$PWD/uiengine.h
-QT += declarative \
+QT += \
     sql \
     network \
     xml
