@@ -5,7 +5,7 @@ Line::Line(QQuickPaintedItem *parent) :
             m_color(Qt::black), m_penWidth(1)
     {
         // Important, otherwise the paint method is never called
-        setFlag(QGraphicsItem::ItemHasNoContents, false);
+//        setFlag(QGraphicsItem::ItemHasNoContents, false);
     }
  
 void Line::paint(QPainter *painter)

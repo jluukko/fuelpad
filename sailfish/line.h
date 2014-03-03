@@ -10,6 +10,8 @@
 #define LINE_H
  
 #include <QQuickPaintedItem>
+#include <QPainter>
+#include <QPen>
  
 class Line : public QQuickPaintedItem
 {
