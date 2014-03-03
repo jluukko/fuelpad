@@ -20,19 +20,12 @@
 
 #include "uiengine.h"
 
-//-------------------------------------------
-// Qml custom elements
-//-------------------------------------------
-#include "line.h"
-
 #include <QDir>
 
 #include <qplatformdefs.h> // MEEGO_EDITION_HARMATTAN
 
 UiEngine::UiEngine(void)
 {
-    qmlRegisterType<Line>("CustomComponents", 1, 0, "Line");
-
     dataBase = &sqliteDatabase;
     geoCode = &nominatimGeoCode;
 

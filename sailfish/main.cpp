@@ -25,6 +25,11 @@
 #include <sailfishapp.h>
 
 //-------------------------------------------
+// Qml custom elements
+//-------------------------------------------
+#include "line.h"
+
+//-------------------------------------------
 // Application includes
 //-------------------------------------------
 #include "uiengine.h"
@@ -35,6 +40,8 @@ int main(int argc, char *argv[])
     QQuickView *view = SailfishApp::createView();
 
     UiEngine uiEngine;
+
+    qmlRegisterType<Line>("CustomComponents", 1, 0, "Line");
 
     // From C++ to Qml
     view->rootContext()->setContextProperty("fuelModel", uiEngine.getFuelEntryModel());

@@ -34,6 +34,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     UiEngine uiEngine;
 
+    qmlRegisterType<Line>("CustomComponents", 1, 0, "Line");
+
     // From C++ to Qml
     viewer.rootContext()->setContextProperty("fuelModel", uiEngine.getFuelEntryModel());
     viewer.rootContext()->setContextProperty("carModel", uiEngine.getCarEntryModel());
