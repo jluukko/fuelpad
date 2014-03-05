@@ -52,8 +52,7 @@ int main(int argc, char *argv[])
     view->rootContext()->setContextProperty("statisticsModel", uiEngine.getStatisticsModel());
     view->rootContext()->setContextProperty("applicationData", uiEngine.getApplicationData());
 
-    view->engine()->addImportPath("qml/fuelpad2/sailfish");
-    qDebug("qml import path: %s",view->engine()->importPathList().join(":").toStdString().c_str());
+    view->engine()->addImportPath(SailfishApp::pathTo("qml/fuelpad2/sailfish").url());
 
     view->setSource(SailfishApp::pathTo("qml/fuelpad2/main.qml"));
     view->showFullScreen();
