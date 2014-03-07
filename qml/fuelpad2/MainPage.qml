@@ -20,7 +20,7 @@
 
 import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
-import QtMobility.location 1.2
+import org.fuelpad.components 1.0
 import "UIConstants.js" as UIConstants
 import "CommonFuncs.js" as Funcs
 import "CommonUnits.js" as Units
@@ -36,7 +36,7 @@ FPPage {
         titleBackgroundColor: UIConstants.COLOR_PAGEHEADER_BACKGROUND
     }
 
-    PositionSource {
+    FPPositionSource {
         id: positionSource
         updateInterval: 1000
         active: false
