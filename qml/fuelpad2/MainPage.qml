@@ -69,7 +69,7 @@ FPPage {
 
     Component {
         id: carDelegate
-        Rectangle {
+        Item {
             id: carDelegateRec
             width: parent.width
             height: carNameText.height*1.5 + grid.height
@@ -147,13 +147,13 @@ FPPage {
                         text: lastyearconsumption.toFixed(1) + " " + Units.getConsumeUnit()
                     }
                 }
-            }
-            Rectangle {
-                id: itemSeperator
-                height: 2
-                width: parent.width
-//                color: UIConstants.COLOR_INVERTED_BACKGROUND
-                color: appTheme.separatorColor
+                Rectangle {
+                    id: itemSeperator
+                    height: 2
+                    width: carListView.width
+    //                color: UIConstants.COLOR_INVERTED_BACKGROUND
+                    color: appTheme.separatorColor
+                }
             }
         }
     }

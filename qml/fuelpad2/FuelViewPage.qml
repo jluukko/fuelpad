@@ -65,7 +65,7 @@ FPPage {
 
     Component {
         id: delegate
-            Rectangle {
+            Item {
                 id: delegateRec
                 height: dateText.height*1.5 + + grid.height
                 width: parent.width
@@ -235,12 +235,12 @@ FPPage {
                         }
                     }
 
-            }
-            Rectangle {
-                id: itemSeperator
-                height: 2
-                width: parent.width
-                color: appTheme.separatorColor
+                    Rectangle {
+                        id: itemSeperator
+                        height: 2
+                        width: listView.width
+                        color: appTheme.separatorColor
+                    }
             }
 
         }
