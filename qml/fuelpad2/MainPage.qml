@@ -29,7 +29,7 @@ FPPage {
     id: mainPage
     tools: commonTools
 
-    PageHeader {
+    FPPageHeader {
         id: applicationHeader
         title: "Fuelpad"
         titleForegroundColor: UIConstants.COLOR_PAGEHEADER_FOREGROUND
