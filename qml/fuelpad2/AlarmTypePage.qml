@@ -18,10 +18,8 @@
  *
  */
 
-// import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
-import "UIConstants.js" as UIConstants
 import "CommonFuncs.js" as Funcs
 import "CommonUnits.js" as Units
 
@@ -36,11 +34,9 @@ FPPage {
         pageStack.push(Funcs.loadComponent("AlarmEventPage.qml",mainPage, {"alarmId": dbid, "alarmName": alarmname}));
     }
 
-    PageHeader {
+    FPPageHeader {
         id: applicationHeader
         title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
-        titleForegroundColor: UIConstants.COLOR_PAGEHEADER_FOREGROUND
-        titleBackgroundColor: UIConstants.COLOR_PAGEHEADER_BACKGROUND
     }
 
     ListView {
@@ -52,8 +48,8 @@ FPPage {
             left: parent.left
             right: parent.right
             bottom: parent.bottom
-            leftMargin: UIConstants.DEFAULT_MARGIN
-            rightMargin: UIConstants.DEFAULT_MARGIN
+            leftMargin: appTheme.paddingLarge
+            rightMargin: appTheme.paddingLarge
         }
         clip: true
     }
@@ -91,7 +87,7 @@ FPPage {
                     anchors {
                         right: parent.right
                         verticalCenter: parent.verticalCenter
-                        rightMargin: UIConstants.SCROLLDECORATOR_SHORT_MARGIN
+                        rightMargin: appTheme.scrollDecoratorMarginShort
                     }
 
                     smooth: true
@@ -194,7 +190,7 @@ FPPage {
                 id: itemSeperator
                 height: 2
                 width: parent.width
-                color: UIConstants.COLOR_INVERTED_BACKGROUND
+                color: appTheme.separatorColor
             }
 
         }

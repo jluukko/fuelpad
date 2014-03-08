@@ -1,7 +1,7 @@
 /*
  * This file is part of Fuelpad.
  *
- * Copyright (C) 2007-2012 Julius Luukko <julle.luukko@quicknet.inet.fi>
+ * Copyright (C) 2007-2012,2014 Julius Luukko <julle.luukko@quicknet.inet.fi>
  *
  * Fuelpad is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
-import "UIConstants.js" as UIConstants
 
 FPPage {
     tools: commonTools
@@ -72,22 +71,22 @@ FPPage {
             id: addDialogData
             anchors {
                 fill: parent
-                leftMargin: UIConstants.DEFAULT_MARGIN
-                rightMargin: UIConstants.DEFAULT_MARGIN
+                leftMargin: appTheme.paddingLarge
+                rightMargin: appTheme.paddingLarge
             }
             contentWidth: addDialogGrid.width
             contentHeight: addDialogGrid.height
             Grid {
                 id: addDialogGrid
                 columns: 1
-                spacing: UIConstants.PADDING_MEDIUM
+                spacing: appTheme.paddingMedium
                 Text {
                     text: qsTr("Mark")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
+                    font.pixelSize: appTheme.fontSizeMedium
                 }
                 FPTextField {
                     id: markField
-                    width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
+                    width: addDialog.width-2*appTheme.paddingLarge
                     placeholderText: qsTr("My car mark")
                     maximumLength: 40
                     validator: RegExpValidator{}
@@ -95,11 +94,11 @@ FPPage {
                 }
                 Text {
                     text: qsTr("Model")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
+                    font.pixelSize: appTheme.fontSizeMedium
                 }
                 FPTextField {
                     id: modelField
-                    width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
+                    width: addDialog.width-2*appTheme.paddingLarge
                     placeholderText: qsTr("My car model")
                     maximumLength: 40
                     validator: RegExpValidator{}
@@ -107,11 +106,11 @@ FPPage {
                 }
                 Text {
                     text: qsTr("Model year")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
+                    font.pixelSize: appTheme.fontSizeMedium
                 }
                 FPTextField {
                     id: yearField
-                    width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
+                    width: addDialog.width-2*appTheme.paddingLarge
                     placeholderText: qsTr("My car model year")
                     maximumLength: 4
                     validator: IntValidator{bottom: 1800; top: 2100}
@@ -120,11 +119,11 @@ FPPage {
                 }
                 Text {
                     text: qsTr("Registration number")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
+                    font.pixelSize: appTheme.fontSizeMedium
                 }
                 FPTextField {
                     id: regnumField
-                    width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
+                    width: addDialog.width-2*appTheme.paddingLarge
                     placeholderText: qsTr("My car registration number")
                     maximumLength: 40
                     validator: RegExpValidator{}
@@ -132,11 +131,11 @@ FPPage {
                 }
                 Text {
                     text: qsTr("Notes")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
+                    font.pixelSize: appTheme.fontSizeMedium
                 }
                 FPTextField {
                     id: notesField
-                    width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
+                    width: addDialog.width-2*appTheme.paddingLarge
                     placeholderText: qsTr("Add notes")
                     maximumLength: 120
                     validator: RegExpValidator{}

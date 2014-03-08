@@ -18,17 +18,15 @@
  *
  */
 
-// import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import "."
-
-import "UIConstants.js" as UIConstants
+import "FPApplicationTheme.js" as AppTheme
 
 Rectangle {
     id: pageHeader
     property alias title: title.text
-    property alias titleForegroundColor: title.color
-    property alias titleBackgroundColor: pageHeader.color
+
+    color: AppTheme.headerColorBackground
 
     anchors {
         top: parent.top
@@ -36,16 +34,17 @@ Rectangle {
         right: parent.right
     }
 
-    height: UIConstants.HEADER_DEFAULT_HEIGHT_PORTRAIT
+    height: AppTheme.headerHeightPortrait
 
     FPLabel {
         id: title
         anchors {
             left: parent.left
             verticalCenter: parent.verticalCenter
-            leftMargin: UIConstants.MARGIN_XLARGE
-            topMargin: -UIConstants.DEFAULT_MARGIN
+            leftMargin: AppTheme.paddingLarge
+            topMargin: -AppTheme.paddingLarge
         }
-        font.pixelSize: UIConstants.FONT_XLARGE
+        font.pixelSize: AppTheme.fontSizeExtraLarge
+        color: AppTheme.headerColorForeground
     }
 }

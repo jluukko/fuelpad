@@ -1,7 +1,7 @@
 /*
  * This file is part of Fuelpad.
  *
- * Copyright (C) 2007-2012 Julius Luukko <julle.luukko@quicknet.inet.fi>
+ * Copyright (C) 2007-2012,2014 Julius Luukko <julle.luukko@quicknet.inet.fi>
  *
  * Fuelpad is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
-import "UIConstants.js" as UIConstants
 
 Item {
     id: touchSelector
@@ -32,15 +31,20 @@ Item {
 
     signal selected(int selectedIndex)
 
+    FPApplicationTheme {
+        id: appTheme
+    }
+
     height: content.height
     width: parent.width
 
     Rectangle {
         id: background
         anchors.fill: touchSelector
-        anchors.margins: -UIConstants.DEFAULT_MARGIN
+        anchors.margins: -appTheme.paddingLarge
         visible: mouseArea.pressed
-        color: UIConstants.COLOR_SELECT
+//        color: UIConstants.COLOR_SELECT
+        color: appTheme.highlightColor
     }
 
     FPSelectionDialog {

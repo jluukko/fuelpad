@@ -1,4 +1,5 @@
 module org.fuelpad.qmlui
+FPApplicationTheme 1.0 FPApplicationTheme.qml
 FPButton 1.0 FPButton.qml
 FPButtonRow 1.0 FPButtonRow.qml
 FPButtonStyle 1.0 FPButtonStyle.qml

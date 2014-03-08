@@ -1,7 +1,7 @@
 /*
  * This file is part of Fuelpad.
  *
- * Copyright (C) 2007-2012 Julius Luukko <julle.luukko@quicknet.inet.fi>
+ * Copyright (C) 2007-2012,2014 Julius Luukko <julle.luukko@quicknet.inet.fi>
  *
  * Fuelpad is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
 import org.fuelpad.components 1.0
-import "UIConstants.js" as UIConstants
 import "CommonFuncs.js" as Funcs
 import "CommonUnits.js" as Units
 
@@ -29,11 +28,13 @@ FPPage {
     id: mainPage
     tools: commonTools
 
+    FPApplicationTheme {
+        id: appTheme
+    }
+
     FPPageHeader {
         id: applicationHeader
         title: "Fuelpad"
-        titleForegroundColor: UIConstants.COLOR_PAGEHEADER_FOREGROUND
-        titleBackgroundColor: UIConstants.COLOR_PAGEHEADER_BACKGROUND
     }
 
     FPPositionSource {
@@ -51,8 +52,8 @@ FPPage {
             left: parent.left
             right: parent.right
             bottom: button1.top
-            leftMargin: UIConstants.DEFAULT_MARGIN
-            rightMargin: UIConstants.DEFAULT_MARGIN
+            leftMargin: appTheme.paddingLarge
+            rightMargin: appTheme.paddingLarge
         }
         clip: true
     }
@@ -84,7 +85,8 @@ FPPage {
                 anchors {
                     right: parent.right
                     verticalCenter: parent.verticalCenter
-                    rightMargin: UIConstants.SCROLLDECORATOR_SHORT_MARGIN
+//                    rightMargin: UIConstants.SCROLLDECORATOR_SHORT_MARGIN
+                    rightMargin: appTheme.scrollDecoratorMarginShort
                 }
 
                 smooth: true
@@ -105,7 +107,8 @@ FPPage {
                 columns: 1
 
                 Row {
-                    spacing: UIConstants.BUTTON_SPACING
+//                    spacing: UIConstants.BUTTON_SPACING
+                    spacing: appTheme.buttonSpacing
                     LabelText {
                         text: qsTr("Overall:") + " "
                     }
@@ -118,7 +121,8 @@ FPPage {
                 }
 
                 Row {
-                    spacing: UIConstants.BUTTON_SPACING
+//                    spacing: UIConstants.BUTTON_SPACING
+                    spacing: appTheme.buttonSpacing
                     LabelText {
                         text: qsTr("Last month:") + " "
                     }
@@ -131,7 +135,8 @@ FPPage {
                 }
 
                 Row {
-                    spacing: UIConstants.BUTTON_SPACING
+//                    spacing: UIConstants.BUTTON_SPACING
+                    spacing: appTheme.buttonSpacing
                     LabelText {
                         text: qsTr("Last year:") + " "
                     }
@@ -147,7 +152,8 @@ FPPage {
                 id: itemSeperator
                 height: 2
                 width: parent.width
-                color: UIConstants.COLOR_INVERTED_BACKGROUND
+//                color: UIConstants.COLOR_INVERTED_BACKGROUND
+                color: appTheme.separatorColor
             }
         }
     }

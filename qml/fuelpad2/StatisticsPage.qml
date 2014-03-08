@@ -1,7 +1,7 @@
 /*
  * This file is part of Fuelpad.
  *
- * Copyright (C) 2007-2012 Julius Luukko <julle.luukko@quicknet.inet.fi>
+ * Copyright (C) 2007-2012,2014 Julius Luukko <julle.luukko@quicknet.inet.fi>
  *
  * Fuelpad is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
 //import "harmattan/org/fuelpad/qmlui/DialogStatus.js" as DialogStatus
 import "DialogStatus.js" as DialogStatus
-import "UIConstants.js" as UIConstants
 import "CommonFuncs.js" as Funcs
 
 FPPage {
@@ -45,11 +44,9 @@ FPPage {
         applicationData.getStatistics(year,stattype);
     }
 
-    PageHeader {
+    FPPageHeader {
         id: statisticsHeader
         title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
-        titleForegroundColor: UIConstants.COLOR_PAGEHEADER_FOREGROUND
-        titleBackgroundColor: UIConstants.COLOR_PAGEHEADER_BACKGROUND
     }
 
     // workaround https://bugreports.qt-project.org/browse/QTBUG-11403

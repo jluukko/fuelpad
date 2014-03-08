@@ -26,3 +26,12 @@ var paddingMedium = PADDING_MEDIUM
 var paddingLarge = PADDING_XLARGE
 
 var headerHeightPortrait = HEADER_DEFAULT_HEIGHT_PORTRAIT
+
+var headerColorForeground = "#191919";
+var headerColorBackground = "#768e94";
+
+var scrollDecoratorMarginShort = SCROLLDECORATOR_SHORT_MARGIN;
+var scrollDecoratorMarginLong = SCROLLDECORATOR_LONG_MARGIN;
+
+var buttonSpacing = BUTTON_SPACING
+var separatorColor = COLOR_INVERTED_BACKGROUND

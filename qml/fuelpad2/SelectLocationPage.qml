@@ -18,10 +18,8 @@
  *
  */
 
-// import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
-import "UIConstants.js" as UIConstants
 import "CommonFuncs.js" as Funcs
 import "CommonUnits.js" as Units
 
@@ -63,8 +61,8 @@ FPPage {
             id: locationDialogData
             anchors {
                 fill: parent
-                leftMargin: UIConstants.DEFAULT_MARGIN
-                rightMargin: UIConstants.DEFAULT_MARGIN
+                leftMargin: appTheme.paddingLarge
+                rightMargin: appTheme.paddingLarge
             }
             contentWidth: column.width
             contentHeight: column.height
@@ -72,11 +70,11 @@ FPPage {
 
             Column {
                 id: column
-                spacing: UIConstants.PADDING_MEDIUM
+                spacing: appTheme.paddingMedium
 
                 Grid {
                     columns: 2
-                    spacing: UIConstants.PADDING_MEDIUM
+                    spacing: appTheme.paddingMedium
 
                     FPLabel {
                         text: qsTr("Enable GPS")
@@ -91,7 +89,7 @@ FPPage {
 
                     FPLabel {
                         text: qsTr("Latitude")
-                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.pixelSize: appTheme.fontSizeMedium
                     }
                     FPLabel {
                         id: latField
@@ -100,7 +98,7 @@ FPPage {
 
                     FPLabel {
                         text: qsTr("Longitude")
-                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.pixelSize: appTheme.fontSizeMedium
                     }
                     FPLabel {
                         id: lonField
@@ -142,8 +140,8 @@ FPPage {
 
                 FPTextArea {
                     id: placeField
-                    width: locationDialog.width-2*UIConstants.DEFAULT_MARGIN
-                    height: 4*UIConstants.FONT_DEFAULT
+                    width: locationDialog.width-2*appTheme.paddingLarge
+                    height: 4*appTheme.fontSizeMedium
                     placeholderText: qsTr("Place")
                     readOnly: true
                 }

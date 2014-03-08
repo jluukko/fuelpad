@@ -1,7 +1,7 @@
 /*
  * This file is part of Fuelpad.
  *
- * Copyright (C) 2007-2012 Julius Luukko <julle.luukko@quicknet.inet.fi>
+ * Copyright (C) 2007-2012,2014 Julius Luukko <julle.luukko@quicknet.inet.fi>
  *
  * Fuelpad is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,10 +18,8 @@
  *
  */
 
-// import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
-import "UIConstants.js" as UIConstants
 import "CommonFuncs.js" as Funcs
 
 FPPage {
@@ -38,6 +36,10 @@ FPPage {
         applicationData.setMainUnit(mainUnit, checked)
     }
 
+    FPApplicationTheme {
+        id: appTheme
+    }
+
     // workaround https://bugreports.qt-project.org/browse/QTBUG-11403
     Text { text: qsTr(name) }
     ListModel {
@@ -47,19 +49,17 @@ FPPage {
         ListElement { name: QT_TR_NOOP("Imperial")}
     }
 
-    PageHeader {
+    FPPageHeader {
         id: applicationHeader
         title: "Settings"
-        titleForegroundColor: UIConstants.COLOR_PAGEHEADER_FOREGROUND
-        titleBackgroundColor: UIConstants.COLOR_PAGEHEADER_BACKGROUND
     }
 
     Column {
         anchors.top: applicationHeader.bottom
-        anchors.topMargin: UIConstants.PADDING_LARGE
+        anchors.topMargin: appTheme.paddingLarge
         anchors.horizontalCenter: parent.horizontalCenter
 
-        spacing: UIConstants.PADDING_MEDIUM
+        spacing: appTheme.paddingMedium
 
         TouchSelector {
             id: mainUnitSelector

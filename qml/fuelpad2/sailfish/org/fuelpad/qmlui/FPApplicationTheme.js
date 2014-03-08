@@ -23,3 +23,9 @@ var itemSizeExtraLarge = Theme.itemSizeExtraLarge
 var paddingSmall = Theme.paddingSmall
 var paddingMedium = Theme.paddingMedium
 var paddingLarge = Theme.paddingLarge
+
+var scrollDecoratorMarginShort = Theme.paddingSmall;
+var scrollDecoratorMarginLong = Theme.paddingLarge;
+
+var buttonSpacing = Theme.paddingMedium
+var separatorColor = "#000000"

@@ -21,7 +21,6 @@
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
-import "UIConstants.js" as UIConstants
 
 FPPage {
     tools: commonTools
@@ -85,14 +84,14 @@ FPPage {
             id: addDialogData
             anchors {
                 fill: parent
-                leftMargin: UIConstants.DEFAULT_MARGIN
-                rightMargin: UIConstants.DEFAULT_MARGIN
+                leftMargin: appTheme.paddingLarge
+                rightMargin: appTheme.paddingLarge
             }
             width: parent.width
             Grid {
                 id: addDialogGrid
                 columns: 2
-                spacing: UIConstants.PADDING_MEDIUM
+                spacing: appTheme.paddingMedium
 
                 FPListButton {
                      id: dateButton
@@ -110,7 +109,7 @@ FPPage {
 
                 Text {
                     text: qsTr("Km")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
+                    font.pixelSize: appTheme.fontSizeMedium
                 }
                 FPTextField {
                     id: kmField
@@ -123,7 +122,7 @@ FPPage {
 
                 Text {
                     text: qsTr("Service")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
+                    font.pixelSize: appTheme.fontSizeMedium
                 }
                 FPTextField {
                     id: serviceField
@@ -136,7 +135,7 @@ FPPage {
 
                 Text {
                     text: qsTr("Oil")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
+                    font.pixelSize: appTheme.fontSizeMedium
                 }
                 FPTextField {
                     id: oilField
@@ -149,7 +148,7 @@ FPPage {
 
                 Text {
                     text: qsTr("Tires")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
+                    font.pixelSize: appTheme.fontSizeMedium
                 }
                 FPTextField {
                     id: tiresField
@@ -162,7 +161,7 @@ FPPage {
 
                 Text {
                     text: qsTr("Notes")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
+                    font.pixelSize: appTheme.fontSizeMedium
                 }
                 FPTextField {
                     id: notesField

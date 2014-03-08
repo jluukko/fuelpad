@@ -1,7 +1,7 @@
 /*
  * This file is part of Fuelpad.
  *
- * Copyright (C) 2007-2012 Julius Luukko <julle.luukko@quicknet.inet.fi>
+ * Copyright (C) 2007-2012,2014 Julius Luukko <julle.luukko@quicknet.inet.fi>
  *
  * Fuelpad is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,13 +18,11 @@
  *
  */
 
-// import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
 //import "harmattan/org/fuelpad/qmlui/DialogStatus.js" as DialogStatus
 import "DialogStatus.js" as DialogStatus
 
-import "UIConstants.js" as UIConstants
 import "CommonFuncs.js" as Funcs
 import "CommonUnits.js" as Units
 
@@ -41,11 +39,9 @@ FPPage {
         pageStack.push(Funcs.loadComponent("StatisticsPage.qml",fuelViewPage, {year: thisyear, stattype: 2}));
     }
 
-    PageHeader {
+    FPPageHeader {
         id: applicationHeader
         title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
-        titleForegroundColor: UIConstants.COLOR_PAGEHEADER_FOREGROUND
-        titleBackgroundColor: UIConstants.COLOR_PAGEHEADER_BACKGROUND
     }
 
     ListView {
@@ -57,8 +53,8 @@ FPPage {
             left: parent.left
             right: parent.right
             bottom: parent.bottom
-            leftMargin: UIConstants.DEFAULT_MARGIN
-            rightMargin: UIConstants.DEFAULT_MARGIN
+            leftMargin: appTheme.paddingLarge
+            rightMargin: appTheme.paddingLarge
         }
         clip: true
     }
@@ -113,7 +109,7 @@ FPPage {
                     anchors {
                         right: parent.right
                         verticalCenter: parent.verticalCenter
-                        rightMargin: UIConstants.SCROLLDECORATOR_SHORT_MARGIN
+                        rightMargin: appTheme.scrollDecoratorMarginShort
                     }
 
                     smooth: true
@@ -244,7 +240,7 @@ FPPage {
                 id: itemSeperator
                 height: 2
                 width: parent.width
-                color: UIConstants.COLOR_INVERTED_BACKGROUND
+                color: appTheme.separatorColor
             }
 
         }

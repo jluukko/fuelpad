@@ -21,7 +21,6 @@
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
-import "UIConstants.js" as UIConstants
 
 FPPage {
     tools: commonTools
@@ -57,22 +56,22 @@ FPPage {
             height: 600
             anchors {
                 fill: parent
-                leftMargin: UIConstants.DEFAULT_MARGIN
-                rightMargin: UIConstants.DEFAULT_MARGIN
+                leftMargin: appTheme.paddingLarge
+                rightMargin: appTheme.paddingLarge
             }
             contentWidth: addDialogGrid.width
             contentHeight: addDialogGrid.height
             Grid {
                 id: addDialogGrid
                 columns: 1
-                spacing: UIConstants.PADDING_MEDIUM
+                spacing: appTheme.paddingMedium
                 Text {
                     text: qsTr("Full name")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
+                    font.pixelSize: appTheme.fontSizeMedium
                 }
                 FPTextField {
                     id: fullnameField
-                    width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
+                    width: addDialog.width-2*appTheme.paddingLarge
                     placeholderText: qsTr("Full name")
                     maximumLength: 40
                     validator: RegExpValidator{}
@@ -80,11 +79,11 @@ FPPage {
                 }
                 Text {
                     text: qsTr("Nick name")
-                    font.pixelSize: UIConstants.FONT_DEFAULT
+                    font.pixelSize: appTheme.fontSizeMedium
                 }
                 FPTextField {
                     id: nicknameField
-                    width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
+                    width: addDialog.width-2*appTheme.paddingLarge
                     placeholderText: qsTr("Nick name")
                     maximumLength: 40
                     validator: RegExpValidator{}

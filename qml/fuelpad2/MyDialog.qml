@@ -20,7 +20,6 @@
 
 import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
-import "UIConstants.js" as UIConstants
 
 FPSheet {
     id: dialog
@@ -29,10 +28,10 @@ FPSheet {
 
     title: Column {
             visible: false
-            spacing: UIConstants.PADDING_MEDIUM
+            spacing: appTheme.paddingMedium
             Text {
                 id: titleText
-                font.pixelSize: UIConstants.FONT_XLARGE
+                font.pixelSize: appTheme.fontSizeLarge
                 font.weight: Font.Bold
 //                    anchors.centerIn: parent
                 color: "white"

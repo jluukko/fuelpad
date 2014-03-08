@@ -21,7 +21,6 @@
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
-import "UIConstants.js" as UIConstants
 import "CommonFuncs.js" as Funcs
 
 FPPage {
@@ -99,8 +98,8 @@ FPPage {
             id: addDialogData
             anchors {
                 fill: parent
-                leftMargin: UIConstants.DEFAULT_MARGIN
-                rightMargin: UIConstants.DEFAULT_MARGIN
+                leftMargin: appTheme.paddingLarge
+                rightMargin: appTheme.paddingLarge
             }
             contentWidth: column.width
             contentHeight: column.height
@@ -109,7 +108,7 @@ FPPage {
                 id: column
                 Grid {
                     columns: 1
-                    spacing: UIConstants.PADDING_MEDIUM
+                    spacing: appTheme.paddingMedium
 
                     FPListButton {
                          id: dateButton
@@ -119,7 +118,7 @@ FPPage {
                     }
                     FPTextField {
                         id: dateField
-                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
+                        width: addDialog.width-2*appTheme.paddingLarge
                         placeholderText: qsTr("Add date")
                         maximumLength: 10
                         readOnly: true
@@ -127,11 +126,11 @@ FPPage {
                     }
                     Text {
                         text: qsTr("Km")
-                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.pixelSize: appTheme.fontSizeMedium
                     }
                     FPTextField {
                         id: kmField
-                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
+                        width: addDialog.width-2*appTheme.paddingLarge
                         placeholderText: qsTr("Add overall km")
                         maximumLength: 8
                         validator: DoubleValidator{bottom: 0.0}
@@ -140,11 +139,11 @@ FPPage {
                     }
                     Text {
                         text: qsTr("Trip")
-                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.pixelSize: appTheme.fontSizeMedium
                     }
                     FPTextField {
                         id: tripField
-                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
+                        width: addDialog.width-2*appTheme.paddingLarge
                         placeholderText: qsTr("Add trip")
                         maximumLength: 5
                         validator: DoubleValidator{bottom: 0.0}
@@ -153,11 +152,11 @@ FPPage {
                     }
                     Text {
                         text: qsTr("Fill")
-                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.pixelSize: appTheme.fontSizeMedium
                     }
                     FPTextField {
                         id: fillField
-                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
+                        width: addDialog.width-2*appTheme.paddingLarge
                         placeholderText: qsTr("Add fill")
                         maximumLength: 5
                         validator: DoubleValidator{bottom: 0.0}
@@ -166,7 +165,7 @@ FPPage {
                     }
                     Text {
                         text: qsTr("Not full fill")
-                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.pixelSize: appTheme.fontSizeMedium
                     }
                     FPSwitch {
                         id: notFullFill
@@ -174,11 +173,11 @@ FPPage {
                     }
                     Text {
                         text: qsTr("Price")
-                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.pixelSize: appTheme.fontSizeMedium
                     }
                     FPTextField {
                         id: priceField
-                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
+                        width: addDialog.width-2*appTheme.paddingLarge
                         placeholderText: qsTr("Add price")
                         maximumLength: 10
                         validator: DoubleValidator{}
@@ -187,11 +186,11 @@ FPPage {
                     }
                     Text {
                         text: qsTr("Notes")
-                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.pixelSize: appTheme.fontSizeMedium
                     }
                     FPTextField {
                         id: notesField
-                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
+                        width: addDialog.width-2*appTheme.paddingLarge
                         placeholderText: qsTr("Add notes")
                         maximumLength: 120
                         validator: RegExpValidator{}
@@ -199,11 +198,11 @@ FPPage {
                     }
                     Text {
                         text: qsTr("Service")
-                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.pixelSize: appTheme.fontSizeMedium
                     }
                     FPTextField {
                         id: serviceField
-                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
+                        width: addDialog.width-2*appTheme.paddingLarge
                         placeholderText: qsTr("Add service cost")
                         maximumLength: 5
                         validator: DoubleValidator{bottom: 0.0}
@@ -212,11 +211,11 @@ FPPage {
                     }
                     Text {
                         text: qsTr("Oil")
-                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.pixelSize: appTheme.fontSizeMedium
                     }
                     FPTextField {
                         id: oilField
-                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
+                        width: addDialog.width-2*appTheme.paddingLarge
                         placeholderText: qsTr("Add oil cost")
                         maximumLength: 5
                         validator: DoubleValidator{bottom: 0.0}
@@ -225,11 +224,11 @@ FPPage {
                     }
                     Text {
                         text: qsTr("Tires")
-                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.pixelSize: appTheme.fontSizeMedium
                     }
                     FPTextField {
                         id: tiresField
-                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
+                        width: addDialog.width-2*appTheme.paddingLarge
                         placeholderText: qsTr("Add tires cost")
                         maximumLength: 5
                         validator: DoubleValidator{bottom: 0.0}
@@ -239,24 +238,24 @@ FPPage {
 
                     Text {
                         text: qsTr("Latitude")
-                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.pixelSize: appTheme.fontSizeMedium
                         visible: false
                     }
                     FPTextField {
                         id: latField
-                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
+                        width: addDialog.width-2*appTheme.paddingLarge
                         text: editMode ? oldLat : positionSource.position.coordinate.latitude.toFixed(8)
                         visible: false
                     }
 
                     Text {
                         text: qsTr("Longitude")
-                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.pixelSize: appTheme.fontSizeMedium
                         visible: false
                     }
                     FPTextField {
                         id: lonField
-                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
+                        width: addDialog.width-2*appTheme.paddingLarge
                         text: editMode ? oldLon : positionSource.position.coordinate.longitude.toFixed(8)
                         visible: false
                     }
@@ -267,8 +266,8 @@ FPPage {
                     }
                     FPTextArea {
                         id: placeField
-                        width: addDialog.width-2*UIConstants.DEFAULT_MARGIN
-                        height: 4*UIConstants.FONT_DEFAULT
+                        width: addDialog.width-2*appTheme.paddingLarge
+                        height: 4*appTheme.fontSizeMedium
                         placeholderText: qsTr("Add place")
                         text: editMode ? oldPlace : ""
                     }

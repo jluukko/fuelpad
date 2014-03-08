@@ -21,7 +21,6 @@
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
-import "UIConstants.js" as UIConstants
 
 FPPage {
     tools: commonTools
@@ -30,17 +29,21 @@ FPPage {
         aboutDialog.open()
     }
 
+    FPApplicationTheme {
+        id: appTheme
+    }
+
     FPDialog {
         id: aboutDialog
 
         width: parent.width
 
         title: Column {
-                spacing: UIConstants.PADDING_MEDIUM
+                spacing: appTheme.paddingMedium
                 anchors.centerIn: parent
                 Text {
                     id: titleText
-                    font.pixelSize: UIConstants.FONT_XLARGE
+                    font.pixelSize: appTheme.fontSizeExtraLarge
                     font.weight: Font.Bold
                     color: "white"
                     text: "Fuelpad2 v 0.0.12"
@@ -64,7 +67,7 @@ FPPage {
                       + "<p>"
                       + "<small>This software is free software distributed under the terms of"
                       + "the GNU General Public License version 3 or later.</small>"
-                font.pixelSize: UIConstants.FONT_DEFAULT
+                font.pixelSize: appTheme.fontSizeMedium
                 font.weight: Font.Light
                 color: "white"
                 wrapMode: Text.WordWrap
