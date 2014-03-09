@@ -70,24 +70,24 @@ FPPage {
         FPMenu {
             id: mainMenu
             visualParent: mainPage
-            FPMenuLayout {
-                FPMenuItem {
+            items: [
+                FPMenuAction {
                     text: qsTr("Settings")
                     onClicked: pageStack.push(Funcs.loadComponent("SettingsPage.qml",mainPage, {}))
-                }
-                FPMenuItem {
+                },
+                FPMenuAction {
                     text: qsTr("Manage cars")
                     onClicked: pageStack.push(Funcs.loadComponent("ManageCarsPage.qml",mainPage, {}))
-                }
-                FPMenuItem {
+                },
+                FPMenuAction {
                     text: qsTr("Manage drivers")
                     onClicked: pageStack.push(Funcs.loadComponent("ManageDriversPage.qml",mainPage, {}))
-                }
-                FPMenuItem {
+                },
+                FPMenuAction {
                     text: qsTr("About")
                     onClicked: Funcs.loadComponent("AboutDialog.qml",mainPage, {}).open()
                 }
-            }
+            ]
         }
 
         Column {
