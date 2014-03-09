@@ -10,6 +10,7 @@ FPLabel 1.0 FPLabel.qml
 FPLabelStyle 1.0 FPLabelStyle.qml
 FPListButton 1.0 FPListButton.qml
 FPMenu 1.0 FPMenu.qml
+FPMenuAction 1.0 FPMenuAction.qml
 FPMenuItem 1.0 FPMenuItem.qml
 FPMenuLayout 1.0 FPMenuLayout.qml
 FPPage 1.0 FPPage.qml
