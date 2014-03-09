@@ -23,18 +23,19 @@ import org.fuelpad.qmlui 1.0
 import org.fuelpad.components 1.0
 import "CommonFuncs.js" as Funcs
 import "CommonUnits.js" as Units
+import "DialogStatus.js" as DialogStatus
 
 FPPage {
     id: mainPage
-    tools: commonTools
+    tools: mainTools
+
+    function loadFuelViewPage(dbid) {
+        applicationData.setCurrentCar(dbid)
+        pageStack.push(Funcs.loadComponent("FuelViewPage.qml",mainPage, {"carId": dbid}))
+    }
 
     FPApplicationTheme {
         id: appTheme
-    }
-
-    FPPageHeader {
-        id: applicationHeader
-        title: "Fuelpad"
     }
 
     FPPositionSource {
@@ -43,141 +44,197 @@ FPPage {
         active: false
     }
 
-    ListView {
-        id: carListView
-        model: carModel
-        delegate: carDelegate
-        anchors {
-            top: applicationHeader.bottom
-            left: parent.left
-            right: parent.right
-            bottom: button1.top
-            leftMargin: appTheme.paddingLarge
-            rightMargin: appTheme.paddingLarge
+    FPToolBarLayout {
+        id: mainTools
+        visible: false
+        z: 99
+        FPToolIcon {
+            iconId: "toolbar-settings"
+            onClicked: loadSettingsPage()
         }
-        clip: true
+        FPToolIcon {
+            platformIconId: "toolbar-view-menu"
+            anchors.right: (parent === undefined) ? undefined : parent.right
+            onClicked: (myMenu.status === DialogStatus.Closed) ? myMenu.open() : myMenu.close()
+        }
     }
 
-    FPScrollDecorator {
-        flickableItem: carListView
-    }
+    FPFlickablePageContent {
+        id: content
 
-    function loadFuelViewPage(dbid) {
-        applicationData.setCurrentCar(dbid)
-        pageStack.push(Funcs.loadComponent("FuelViewPage.qml",mainPage, {"carId": dbid}))
-    }
+        width: mainPage.width
+        anchors.fill: parent
 
-    Component {
-        id: carDelegate
-        Item {
-            id: carDelegateRec
-            width: parent.width
-            height: carNameText.height*1.5 + grid.height
-            MouseArea {
-                width: parent.width
-                height: parent.height
-                onClicked: loadFuelViewPage(databaseid)
+        contentHeight: contentColumn.height
+
+        FPMenu {
+            id: mainMenu
+            visualParent: mainPage
+            FPMenuLayout {
+                FPMenuItem {
+                    text: qsTr("Settings")
+                    onClicked: pageStack.push(Funcs.loadComponent("SettingsPage.qml",mainPage, {}))
+                }
+                FPMenuItem {
+                    text: qsTr("Manage cars")
+                    onClicked: pageStack.push(Funcs.loadComponent("ManageCarsPage.qml",mainPage, {}))
+                }
+                FPMenuItem {
+                    text: qsTr("Manage drivers")
+                    onClicked: pageStack.push(Funcs.loadComponent("ManageDriversPage.qml",mainPage, {}))
+                }
+                FPMenuItem {
+                    text: qsTr("About")
+                    onClicked: Funcs.loadComponent("AboutDialog.qml",mainPage, {}).open()
+                }
             }
-            Image {
-                id: subIndicatorArrow
-                width: sourceSize.width
+        }
 
+        Column {
+            id: contentColumn
+            spacing: 10
+
+            FPPageHeader {
+                id: applicationHeader
+                title: "Fuelpad"
+            }
+
+            ListView {
+                id: carListView
+                model: carModel
+                delegate: carDelegate
                 anchors {
-                    right: parent.right
-                    verticalCenter: parent.verticalCenter
-//                    rightMargin: UIConstants.SCROLLDECORATOR_SHORT_MARGIN
-                    rightMargin: appTheme.scrollDecoratorMarginShort
+                    top: applicationHeader.bottom
+//                    bottom: button1.top
+                    leftMargin: appTheme.paddingLarge
+                    rightMargin: appTheme.paddingLarge
                 }
+//                height: mainPage.height-applicationHeader.height-button1.height-button4.height-mainTools.height-3*contentColumn.spacing
+//                height: contentHeight-button1.height-button4.height-mainTools.height-3*contentColumn.spacing
+                height: content.height-button1.height-button4.height-mainTools.height-3*contentColumn.spacing
+                width: content.width
+                clip: true
+            }
 
-                smooth: true
-                source: "image://theme/icon-m-common-drilldown-arrow"
-                        + (theme.inverted ? "-inverse" : "");
+            // If ListView is inside ScrollDecorator, buttons below won't show on Harmattan
+//            FPScrollDecorator {
+//                flickableItem: carListView
+//            }
+
+            Component {
+                id: carDelegate
+                Item {
+                    id: carDelegateRec
+                    width: parent.width
+                    height: carNameText.height*1.5 + grid.height
+                    MouseArea {
+                        width: parent.width
+                        height: parent.height
+                        onClicked: loadFuelViewPage(databaseid)
+                    }
+                    Image {
+                        id: subIndicatorArrow
+                        width: sourceSize.width
+
+                        anchors {
+                            right: parent.right
+                            verticalCenter: parent.verticalCenter
+        //                    rightMargin: UIConstants.SCROLLDECORATOR_SHORT_MARGIN
+                            rightMargin: appTheme.scrollDecoratorMarginShort
+                        }
+
+                        smooth: true
+                        source: "image://theme/icon-m-common-drilldown-arrow"
+                                + (theme.inverted ? "-inverse" : "");
+                    }
+                    FPLabel {
+                        id: carNameText
+                        text: mark + " " + carmodel
+                        platformStyle: MyLabelStyleTitle{}
+                        font.bold: true
+                    }
+                    Grid {
+                        id: grid
+                        anchors {
+                            top: carNameText.bottom
+                        }
+                        columns: 1
+
+                        Row {
+        //                    spacing: UIConstants.BUTTON_SPACING
+                            spacing: appTheme.buttonSpacing
+                            LabelText {
+                                text: qsTr("Overall:") + " "
+                            }
+                            ElementText {
+                                text: totalkm.toFixed(0) + " " + Units.getLengthUnit()
+                            }
+                            ElementText {
+                                text: totalconsumption.toFixed(1) + " " + Units.getConsumeUnit()
+                            }
+                        }
+
+                        Row {
+        //                    spacing: UIConstants.BUTTON_SPACING
+                            spacing: appTheme.buttonSpacing
+                            LabelText {
+                                text: qsTr("Last month:") + " "
+                            }
+                            ElementText {
+                                text: lastmonthkm.toFixed(0) + " " + Units.getLengthUnit()
+                            }
+                            ElementText {
+                                text: lastmonthconsumption.toFixed(1) + " " + Units.getConsumeUnit()
+                            }
+                        }
+
+                        Row {
+        //                    spacing: UIConstants.BUTTON_SPACING
+                            spacing: appTheme.buttonSpacing
+                            LabelText {
+                                text: qsTr("Last year:") + " "
+                            }
+                            ElementText {
+                                text: lastyearkm.toFixed(0) + " " + Units.getLengthUnit()
+                            }
+                            ElementText {
+                                text: lastyearconsumption.toFixed(1) + " " + Units.getConsumeUnit()
+                            }
+                        }
+                        Rectangle {
+                            id: itemSeperator
+                            height: 2
+                            width: carListView.width
+            //                color: UIConstants.COLOR_INVERTED_BACKGROUND
+                            color: appTheme.separatorColor
+                        }
+                    }
+                }
             }
-            FPLabel {
-                id: carNameText
-                text: mark + " " + carmodel
-                platformStyle: MyLabelStyleTitle{}
-                font.bold: true
-            }
-            Grid {
-                id: grid
+
+            FPButton {
+                id: button1
                 anchors {
-                    top: carNameText.bottom
+                    horizontalCenter: parent.horizontalCenter
+//                    bottom: button4.top
+//                    topMargin: 10
                 }
-                columns: 1
-
-                Row {
-//                    spacing: UIConstants.BUTTON_SPACING
-                    spacing: appTheme.buttonSpacing
-                    LabelText {
-                        text: qsTr("Overall:") + " "
-                    }
-                    ElementText {
-                        text: totalkm.toFixed(0) + " " + Units.getLengthUnit()
-                    }
-                    ElementText {
-                        text: totalconsumption.toFixed(1) + " " + Units.getConsumeUnit()
-                    }
+                text: qsTr("Examine service reminders")
+                onClicked: pageStack.push(Funcs.loadComponent("RemindersPage.qml",mainPage, {}))
+                width: content.width-50
+            }
+            FPButton {
+                id: button4
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+//                    bottom: content.bottom
+//                    topMargin: 10
                 }
-
-                Row {
-//                    spacing: UIConstants.BUTTON_SPACING
-                    spacing: appTheme.buttonSpacing
-                    LabelText {
-                        text: qsTr("Last month:") + " "
-                    }
-                    ElementText {
-                        text: lastmonthkm.toFixed(0) + " " + Units.getLengthUnit()
-                    }
-                    ElementText {
-                        text: lastmonthconsumption.toFixed(1) + " " + Units.getConsumeUnit()
-                    }
-                }
-
-                Row {
-//                    spacing: UIConstants.BUTTON_SPACING
-                    spacing: appTheme.buttonSpacing
-                    LabelText {
-                        text: qsTr("Last year:") + " "
-                    }
-                    ElementText {
-                        text: lastyearkm.toFixed(0) + " " + Units.getLengthUnit()
-                    }
-                    ElementText {
-                        text: lastyearconsumption.toFixed(1) + " " + Units.getConsumeUnit()
-                    }
-                }
-                Rectangle {
-                    id: itemSeperator
-                    height: 2
-                    width: carListView.width
-    //                color: UIConstants.COLOR_INVERTED_BACKGROUND
-                    color: appTheme.separatorColor
-                }
+                text: qsTr("Log driving")
+                onClicked: pageStack.push(Funcs.loadComponent("DrivingLogPage.qml",mainPage, {}))
+                width: content.width-50
             }
         }
-    }
 
-    FPButton {
-        id: button1
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            bottom: button4.top
-            topMargin: 10
-        }
-        text: qsTr("Examine service reminders")
-        onClicked: pageStack.push(Funcs.loadComponent("RemindersPage.qml",mainPage, {}))
-        width: parent.width-50
-    }
-    FPButton {
-        id: button4
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            bottom: parent.bottom
-            topMargin: 10
-        }
-        text: qsTr("Log driving")
-        onClicked: pageStack.push(Funcs.loadComponent("DrivingLogPage.qml",mainPage, {}))
-        width: parent.width-50
     }
 }

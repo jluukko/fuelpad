@@ -5,6 +5,7 @@ FPButtonRow 1.0 FPButtonRow.qml
 FPButtonStyle 1.0 FPButtonStyle.qml
 FPDatePickerDialog 1.0 FPDatePickerDialog.qml
 FPDialog 1.0 FPDialog.qml
+FPFlickablePageContent 1.0 FPFlickablePageContent.qml
 FPLabel 1.0 FPLabel.qml
 FPLabelStyle 1.0 FPLabelStyle.qml
 FPListButton 1.0 FPListButton.qml
