@@ -28,12 +28,16 @@ import "CommonFuncs.js" as Funcs
 FPPageStackWindow {
     id: appWindow
 
-    initialPage: MainPage{}
+    initialPage: Component { MainPage{} }
     showStatusBar: false
     showToolBar: true
 
-    MainPage {
-        id: mainPage
+    function loadPreviousPage() {
+        pageStack.pop();
+    }
+
+    function loadSettingsPage() {
+        pageStack.push(Funcs.loadComponent("SettingsPage.qml",parent, {}));
     }
 
     FPToolBarLayout {
@@ -43,16 +47,17 @@ FPPageStackWindow {
         FPToolIcon {
             iconId: "toolbar-back"
             visible: pageStack.depth > 1
-            onClicked: { pageStack.pop(); }
+            onClicked: { loadPreviousPage() }
         }
         FPToolIcon {
             iconId: "toolbar-settings"
             visible: pageStack.depth == 1
-            onClicked: pageStack.push(Funcs.loadComponent("SettingsPage.qml",mainPage, {}))
+            onClicked: loadSettingsPage()
         }
         FPToolIcon {
             platformIconId: "toolbar-view-menu"
             anchors.right: (parent === undefined) ? undefined : parent.right
+            visible: pageStack.depth == 1
             onClicked: (myMenu.status === DialogStatus.Closed) ? myMenu.open() : myMenu.close()
         }
     }
@@ -63,19 +68,19 @@ FPPageStackWindow {
         FPMenuLayout {
             FPMenuItem {
                 text: qsTr("Settings")
-                onClicked: pageStack.push(Funcs.loadComponent("SettingsPage.qml",mainPage, {}))
+                onClicked: pageStack.push(Funcs.loadComponent("SettingsPage.qml",parent, {}))
             }
             FPMenuItem {
                 text: qsTr("Manage cars")
-                onClicked: pageStack.push(Funcs.loadComponent("ManageCarsPage.qml",mainPage, {}))
+                onClicked: pageStack.push(Funcs.loadComponent("ManageCarsPage.qml",parent, {}))
             }
             FPMenuItem {
                 text: qsTr("Manage drivers")
-                onClicked: pageStack.push(Funcs.loadComponent("ManageDriversPage.qml",mainPage, {}))
+                onClicked: pageStack.push(Funcs.loadComponent("ManageDriversPage.qml",parent, {}))
             }
             FPMenuItem {
                 text: qsTr("About")
-                onClicked: Funcs.loadComponent("AboutDialog.qml",mainPage, {}).open()
+                onClicked: Funcs.loadComponent("AboutDialog.qml",parent, {}).open()
             }
         }
     }
