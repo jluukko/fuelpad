@@ -31,7 +31,7 @@ FPPage {
 
     function loadAlarmTypePage(dbid) {
         applicationData.setCurrentCar(dbid)
-        pageStack.push(Funcs.loadComponent("AlarmTypePage.qml",mainPage, {"carId": dbid}))
+        pageStack.push(Funcs.loadComponent("AlarmTypePage.qml",remindersPage, {"carId": dbid}))
     }
 
 
@@ -68,7 +68,7 @@ FPPage {
                 MouseArea {
                     width: parent.width
                     height: parent.height
-//                    onPressAndHold: Funcs.loadComponent("DeleteCarDialog.qml", mainPage,
+//                    onPressAndHold: Funcs.loadComponent("DeleteCarDialog.qml", remindersPage,
 //                                                        {databaseId: databaseid}).open()
                     onClicked: loadAlarmTypePage(databaseid)
                 }
@@ -146,7 +146,7 @@ FPPage {
         }
 //        FPToolIcon {
 //            iconId: "toolbar-add"
-//            onClicked: Funcs.loadComponent("AddCarDialog.qml",mainPage, {}).open()
+//            onClicked: Funcs.loadComponent("AddCarDialog.qml",remindersPage, {}).open()
 //        }
 //        FPToolIcon {
 //            platformIconId: "toolbar-view-menu"

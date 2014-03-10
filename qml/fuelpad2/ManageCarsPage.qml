@@ -27,6 +27,7 @@ import "CommonFuncs.js" as Funcs
 import "CommonUnits.js" as Units
 
 FPPage {
+    id: manageCarsPage
     tools: manageCarsTools
 
     FPApplicationTheme {
@@ -66,9 +67,9 @@ FPPage {
                 MouseArea {
                     width: parent.width
                     height: parent.height
-                    onPressAndHold: Funcs.loadComponent("DeleteCarDialog.qml", mainPage,
+                    onPressAndHold: Funcs.loadComponent("DeleteCarDialog.qml", manageCarsPage,
                                                         {databaseId: databaseid}).open()
-                    onClicked: Funcs.loadComponent("AddCarDialog.qml",mainPage,
+                    onClicked: Funcs.loadComponent("AddCarDialog.qml",manageCarsPage,
                                                    {editMode: true,
                                                     oldId: databaseid,
                                                     oldMark: mark,
@@ -198,7 +199,7 @@ FPPage {
         }
         FPToolIcon {
             iconId: "toolbar-add"
-            onClicked: Funcs.loadComponent("AddCarDialog.qml",mainPage, {}).open()
+            onClicked: Funcs.loadComponent("AddCarDialog.qml",manageCarsPage, {}).open()
         }
 //        FPToolIcon {
 //            platformIconId: "toolbar-view-menu"

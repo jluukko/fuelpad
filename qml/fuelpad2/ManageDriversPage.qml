@@ -25,6 +25,7 @@ import "DialogStatus.js" as DialogStatus
 import "CommonFuncs.js" as Funcs
 
 FPPage {
+    id: manageDriversPage
     tools: manageDriversTools
 
     FPApplicationTheme {
@@ -64,9 +65,9 @@ FPPage {
                 MouseArea {
                     width: parent.width
                     height: parent.height
-                    onPressAndHold: Funcs.loadComponent("DeleteDriverDialog.qml", mainPage,
+                    onPressAndHold: Funcs.loadComponent("DeleteDriverDialog.qml", manageDriversPage,
                                                         {databaseId: databaseid}).open()
-                    onClicked: Funcs.loadComponent("AddDriverDialog.qml",mainPage,
+                    onClicked: Funcs.loadComponent("AddDriverDialog.qml",manageDriversPage,
                                                    {editMode: true,
                                                     oldId: databaseid,
                                                     oldFullname: fullname,
@@ -146,7 +147,7 @@ FPPage {
         }
         FPToolIcon {
             iconId: "toolbar-add"
-            onClicked: Funcs.loadComponent("AddDriverDialog.qml",mainPage, {}).open()
+            onClicked: Funcs.loadComponent("AddDriverDialog.qml",manageDriversPage, {}).open()
         }
 //        FPToolIcon {
 //            platformIconId: "toolbar-view-menu"
