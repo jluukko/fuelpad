@@ -30,32 +30,32 @@ FPPage {
         locationDialog.open()
     }
 
-    function toggleGPS() {
-        if (enableGPS.checked) {
-            positionSource.start()
-        }
-        else {
-            positionSource.stop()
-        }
-    }
-
-    function locationDialogAccepted() {
-        parent.addressFound(placeField.text);
-    }
-
-    Connections {
-        target: applicationData
-        onAddressReady: {
-            placeField.text = applicationData.getAddress()
-            console.log(applicationData.getAddress())
-        }
-    }
-
     MyDialog {
         id: locationDialog
         width: parent.width
 
         titleText: qsTr("Retrieve location")
+
+        function toggleGPS() {
+            if (enableGPS.checked) {
+                positionSource.start()
+            }
+            else {
+                positionSource.stop()
+            }
+        }
+
+        function locationDialogAccepted() {
+            selectLocationPage.parent.addressFound(placeField.text);
+        }
+
+        Connections {
+            target: applicationData
+            onAddressReady: {
+                placeField.text = applicationData.getAddress()
+                console.log(applicationData.getAddress())
+            }
+        }
 
         content:Flickable {
             id: locationDialogData
@@ -84,7 +84,7 @@ FPPage {
                     FPSwitch {
                         id: enableGPS
                         checked: positionSource.active
-                        onCheckedChanged: toggleGPS()
+                        onCheckedChanged: locationDialog.toggleGPS()
                     }
 
                     FPLabel {

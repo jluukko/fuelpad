@@ -23,7 +23,6 @@ import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
 
 FPPage {
-    tools: commonTools
 
     property bool editMode: false
     property string oldId
@@ -38,34 +37,32 @@ FPPage {
         addDialog.open()
     }
 
-    // applicationData.addFuelEntry could be directly called from onAccepted
-    function addDialogAccepted() {
-        if (editMode) {
-            console.log("Now entry would be updated if a function would exist")
-            applicationData.updateCar(oldId, markField.text, modelField.text, yearField.text, regnumField.text,
-                                            notesField.text, fueltypeField.selectedIndex)
-        } else {
-            applicationData.addCar(markField.text, modelField.text, yearField.text, regnumField.text,
-                                         notesField.text, fueltypeField.selectedIndex)
-        }
-    }
-
-    // workaround https://bugreports.qt-project.org/browse/QTBUG-11403
-    Text { text: qsTr(name) }
-    ListModel {
-        id: fueltypeModel
-        ListElement { name: QT_TR_NOOP("Petrol") }
-        ListElement { name: QT_TR_NOOP("Diesel") }
-        ListElement { name: QT_TR_NOOP("Ethanol")}
-        ListElement { name: QT_TR_NOOP("Other")}
-    }
-
     MyDialog {
         id: addDialog
 
         width: parent.width
 
         titleText: editMode ? qsTr("Edit car") : qsTr("Add a new car")
+
+        function addDialogAccepted() {
+            if (editMode) {
+                applicationData.updateCar(oldId, markField.text, modelField.text, yearField.text, regnumField.text,
+                                                notesField.text, fueltypeField.selectedIndex)
+            } else {
+                applicationData.addCar(markField.text, modelField.text, yearField.text, regnumField.text,
+                                             notesField.text, fueltypeField.selectedIndex)
+            }
+        }
+
+        // workaround https://bugreports.qt-project.org/browse/QTBUG-11403
+        Text { text: qsTr(name) }
+        ListModel {
+            id: fueltypeModel
+            ListElement { name: QT_TR_NOOP("Petrol") }
+            ListElement { name: QT_TR_NOOP("Diesel") }
+            ListElement { name: QT_TR_NOOP("Ethanol")}
+            ListElement { name: QT_TR_NOOP("Other")}
+        }
 
         content:Flickable {
             id: addDialogData

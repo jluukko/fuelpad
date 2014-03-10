@@ -25,7 +25,6 @@ import "CommonFuncs.js" as Funcs
 
 FPPage {
     id: addFuelEntryDialogPage
-    tools: commonTools
 
     property int carId: -1
     property bool editMode: false
@@ -48,51 +47,50 @@ FPPage {
         addDialog.open()
     }
 
-    function addressFound(address) {
-        placeField.text = address;
-    }
-
-    function launchDateDialogToToday() {
-         var d = new Date();
-         dateDialog.year = d.getFullYear();
-         dateDialog.month = d.getMonth()+1;
-         dateDialog.day = d.getDate();
-         dateDialog.open();
-    }
-
-    function dateDialogAccecpted() {
-        dateField.text = dateDialog.year+"-"+dateDialog.month+"-"+dateDialog.day
-    }
-
-    // applicationData.addFuelEntry could be directly called from onAccepted
-    function addDialogAccepted() {
-        if (editMode) {
-            applicationData.updateFuelEntry(carId, oldId, dateField.text, kmField.text, tripField.text, fillField.text,
-                                         notFullFill.checked, priceField.text, serviceField.text,
-                                         oilField.text, tiresField.text, latField.text, lonField.text,
-                                            placeField.text, notesField.text)
-        } else {
-            applicationData.addFuelEntry(carId, dateField.text, kmField.text, tripField.text, fillField.text,
-                                         notFullFill.checked, priceField.text, serviceField.text,
-                                         oilField.text, tiresField.text, latField.text, lonField.text,
-                                         placeField.text, notesField.text)
-        }
-    }
-
-    FPDatePickerDialog {
-        id: dateDialog
-        titleText: qsTr("Entry date")
-        acceptButtonText: qsTr("OK")
-        rejectButtonText: qsTr("Cancel")
-        onAccepted: dateDialogAccecpted()
-    }
-
     MyDialog {
         id: addDialog
 
         width: parent.width
 
         titleText: editMode ? qsTr("Edit fuel record") : qsTr("Add a new fuel record")
+
+        function addressFound(address) {
+            placeField.text = address;
+        }
+
+        function launchDateDialogToToday() {
+             var d = new Date();
+             dateDialog.year = d.getFullYear();
+             dateDialog.month = d.getMonth()+1;
+             dateDialog.day = d.getDate();
+             dateDialog.open();
+        }
+
+        function dateDialogAccecpted() {
+            dateField.text = dateDialog.year+"-"+dateDialog.month+"-"+dateDialog.day
+        }
+
+        function addDialogAccepted() {
+            if (editMode) {
+                applicationData.updateFuelEntry(carId, oldId, dateField.text, kmField.text, tripField.text, fillField.text,
+                                             notFullFill.checked, priceField.text, serviceField.text,
+                                             oilField.text, tiresField.text, latField.text, lonField.text,
+                                                placeField.text, notesField.text)
+            } else {
+                applicationData.addFuelEntry(carId, dateField.text, kmField.text, tripField.text, fillField.text,
+                                             notFullFill.checked, priceField.text, serviceField.text,
+                                             oilField.text, tiresField.text, latField.text, lonField.text,
+                                             placeField.text, notesField.text)
+            }
+        }
+
+        FPDatePickerDialog {
+            id: dateDialog
+            titleText: qsTr("Entry date")
+            acceptButtonText: qsTr("OK")
+            rejectButtonText: qsTr("Cancel")
+            onAccepted: addDialog.dateDialogAccecpted()
+        }
 
         content:Flickable {
             id: addDialogData
@@ -114,7 +112,7 @@ FPPage {
                          id: dateButton
                          text: qsTr("Pick date")
                          width: text.width
-                         onClicked: launchDateDialogToToday()
+                         onClicked: addDialog.launchDateDialogToToday()
                     }
                     FPTextField {
                         id: dateField
@@ -262,7 +260,7 @@ FPPage {
 
                     FPListButton {
                         text: qsTr("Get address")
-                        onClicked: Funcs.loadComponent("SelectLocationPage.qml",addFuelEntryDialogPage, {}).open()
+                        onClicked: Funcs.loadComponent("SelectLocationPage.qml",addDialog, {}).open()
                     }
                     FPTextArea {
                         id: placeField

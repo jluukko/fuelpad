@@ -23,7 +23,6 @@ import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
 
 FPPage {
-    tools: commonTools
 
     property bool editMode: false
     property string oldId
@@ -40,45 +39,44 @@ FPPage {
         addDialog.open()
     }
 
-    // Similar function exists also in AddFuelEntryDialog
-    function launchDateDialogToToday() {
-         var d = new Date();
-         dateDialog.year = d.getFullYear();
-         dateDialog.month = d.getMonth()+1;
-         dateDialog.day = d.getDate();
-         dateDialog.open();
-    }
-
-    function dateDialogAccecpted() {
-        dateField.text = dateDialog.year+"-"+dateDialog.month+"-"+dateDialog.day
-    }
-
-
-    function addDialogAccepted() {
-        if (editMode) {
-            applicationData.updateAlarmEvent(oldId, oldAlarmId, oldRecordId, dateField.text, kmField.text, serviceField.text, oilField.text,
-                                            tiresField.text, notesField.text)
-        }
-        else {
-            applicationData.addAlarmEvent(oldAlarmId, dateField.text, kmField.text, serviceField.text, oilField.text,
-                                          tiresField.text, notesField.text)
-        }
-    }
-
-    FPDatePickerDialog {
-        id: dateDialog
-        titleText: qsTr("Event date")
-        acceptButtonText: qsTr("OK")
-        rejectButtonText: qsTr("Cancel")
-        onAccepted: dateDialogAccecpted()
-    }
-
     MyDialog {
         id: addDialog
 
         width: parent.width
 
         titleText: editMode ? qsTr("Edit event") : qsTr("Add a new event")
+
+        // Similar function exists also in AddFuelEntryDialog
+        function launchDateDialogToToday() {
+             var d = new Date();
+             dateDialog.year = d.getFullYear();
+             dateDialog.month = d.getMonth()+1;
+             dateDialog.day = d.getDate();
+             dateDialog.open();
+        }
+
+        function dateDialogAccecpted() {
+            dateField.text = dateDialog.year+"-"+dateDialog.month+"-"+dateDialog.day
+        }
+
+        function addDialogAccepted() {
+            if (editMode) {
+                applicationData.updateAlarmEvent(oldId, oldAlarmId, oldRecordId, dateField.text, kmField.text, serviceField.text, oilField.text,
+                                                tiresField.text, notesField.text)
+            }
+            else {
+                applicationData.addAlarmEvent(oldAlarmId, dateField.text, kmField.text, serviceField.text, oilField.text,
+                                              tiresField.text, notesField.text)
+            }
+        }
+
+        FPDatePickerDialog {
+            id: dateDialog
+            titleText: qsTr("Event date")
+            acceptButtonText: qsTr("OK")
+            rejectButtonText: qsTr("Cancel")
+            onAccepted: addDialog.dateDialogAccecpted()
+        }
 
         content:Flickable {
             id: addDialogData
@@ -97,7 +95,7 @@ FPPage {
                      id: dateButton
                      text: qsTr("Pick date")
                      width: text.width
-                     onClicked: launchDateDialogToToday()
+                     onClicked: addDialog.launchDateDialogToToday()
                 }
                 FPTextField {
                     id: dateField
