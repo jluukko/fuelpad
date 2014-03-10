@@ -74,7 +74,7 @@ FPPage {
                     height: parent.height
                     onPressAndHold: Funcs.loadComponent("DeleteFuelEntryDialog.qml", mainPage,
                                                         {databaseId: databaseid}).open()
-                    onClicked: Funcs.loadComponent("AddFuelEntryDialog.qml",mainPage,
+                    onClicked: pageStack.push(Funcs.loadComponent("AddFuelEntryDialog.qml",mainPage,
                                                    {carId: carId,
                                                     editMode: true,
                                                     oldId: databaseid,
@@ -91,7 +91,7 @@ FPPage {
                                                        oldLat: latitude,
                                                        oldLon: longitude,
                                                        oldPlace: place
-                                                   }).open()
+                                                   }))
                 }
 
 //                states: [
@@ -255,7 +255,7 @@ FPPage {
         }
         FPToolIcon {
             iconId: "toolbar-add"
-            onClicked: Funcs.loadComponent("AddFuelEntryDialog.qml",mainPage, {carId: carId}).open()
+            onClicked: pageStack.push(Funcs.loadComponent("AddFuelEntryDialog.qml",mainPage, {carId: carId}))
         }
         FPToolIcon {
             platformIconId: "toolbar-view-menu"

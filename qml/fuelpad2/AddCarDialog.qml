@@ -18,11 +18,11 @@
  *
  */
 
-// import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
 
-FPPage {
+FPDialog {
+    id: addDialog
 
     property bool editMode: false
     property string oldId
@@ -33,26 +33,29 @@ FPPage {
     property string oldFueltype
     property string oldNotes
 
-    function open() {
-        addDialog.open()
+    width: parent.width
+
+    title: editMode ? qsTr("Edit car") : qsTr("Add a new car")
+
+    function addDialogAccepted() {
+        if (editMode) {
+            applicationData.updateCar(oldId, markField.text, modelField.text, yearField.text, regnumField.text,
+                                            notesField.text, fueltypeField.selectedIndex)
+        } else {
+            applicationData.addCar(markField.text, modelField.text, yearField.text, regnumField.text,
+                                         notesField.text, fueltypeField.selectedIndex)
+        }
     }
 
-    MyDialog {
-        id: addDialog
-
-        width: parent.width
-
-        titleText: editMode ? qsTr("Edit car") : qsTr("Add a new car")
-
-        function addDialogAccepted() {
-            if (editMode) {
-                applicationData.updateCar(oldId, markField.text, modelField.text, yearField.text, regnumField.text,
-                                                notesField.text, fueltypeField.selectedIndex)
-            } else {
-                applicationData.addCar(markField.text, modelField.text, yearField.text, regnumField.text,
-                                             notesField.text, fueltypeField.selectedIndex)
-            }
+    Flickable {
+        id: addDialogData
+        anchors {
+            fill: parent
+            leftMargin: appTheme.paddingLarge
+            rightMargin: appTheme.paddingLarge
         }
+        contentWidth: addDialogGrid.width
+        contentHeight: addDialogGrid.height
 
         // workaround https://bugreports.qt-project.org/browse/QTBUG-11403
         Text { text: qsTr(name) }
@@ -64,108 +67,97 @@ FPPage {
             ListElement { name: QT_TR_NOOP("Other")}
         }
 
-        content:Flickable {
-            id: addDialogData
-            anchors {
-                fill: parent
-                leftMargin: appTheme.paddingLarge
-                rightMargin: appTheme.paddingLarge
+        Grid {
+            id: addDialogGrid
+            columns: 1
+            spacing: appTheme.paddingMedium
+            Text {
+                text: qsTr("Mark")
+                font.pixelSize: appTheme.fontSizeMedium
             }
-            contentWidth: addDialogGrid.width
-            contentHeight: addDialogGrid.height
-            Grid {
-                id: addDialogGrid
-                columns: 1
-                spacing: appTheme.paddingMedium
-                Text {
-                    text: qsTr("Mark")
-                    font.pixelSize: appTheme.fontSizeMedium
-                }
-                FPTextField {
-                    id: markField
-                    width: addDialog.width-2*appTheme.paddingLarge
-                    placeholderText: qsTr("My car mark")
-                    maximumLength: 40
-                    validator: RegExpValidator{}
-                    text: editMode ? oldMark : ""
-                }
-                Text {
-                    text: qsTr("Model")
-                    font.pixelSize: appTheme.fontSizeMedium
-                }
-                FPTextField {
-                    id: modelField
-                    width: addDialog.width-2*appTheme.paddingLarge
-                    placeholderText: qsTr("My car model")
-                    maximumLength: 40
-                    validator: RegExpValidator{}
-                    text: editMode ? oldModel : ""
-                }
-                Text {
-                    text: qsTr("Model year")
-                    font.pixelSize: appTheme.fontSizeMedium
-                }
-                FPTextField {
-                    id: yearField
-                    width: addDialog.width-2*appTheme.paddingLarge
-                    placeholderText: qsTr("My car model year")
-                    maximumLength: 4
-                    validator: IntValidator{bottom: 1800; top: 2100}
-                    inputMethodHints: Qt.ImhFormattedNumbersOnly
-                    text: editMode ? oldYear : ""
-                }
-                Text {
-                    text: qsTr("Registration number")
-                    font.pixelSize: appTheme.fontSizeMedium
-                }
-                FPTextField {
-                    id: regnumField
-                    width: addDialog.width-2*appTheme.paddingLarge
-                    placeholderText: qsTr("My car registration number")
-                    maximumLength: 40
-                    validator: RegExpValidator{}
-                    text: editMode ? oldRegnum : ""
-                }
-                Text {
-                    text: qsTr("Notes")
-                    font.pixelSize: appTheme.fontSizeMedium
-                }
-                FPTextField {
-                    id: notesField
-                    width: addDialog.width-2*appTheme.paddingLarge
-                    placeholderText: qsTr("Add notes")
-                    maximumLength: 120
-                    validator: RegExpValidator{}
-                    text: editMode ? oldNotes : ""
-                }
+            FPTextField {
+                id: markField
+                width: addDialog.width-2*appTheme.paddingLarge
+                placeholderText: qsTr("My car mark")
+                maximumLength: 40
+                validator: RegExpValidator{}
+                text: editMode ? oldMark : ""
             }
-
-            TouchSelector {
-                id: fueltypeField
-                anchors.top: addDialogGrid.bottom
-                buttonText: qsTr("Primary fuel type")
-                titleText: qsTr("Select primary fuel type")
-                selectedIndex: 0
-                model: fueltypeModel
+            Text {
+                text: qsTr("Model")
+                font.pixelSize: appTheme.fontSizeMedium
             }
-
+            FPTextField {
+                id: modelField
+                width: addDialog.width-2*appTheme.paddingLarge
+                placeholderText: qsTr("My car model")
+                maximumLength: 40
+                validator: RegExpValidator{}
+                text: editMode ? oldModel : ""
+            }
+            Text {
+                text: qsTr("Model year")
+                font.pixelSize: appTheme.fontSizeMedium
+            }
+            FPTextField {
+                id: yearField
+                width: addDialog.width-2*appTheme.paddingLarge
+                placeholderText: qsTr("My car model year")
+                maximumLength: 4
+                validator: IntValidator{bottom: 1800; top: 2100}
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                text: editMode ? oldYear : ""
+            }
+            Text {
+                text: qsTr("Registration number")
+                font.pixelSize: appTheme.fontSizeMedium
+            }
+            FPTextField {
+                id: regnumField
+                width: addDialog.width-2*appTheme.paddingLarge
+                placeholderText: qsTr("My car registration number")
+                maximumLength: 40
+                validator: RegExpValidator{}
+                text: editMode ? oldRegnum : ""
+            }
+            Text {
+                text: qsTr("Notes")
+                font.pixelSize: appTheme.fontSizeMedium
+            }
+            FPTextField {
+                id: notesField
+                width: addDialog.width-2*appTheme.paddingLarge
+                placeholderText: qsTr("Add notes")
+                maximumLength: 120
+                validator: RegExpValidator{}
+                text: editMode ? oldNotes : ""
+            }
         }
 
-        buttons: FPButtonRow {
-            platformStyle: FPButtonStyle { }
-            anchors.horizontalCenter: parent.horizontalCenter
-            FPButton {
-                text: editMode ? qsTr("Apply") : qsTr("Add");
-                onClicked: addDialog.accept()
-            }
-            FPButton {
-                text: qsTr("Cancel");
-                onClicked: addDialog.cancel()
-            }
-          }
-
-        onAccepted: addDialogAccepted()
-
+        TouchSelector {
+            id: fueltypeField
+            anchors.top: addDialogGrid.bottom
+            buttonText: qsTr("Primary fuel type")
+            titleText: qsTr("Select primary fuel type")
+            selectedIndex: 0
+            model: fueltypeModel
         }
+
+    }
+
+    buttons: FPButtonRow {
+        style: FPButtonStyle { }
+        anchors.horizontalCenter: parent.horizontalCenter
+        FPButton {
+            text: editMode ? qsTr("Apply") : qsTr("Add");
+            onClicked: addDialog.accept()
+        }
+        FPButton {
+            text: qsTr("Cancel");
+            onClicked: addDialog.cancel()
+        }
+      }
+
+    onAccepted: addDialogAccepted()
 
 }

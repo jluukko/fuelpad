@@ -67,12 +67,12 @@ FPPage {
                     height: parent.height
                     onPressAndHold: Funcs.loadComponent("DeleteDriverDialog.qml", manageDriversPage,
                                                         {databaseId: databaseid}).open()
-                    onClicked: Funcs.loadComponent("AddDriverDialog.qml",manageDriversPage,
+                    onClicked: pageStack.push(Funcs.loadComponent("AddDriverDialog.qml",manageDriversPage,
                                                    {editMode: true,
                                                     oldId: databaseid,
                                                     oldFullname: fullname,
                                                     oldNickname: nickname
-                                                   }).open()
+                                                   }))
                 }
 
                 states: [
@@ -147,7 +147,7 @@ FPPage {
         }
         FPToolIcon {
             iconId: "toolbar-add"
-            onClicked: Funcs.loadComponent("AddDriverDialog.qml",manageDriversPage, {}).open()
+            onClicked: pageStack.push(Funcs.loadComponent("AddDriverDialog.qml",manageDriversPage, {}))
         }
 //        FPToolIcon {
 //            platformIconId: "toolbar-view-menu"

@@ -19,6 +19,7 @@ FPPageStackWindow 1.0 FPPageStackWindow.qml
 FPScrollDecorator 1.0 FPScrollDecorator.qml
 FPSelectionDialog 1.0 FPSelectionDialog.qml
 FPSheet 1.0 FPSheet.qml
+FPSimpleDialog 1.0 FPSimpleDialog.qml
 FPSwitch 1.0 FPSwitch.qml
 FPTextArea 1.0 FPTextArea.qml
 FPTextField 1.0 FPTextField.qml

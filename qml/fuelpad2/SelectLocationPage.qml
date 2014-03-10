@@ -23,31 +23,41 @@ import org.fuelpad.qmlui 1.0
 import "CommonFuncs.js" as Funcs
 import "CommonUnits.js" as Units
 
-FPPage {
-    id: selectLocationPage
+FPDialog {
+    id: locationDialog
 
-    function open() {
-        locationDialog.open()
+    FPApplicationTheme {
+        id: appTheme
     }
 
-    MyDialog {
-        id: locationDialog
-        width: parent.width
+    width: parent.width
 
-        titleText: qsTr("Retrieve location")
+    title: qsTr("Retrieve location")
 
-        function toggleGPS() {
-            if (enableGPS.checked) {
-                positionSource.start()
-            }
-            else {
-                positionSource.stop()
-            }
+    function toggleGPS() {
+        if (enableGPS.checked) {
+            positionSource.start()
         }
-
-        function locationDialogAccepted() {
-            selectLocationPage.parent.addressFound(placeField.text);
+        else {
+            positionSource.stop()
         }
+    }
+
+    function locationDialogAccepted() {
+        addressFound(placeField.text);
+    }
+
+
+    Flickable {
+        id: locationDialogData
+        anchors {
+            fill: parent
+            leftMargin: appTheme.paddingLarge
+            rightMargin: appTheme.paddingLarge
+        }
+        contentWidth: column.width
+        contentHeight: column.height
+        flickableDirection: Flickable.VerticalFlick
 
         Connections {
             target: applicationData
@@ -57,113 +67,99 @@ FPPage {
             }
         }
 
-        content:Flickable {
-            id: locationDialogData
-            anchors {
-                fill: parent
-                leftMargin: appTheme.paddingLarge
-                rightMargin: appTheme.paddingLarge
-            }
-            contentWidth: column.width
-            contentHeight: column.height
-            flickableDirection: Flickable.VerticalFlick
+        Column {
+            id: column
+            spacing: appTheme.paddingMedium
 
-            Column {
-                id: column
+            Grid {
+                columns: 2
                 spacing: appTheme.paddingMedium
 
-                Grid {
-                    columns: 2
-                    spacing: appTheme.paddingMedium
-
-                    FPLabel {
-                        text: qsTr("Enable GPS")
-                    }
-
-                    // todo Get checked from global settings
-                    FPSwitch {
-                        id: enableGPS
-                        checked: positionSource.active
-                        onCheckedChanged: locationDialog.toggleGPS()
-                    }
-
-                    FPLabel {
-                        text: qsTr("Latitude")
-                        font.pixelSize: appTheme.fontSizeMedium
-                    }
-                    FPLabel {
-                        id: latField
-                        text: positionSource.position.coordinate.latitude.toFixed(8)
-                    }
-
-                    FPLabel {
-                        text: qsTr("Longitude")
-                        font.pixelSize: appTheme.fontSizeMedium
-                    }
-                    FPLabel {
-                        id: lonField
-                        text: positionSource.position.coordinate.longitude.toFixed(8)
-                    }
-
-                    FPLabel {
-                        text: qsTr("Position valid")
-                    }
-
-                    FPLabel {
-                        text: (positionSource.position.latitudeValid && positionSource.position.longitudeValid) ?
-                                  qsTr("valid") : qsTr("invalid")
-                    }
-
-                    FPLabel {
-                        text: qsTr("Horizontal accuracy")
-                    }
-
-                    FPLabel {
-                        text: positionSource.position.horizontalAccuracy.toFixed(1)
-                    }
-
-                    FPLabel {
-                        text: qsTr("Vertical accuracy")
-                    }
-
-                    FPLabel {
-                        text: positionSource.position.verticalAccuracy.toFixed(1)
-                    }
-
+                FPLabel {
+                    text: qsTr("Enable GPS")
                 }
 
-                FPButton {
+                // todo Get checked from global settings
+                FPSwitch {
+                    id: enableGPS
+                    checked: positionSource.active
+                    onCheckedChanged: locationDialog.toggleGPS()
+                }
+
+                FPLabel {
+                    text: qsTr("Latitude")
+                    font.pixelSize: appTheme.fontSizeMedium
+                }
+                FPLabel {
+                    id: latField
+                    text: positionSource.position.coordinate.latitude.toFixed(8)
+                }
+
+                FPLabel {
+                    text: qsTr("Longitude")
+                    font.pixelSize: appTheme.fontSizeMedium
+                }
+                FPLabel {
+                    id: lonField
+                    text: positionSource.position.coordinate.longitude.toFixed(8)
+                }
+
+                FPLabel {
+                    text: qsTr("Position valid")
+                }
+
+                FPLabel {
+                    text: (positionSource.position.latitudeValid && positionSource.position.longitudeValid) ?
+                              qsTr("valid") : qsTr("invalid")
+                }
+
+                FPLabel {
+                    text: qsTr("Horizontal accuracy")
+                }
+
+                FPLabel {
+                    text: positionSource.position.horizontalAccuracy.toFixed(1)
+                }
+
+                FPLabel {
+                    text: qsTr("Vertical accuracy")
+                }
+
+                FPLabel {
+                    text: positionSource.position.verticalAccuracy.toFixed(1)
+                }
+
+            }
+
+            FPButton {
 //                    anchors.horizontalCenter: locationDialog.horizontalCenter
-                    text: qsTr("Retrieve address")
-                    onClicked: applicationData.requestAddress(latField.text, lonField.text)
-                }
-
-                FPTextArea {
-                    id: placeField
-                    width: locationDialog.width-2*appTheme.paddingLarge
-                    height: 4*appTheme.fontSizeMedium
-                    placeholderText: qsTr("Place")
-                    readOnly: true
-                }
-
+                text: qsTr("Retrieve address")
+                onClicked: applicationData.requestAddress(latField.text, lonField.text)
             }
+
+            FPTextArea {
+                id: placeField
+                width: locationDialog.width-2*appTheme.paddingLarge
+                height: 4*appTheme.fontSizeMedium
+                placeholderText: qsTr("Place")
+                readOnly: true
+            }
+
         }
-        buttons: FPButtonRow {
-            style: FPButtonStyle { }
-            anchors.horizontalCenter: parent.horizontalCenter
-            FPButton {
-                text: qsTr("Apply")
-                onClicked: locationDialog.accept()
-            }
-            FPButton {
-                text: qsTr("Cancel");
-                onClicked: locationDialog.cancel()
-            }
+    }
+    buttons: FPButtonRow {
+        style: FPButtonStyle { }
+        anchors.horizontalCenter: parent.horizontalCenter
+        FPButton {
+            text: qsTr("Apply")
+            onClicked: locationDialog.accept()
         }
-
-        onAccepted: locationDialogAccepted()
-
+        FPButton {
+            text: qsTr("Cancel");
+            onClicked: locationDialog.cancel()
+        }
     }
 
+    onAccepted: locationDialogAccepted()
 
 }

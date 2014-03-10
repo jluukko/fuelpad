@@ -23,8 +23,8 @@ import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
 import "CommonFuncs.js" as Funcs
 
-FPPage {
-    id: addFuelEntryDialogPage
+FPDialog {
+    id: addDialog
 
     property int carId: -1
     property bool editMode: false
@@ -43,20 +43,34 @@ FPPage {
     property double oldLon
     property string oldPlace
 
-    function open() {
-        addDialog.open()
+    width: parent.width
+
+    title: editMode ? qsTr("Edit fuel record") : qsTr("Add a new fuel record")
+
+    function addDialogAccepted() {
+        if (editMode) {
+            applicationData.updateFuelEntry(carId, oldId, dateField.text, kmField.text, tripField.text, fillField.text,
+                                         notFullFill.checked, priceField.text, serviceField.text,
+                                         oilField.text, tiresField.text, latField.text, lonField.text,
+                                            placeField.text, notesField.text)
+        } else {
+            applicationData.addFuelEntry(carId, dateField.text, kmField.text, tripField.text, fillField.text,
+                                         notFullFill.checked, priceField.text, serviceField.text,
+                                         oilField.text, tiresField.text, latField.text, lonField.text,
+                                         placeField.text, notesField.text)
+        }
     }
 
-    MyDialog {
-        id: addDialog
-
-        width: parent.width
-
-        titleText: editMode ? qsTr("Edit fuel record") : qsTr("Add a new fuel record")
-
-        function addressFound(address) {
-            placeField.text = address;
+    Flickable {
+        id: addDialogData
+        anchors {
+            fill: parent
+            leftMargin: appTheme.paddingLarge
+            rightMargin: appTheme.paddingLarge
         }
+        contentWidth: column.width
+        contentHeight: column.height
+//        flickableDirection: Flickable.VerticalFlick
 
         function launchDateDialogToToday() {
              var d = new Date();
@@ -70,226 +84,204 @@ FPPage {
             dateField.text = dateDialog.year+"-"+dateDialog.month+"-"+dateDialog.day
         }
 
-        function addDialogAccepted() {
-            if (editMode) {
-                applicationData.updateFuelEntry(carId, oldId, dateField.text, kmField.text, tripField.text, fillField.text,
-                                             notFullFill.checked, priceField.text, serviceField.text,
-                                             oilField.text, tiresField.text, latField.text, lonField.text,
-                                                placeField.text, notesField.text)
-            } else {
-                applicationData.addFuelEntry(carId, dateField.text, kmField.text, tripField.text, fillField.text,
-                                             notFullFill.checked, priceField.text, serviceField.text,
-                                             oilField.text, tiresField.text, latField.text, lonField.text,
-                                             placeField.text, notesField.text)
-            }
-        }
-
         FPDatePickerDialog {
             id: dateDialog
             titleText: qsTr("Entry date")
             acceptButtonText: qsTr("OK")
             rejectButtonText: qsTr("Cancel")
-            onAccepted: addDialog.dateDialogAccecpted()
+            onAccepted: addDialogData.dateDialogAccecpted()
         }
 
-        content:Flickable {
-            id: addDialogData
-            anchors {
-                fill: parent
-                leftMargin: appTheme.paddingLarge
-                rightMargin: appTheme.paddingLarge
-            }
-            contentWidth: column.width
-            contentHeight: column.height
-            flickableDirection: Flickable.VerticalFlick
-            Column{
-                id: column
-                Grid {
-                    columns: 1
-                    spacing: appTheme.paddingMedium
+        function addressFound(address) {
+            placeField.text = address;
+        }
 
-                    FPListButton {
-                         id: dateButton
-                         text: qsTr("Pick date")
-                         width: text.width
-                         onClicked: addDialog.launchDateDialogToToday()
-                    }
-                    FPTextField {
-                        id: dateField
-                        width: addDialog.width-2*appTheme.paddingLarge
-                        placeholderText: qsTr("Add date")
-                        maximumLength: 10
-                        readOnly: true
-                        text: editMode ? oldDate : ""
-                    }
-                    Text {
-                        text: qsTr("Km")
-                        font.pixelSize: appTheme.fontSizeMedium
-                    }
-                    FPTextField {
-                        id: kmField
-                        width: addDialog.width-2*appTheme.paddingLarge
-                        placeholderText: qsTr("Add overall km")
-                        maximumLength: 8
-                        validator: DoubleValidator{bottom: 0.0}
-                        inputMethodHints: Qt.ImhFormattedNumbersOnly
-                        text: editMode ? oldKm : ""
-                    }
-                    Text {
-                        text: qsTr("Trip")
-                        font.pixelSize: appTheme.fontSizeMedium
-                    }
-                    FPTextField {
-                        id: tripField
-                        width: addDialog.width-2*appTheme.paddingLarge
-                        placeholderText: qsTr("Add trip")
-                        maximumLength: 5
-                        validator: DoubleValidator{bottom: 0.0}
-                        inputMethodHints: Qt.ImhFormattedNumbersOnly
-                        text: editMode ? oldTrip : ""
-                    }
-                    Text {
-                        text: qsTr("Fill")
-                        font.pixelSize: appTheme.fontSizeMedium
-                    }
-                    FPTextField {
-                        id: fillField
-                        width: addDialog.width-2*appTheme.paddingLarge
-                        placeholderText: qsTr("Add fill")
-                        maximumLength: 5
-                        validator: DoubleValidator{bottom: 0.0}
-                        inputMethodHints: Qt.ImhFormattedNumbersOnly
-                        text: editMode ? oldFill : ""
-                    }
-                    Text {
-                        text: qsTr("Not full fill")
-                        font.pixelSize: appTheme.fontSizeMedium
-                    }
-                    FPSwitch {
-                        id: notFullFill
-                        checked: editMode ? oldNotFull : false
-                    }
-                    Text {
-                        text: qsTr("Price")
-                        font.pixelSize: appTheme.fontSizeMedium
-                    }
-                    FPTextField {
-                        id: priceField
-                        width: addDialog.width-2*appTheme.paddingLarge
-                        placeholderText: qsTr("Add price")
-                        maximumLength: 10
-                        validator: DoubleValidator{}
-                        inputMethodHints: Qt.ImhFormattedNumbersOnly
-                        text: editMode ? oldPrice : ""
-                    }
-                    Text {
-                        text: qsTr("Notes")
-                        font.pixelSize: appTheme.fontSizeMedium
-                    }
-                    FPTextField {
-                        id: notesField
-                        width: addDialog.width-2*appTheme.paddingLarge
-                        placeholderText: qsTr("Add notes")
-                        maximumLength: 120
-                        validator: RegExpValidator{}
-                        text: editMode ? oldNotes : ""
-                    }
-                    Text {
-                        text: qsTr("Service")
-                        font.pixelSize: appTheme.fontSizeMedium
-                    }
-                    FPTextField {
-                        id: serviceField
-                        width: addDialog.width-2*appTheme.paddingLarge
-                        placeholderText: qsTr("Add service cost")
-                        maximumLength: 5
-                        validator: DoubleValidator{bottom: 0.0}
-                        inputMethodHints: Qt.ImhFormattedNumbersOnly
-                        text: editMode ? oldService : ""
-                    }
-                    Text {
-                        text: qsTr("Oil")
-                        font.pixelSize: appTheme.fontSizeMedium
-                    }
-                    FPTextField {
-                        id: oilField
-                        width: addDialog.width-2*appTheme.paddingLarge
-                        placeholderText: qsTr("Add oil cost")
-                        maximumLength: 5
-                        validator: DoubleValidator{bottom: 0.0}
-                        inputMethodHints: Qt.ImhFormattedNumbersOnly
-                        text: editMode ? oldOil : ""
-                    }
-                    Text {
-                        text: qsTr("Tires")
-                        font.pixelSize: appTheme.fontSizeMedium
-                    }
-                    FPTextField {
-                        id: tiresField
-                        width: addDialog.width-2*appTheme.paddingLarge
-                        placeholderText: qsTr("Add tires cost")
-                        maximumLength: 5
-                        validator: DoubleValidator{bottom: 0.0}
-                        inputMethodHints: Qt.ImhFormattedNumbersOnly
-                        text: editMode ? oldTires : ""
-                    }
+        Column{
+            id: column
+            Grid {
+                columns: 1
+                spacing: appTheme.paddingMedium
 
-                    Text {
-                        text: qsTr("Latitude")
-                        font.pixelSize: appTheme.fontSizeMedium
-                        visible: false
-                    }
-                    FPTextField {
-                        id: latField
-                        width: addDialog.width-2*appTheme.paddingLarge
-                        text: editMode ? oldLat : positionSource.position.coordinate.latitude.toFixed(8)
-                        visible: false
-                    }
+                FPListButton {
+                     id: dateButton
+                     text: qsTr("Pick date")
+                     width: text.width
+                     onClicked: addDialogData.launchDateDialogToToday()
+                }
+                FPTextField {
+                    id: dateField
+                    width: addDialog.width-2*appTheme.paddingLarge
+                    placeholderText: qsTr("Add date")
+                    maximumLength: 10
+                    readOnly: true
+                    text: editMode ? oldDate : ""
+                }
+                Text {
+                    text: qsTr("Km")
+                    font.pixelSize: appTheme.fontSizeMedium
+                }
+                FPTextField {
+                    id: kmField
+                    width: addDialog.width-2*appTheme.paddingLarge
+                    placeholderText: qsTr("Add overall km")
+                    maximumLength: 8
+                    validator: DoubleValidator{bottom: 0.0}
+                    inputMethodHints: Qt.ImhFormattedNumbersOnly
+                    text: editMode ? oldKm : ""
+                }
+                Text {
+                    text: qsTr("Trip")
+                    font.pixelSize: appTheme.fontSizeMedium
+                }
+                FPTextField {
+                    id: tripField
+                    width: addDialog.width-2*appTheme.paddingLarge
+                    placeholderText: qsTr("Add trip")
+                    maximumLength: 5
+                    validator: DoubleValidator{bottom: 0.0}
+                    inputMethodHints: Qt.ImhFormattedNumbersOnly
+                    text: editMode ? oldTrip : ""
+                }
+                Text {
+                    text: qsTr("Fill")
+                    font.pixelSize: appTheme.fontSizeMedium
+                }
+                FPTextField {
+                    id: fillField
+                    width: addDialog.width-2*appTheme.paddingLarge
+                    placeholderText: qsTr("Add fill")
+                    maximumLength: 5
+                    validator: DoubleValidator{bottom: 0.0}
+                    inputMethodHints: Qt.ImhFormattedNumbersOnly
+                    text: editMode ? oldFill : ""
+                }
+                Text {
+                    text: qsTr("Not full fill")
+                    font.pixelSize: appTheme.fontSizeMedium
+                }
+                FPSwitch {
+                    id: notFullFill
+                    checked: editMode ? oldNotFull : false
+                }
+                Text {
+                    text: qsTr("Price")
+                    font.pixelSize: appTheme.fontSizeMedium
+                }
+                FPTextField {
+                    id: priceField
+                    width: addDialog.width-2*appTheme.paddingLarge
+                    placeholderText: qsTr("Add price")
+                    maximumLength: 10
+                    validator: DoubleValidator{}
+                    inputMethodHints: Qt.ImhFormattedNumbersOnly
+                    text: editMode ? oldPrice : ""
+                }
+                Text {
+                    text: qsTr("Notes")
+                    font.pixelSize: appTheme.fontSizeMedium
+                }
+                FPTextField {
+                    id: notesField
+                    width: addDialog.width-2*appTheme.paddingLarge
+                    placeholderText: qsTr("Add notes")
+                    maximumLength: 120
+                    validator: RegExpValidator{}
+                    text: editMode ? oldNotes : ""
+                }
+                Text {
+                    text: qsTr("Service")
+                    font.pixelSize: appTheme.fontSizeMedium
+                }
+                FPTextField {
+                    id: serviceField
+                    width: addDialog.width-2*appTheme.paddingLarge
+                    placeholderText: qsTr("Add service cost")
+                    maximumLength: 5
+                    validator: DoubleValidator{bottom: 0.0}
+                    inputMethodHints: Qt.ImhFormattedNumbersOnly
+                    text: editMode ? oldService : ""
+                }
+                Text {
+                    text: qsTr("Oil")
+                    font.pixelSize: appTheme.fontSizeMedium
+                }
+                FPTextField {
+                    id: oilField
+                    width: addDialog.width-2*appTheme.paddingLarge
+                    placeholderText: qsTr("Add oil cost")
+                    maximumLength: 5
+                    validator: DoubleValidator{bottom: 0.0}
+                    inputMethodHints: Qt.ImhFormattedNumbersOnly
+                    text: editMode ? oldOil : ""
+                }
+                Text {
+                    text: qsTr("Tires")
+                    font.pixelSize: appTheme.fontSizeMedium
+                }
+                FPTextField {
+                    id: tiresField
+                    width: addDialog.width-2*appTheme.paddingLarge
+                    placeholderText: qsTr("Add tires cost")
+                    maximumLength: 5
+                    validator: DoubleValidator{bottom: 0.0}
+                    inputMethodHints: Qt.ImhFormattedNumbersOnly
+                    text: editMode ? oldTires : ""
+                }
 
-                    Text {
-                        text: qsTr("Longitude")
-                        font.pixelSize: appTheme.fontSizeMedium
-                        visible: false
-                    }
-                    FPTextField {
-                        id: lonField
-                        width: addDialog.width-2*appTheme.paddingLarge
-                        text: editMode ? oldLon : positionSource.position.coordinate.longitude.toFixed(8)
-                        visible: false
-                    }
+                Text {
+                    text: qsTr("Latitude")
+                    font.pixelSize: appTheme.fontSizeMedium
+                    visible: false
+                }
+                FPTextField {
+                    id: latField
+                    width: addDialog.width-2*appTheme.paddingLarge
+                    text: editMode ? oldLat : positionSource.position.coordinate.latitude.toFixed(8)
+                    visible: false
+                }
 
-                    FPListButton {
-                        text: qsTr("Get address")
-                        onClicked: Funcs.loadComponent("SelectLocationPage.qml",addDialog, {}).open()
-                    }
-                    FPTextArea {
-                        id: placeField
-                        width: addDialog.width-2*appTheme.paddingLarge
-                        height: 4*appTheme.fontSizeMedium
-                        placeholderText: qsTr("Add place")
-                        text: editMode ? oldPlace : ""
-                    }
+                Text {
+                    text: qsTr("Longitude")
+                    font.pixelSize: appTheme.fontSizeMedium
+                    visible: false
+                }
+                FPTextField {
+                    id: lonField
+                    width: addDialog.width-2*appTheme.paddingLarge
+                    text: editMode ? oldLon : positionSource.position.coordinate.longitude.toFixed(8)
+                    visible: false
+                }
 
+                FPListButton {
+                    text: qsTr("Get address")
+                    onClicked: pageStack.push(Funcs.loadComponent("SelectLocationPage.qml",addDialogData, {}))
+                }
+                FPTextArea {
+                    id: placeField
+                    width: addDialog.width-2*appTheme.paddingLarge
+                    height: 4*appTheme.fontSizeMedium
+                    placeholderText: qsTr("Add place")
+                    text: editMode ? oldPlace : ""
                 }
 
             }
-        }
-
-        buttons: FPButtonRow {
-            style: FPButtonStyle { }
-            anchors.horizontalCenter: parent.horizontalCenter
-            FPButton {
-                text: editMode ? qsTr("Apply") : qsTr("Add");
-                onClicked: addDialog.accept()
-            }
-            FPButton {
-                text: qsTr("Cancel");
-                onClicked: addDialog.cancel()
-            }
-          }
-
-        onAccepted: addDialogAccepted()
 
         }
+    }
+
+    buttons: FPButtonRow {
+        style: FPButtonStyle { }
+        anchors.horizontalCenter: parent.horizontalCenter
+        FPButton {
+            text: editMode ? qsTr("Apply") : qsTr("Add");
+            onClicked: addDialog.accept()
+        }
+        FPButton {
+            text: qsTr("Cancel");
+            onClicked: addDialog.cancel()
+        }
+      }
+
+    onAccepted: addDialogAccepted()
 
 }

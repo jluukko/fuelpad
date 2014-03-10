@@ -22,7 +22,8 @@
 import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
 
-FPPage {
+FPDialog {
+    id: addDialog
 
     property bool editMode: false
     property string oldId
@@ -35,158 +36,149 @@ FPPage {
     property double oldOil
     property double oldTires
 
-    function open() {
-        addDialog.open()
+    width: parent.width
+
+    title: editMode ? qsTr("Edit event") : qsTr("Add a new event")
+
+    // Similar function exists also in AddFuelEntryDialog
+    function launchDateDialogToToday() {
+         var d = new Date();
+         dateDialog.year = d.getFullYear();
+         dateDialog.month = d.getMonth()+1;
+         dateDialog.day = d.getDate();
+         dateDialog.open();
     }
 
-    MyDialog {
-        id: addDialog
+    function dateDialogAccecpted() {
+        dateField.text = dateDialog.year+"-"+dateDialog.month+"-"+dateDialog.day
+    }
 
+    function addDialogAccepted() {
+        if (editMode) {
+            applicationData.updateAlarmEvent(oldId, oldAlarmId, oldRecordId, dateField.text, kmField.text, serviceField.text, oilField.text,
+                                            tiresField.text, notesField.text)
+        }
+        else {
+            applicationData.addAlarmEvent(oldAlarmId, dateField.text, kmField.text, serviceField.text, oilField.text,
+                                          tiresField.text, notesField.text)
+        }
+    }
+
+    FPDatePickerDialog {
+        id: dateDialog
+        titleText: qsTr("Event date")
+        acceptButtonText: qsTr("OK")
+        rejectButtonText: qsTr("Cancel")
+        onAccepted: addDialog.dateDialogAccecpted()
+    }
+
+    Flickable {
+        id: addDialogData
+        anchors {
+            fill: parent
+            leftMargin: appTheme.paddingLarge
+            rightMargin: appTheme.paddingLarge
+        }
         width: parent.width
+        Grid {
+            id: addDialogGrid
+            columns: 2
+            spacing: appTheme.paddingMedium
 
-        titleText: editMode ? qsTr("Edit event") : qsTr("Add a new event")
-
-        // Similar function exists also in AddFuelEntryDialog
-        function launchDateDialogToToday() {
-             var d = new Date();
-             dateDialog.year = d.getFullYear();
-             dateDialog.month = d.getMonth()+1;
-             dateDialog.day = d.getDate();
-             dateDialog.open();
-        }
-
-        function dateDialogAccecpted() {
-            dateField.text = dateDialog.year+"-"+dateDialog.month+"-"+dateDialog.day
-        }
-
-        function addDialogAccepted() {
-            if (editMode) {
-                applicationData.updateAlarmEvent(oldId, oldAlarmId, oldRecordId, dateField.text, kmField.text, serviceField.text, oilField.text,
-                                                tiresField.text, notesField.text)
+            FPListButton {
+                 id: dateButton
+                 text: qsTr("Pick date")
+                 width: text.width
+                 onClicked: addDialog.launchDateDialogToToday()
             }
-            else {
-                applicationData.addAlarmEvent(oldAlarmId, dateField.text, kmField.text, serviceField.text, oilField.text,
-                                              tiresField.text, notesField.text)
-            }
-        }
-
-        FPDatePickerDialog {
-            id: dateDialog
-            titleText: qsTr("Event date")
-            acceptButtonText: qsTr("OK")
-            rejectButtonText: qsTr("Cancel")
-            onAccepted: addDialog.dateDialogAccecpted()
-        }
-
-        content:Flickable {
-            id: addDialogData
-            anchors {
-                fill: parent
-                leftMargin: appTheme.paddingLarge
-                rightMargin: appTheme.paddingLarge
-            }
-            width: parent.width
-            Grid {
-                id: addDialogGrid
-                columns: 2
-                spacing: appTheme.paddingMedium
-
-                FPListButton {
-                     id: dateButton
-                     text: qsTr("Pick date")
-                     width: text.width
-                     onClicked: addDialog.launchDateDialogToToday()
-                }
-                FPTextField {
-                    id: dateField
-                    placeholderText: qsTr("Add date")
-                    maximumLength: 10
-                    readOnly: true
-                    text: editMode ? oldDate : ""
-                }
-
-                Text {
-                    text: qsTr("Km")
-                    font.pixelSize: appTheme.fontSizeMedium
-                }
-                FPTextField {
-                    id: kmField
-                    placeholderText: qsTr("Add event km")
-                    maximumLength: 8
-                    validator: DoubleValidator{bottom: 0.0}
-                    inputMethodHints: Qt.ImhFormattedNumbersOnly
-                    text: editMode ? oldKm : ""
-                }
-
-                Text {
-                    text: qsTr("Service")
-                    font.pixelSize: appTheme.fontSizeMedium
-                }
-                FPTextField {
-                    id: serviceField
-                    placeholderText: qsTr("Add service cost")
-                    maximumLength: 5
-                    validator: DoubleValidator{bottom: 0.0}
-                    inputMethodHints: Qt.ImhFormattedNumbersOnly
-                    text: editMode ? oldService : ""
-                }
-
-                Text {
-                    text: qsTr("Oil")
-                    font.pixelSize: appTheme.fontSizeMedium
-                }
-                FPTextField {
-                    id: oilField
-                    placeholderText: qsTr("Add oil cost")
-                    maximumLength: 5
-                    validator: DoubleValidator{bottom: 0.0}
-                    inputMethodHints: Qt.ImhFormattedNumbersOnly
-                    text: editMode ? oldOil : ""
-                }
-
-                Text {
-                    text: qsTr("Tires")
-                    font.pixelSize: appTheme.fontSizeMedium
-                }
-                FPTextField {
-                    id: tiresField
-                    placeholderText: qsTr("Add tires cost")
-                    maximumLength: 5
-                    validator: DoubleValidator{bottom: 0.0}
-                    inputMethodHints: Qt.ImhFormattedNumbersOnly
-                    text: editMode ? oldTires : ""
-                }
-
-                Text {
-                    text: qsTr("Notes")
-                    font.pixelSize: appTheme.fontSizeMedium
-                }
-                FPTextField {
-                    id: notesField
-                    placeholderText: qsTr("Add notes")
-                    maximumLength: 120
-                    validator: RegExpValidator{}
-                    text: editMode ? oldNotes : ""
-                }
+            FPTextField {
+                id: dateField
+                placeholderText: qsTr("Add date")
+                maximumLength: 10
+                readOnly: true
+                text: editMode ? oldDate : ""
             }
 
+            Text {
+                text: qsTr("Km")
+                font.pixelSize: appTheme.fontSizeMedium
+            }
+            FPTextField {
+                id: kmField
+                placeholderText: qsTr("Add event km")
+                maximumLength: 8
+                validator: DoubleValidator{bottom: 0.0}
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                text: editMode ? oldKm : ""
+            }
+
+            Text {
+                text: qsTr("Service")
+                font.pixelSize: appTheme.fontSizeMedium
+            }
+            FPTextField {
+                id: serviceField
+                placeholderText: qsTr("Add service cost")
+                maximumLength: 5
+                validator: DoubleValidator{bottom: 0.0}
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                text: editMode ? oldService : ""
+            }
+
+            Text {
+                text: qsTr("Oil")
+                font.pixelSize: appTheme.fontSizeMedium
+            }
+            FPTextField {
+                id: oilField
+                placeholderText: qsTr("Add oil cost")
+                maximumLength: 5
+                validator: DoubleValidator{bottom: 0.0}
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                text: editMode ? oldOil : ""
+            }
+
+            Text {
+                text: qsTr("Tires")
+                font.pixelSize: appTheme.fontSizeMedium
+            }
+            FPTextField {
+                id: tiresField
+                placeholderText: qsTr("Add tires cost")
+                maximumLength: 5
+                validator: DoubleValidator{bottom: 0.0}
+                inputMethodHints: Qt.ImhFormattedNumbersOnly
+                text: editMode ? oldTires : ""
+            }
+
+            Text {
+                text: qsTr("Notes")
+                font.pixelSize: appTheme.fontSizeMedium
+            }
+            FPTextField {
+                id: notesField
+                placeholderText: qsTr("Add notes")
+                maximumLength: 120
+                validator: RegExpValidator{}
+                text: editMode ? oldNotes : ""
+            }
         }
 
-        buttons: FPButtonRow {
-            platformStyle: FPButtonStyle { }
-            anchors.horizontalCenter: parent.horizontalCenter
-            FPButton {
-                text: editMode ? qsTr("Apply") : qsTr("Add");
-                onClicked: addDialog.accept()
-            }
-            FPButton {
-                text: qsTr("Cancel");
-                onClicked: addDialog.cancel()
-            }
-          }
+    }
 
-        onAccepted: addDialogAccepted()
-
+    buttons: FPButtonRow {
+        platformStyle: FPButtonStyle { }
+        anchors.horizontalCenter: parent.horizontalCenter
+        FPButton {
+            text: editMode ? qsTr("Apply") : qsTr("Add");
+            onClicked: addDialog.accept()
         }
+        FPButton {
+            text: qsTr("Cancel");
+            onClicked: addDialog.cancel()
+        }
+      }
+
+    onAccepted: addDialogAccepted()
 
 }

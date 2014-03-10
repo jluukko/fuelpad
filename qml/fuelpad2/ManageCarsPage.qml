@@ -69,7 +69,7 @@ FPPage {
                     height: parent.height
                     onPressAndHold: Funcs.loadComponent("DeleteCarDialog.qml", manageCarsPage,
                                                         {databaseId: databaseid}).open()
-                    onClicked: Funcs.loadComponent("AddCarDialog.qml",manageCarsPage,
+                    onClicked: pageStack.push(Funcs.loadComponent("AddCarDialog.qml",manageCarsPage,
                                                    {editMode: true,
                                                     oldId: databaseid,
                                                     oldMark: mark,
@@ -78,7 +78,7 @@ FPPage {
                                                     oldRegnum: regnum,
                                                     oldFueltype: fueltype,
                                                     oldNotes: notes
-                                                   }).open()
+                                                   }))
                 }
 
                 states: [
@@ -199,7 +199,7 @@ FPPage {
         }
         FPToolIcon {
             iconId: "toolbar-add"
-            onClicked: Funcs.loadComponent("AddCarDialog.qml",manageCarsPage, {}).open()
+            onClicked: pageStack.push(Funcs.loadComponent("AddCarDialog.qml",manageCarsPage, {}))
         }
 //        FPToolIcon {
 //            platformIconId: "toolbar-view-menu"

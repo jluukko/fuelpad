@@ -67,7 +67,7 @@ FPPage {
                     height: parent.height
 //                    onPressAndHold: Funcs.loadComponent("DeletealarmEventDialog.qml", mainPage,
 //                                                        {databaseId: databaseid}).open()
-                    onClicked: Funcs.loadComponent("AddAlarmEventDialog.qml",mainPage,
+                    onClicked: pageStack.push(Funcs.loadComponent("AddAlarmEventDialog.qml",mainPage,
                                                       {"editMode": true,
                                                        "oldId": databaseid,
                                                       "oldAlarmId": alarmId,
@@ -78,7 +78,7 @@ FPPage {
                                                       "oldService": service,
                                                       "oldOil": oil,
                                                       "oldTires": tires}
-                                                   ).open()
+                                                   ))
                 }
 
 //                states: [
@@ -194,7 +194,7 @@ FPPage {
         }
         FPToolIcon {
             iconId: "toolbar-add"
-            onClicked: Funcs.loadComponent("AddAlarmEventDialog.qml",mainPage, {"editMode": false}).open()
+            onClicked: pageStack.push(Funcs.loadComponent("AddAlarmEventDialog.qml",mainPage, {"editMode": false}))
         }
     }
 

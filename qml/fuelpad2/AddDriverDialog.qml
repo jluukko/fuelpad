@@ -21,89 +21,80 @@
 import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
 
-FPPage {
+FPDialog {
+    id: addDialog
 
     property bool editMode: false
     property string oldId
     property string oldFullname
     property string oldNickname
 
-    function open() {
-        addDialog.open()
+    width: parent.width
+
+    title: editMode ? qsTr("Edit driver") : qsTr("Add a new driver")
+
+    function addDialogAccepted() {
+        if (editMode) {
+            applicationData.updateDriver(oldId, fullnameField.text, nicknameField.text)
+        } else {
+            applicationData.addDriver(fullnameField.text, nicknameField.text)
+        }
     }
 
-    MyDialog {
-        id: addDialog
-
-        width: parent.width
-
-        titleText: editMode ? qsTr("Edit driver") : qsTr("Add a new driver")
-
-        function addDialogAccepted() {
-            if (editMode) {
-                applicationData.updateDriver(oldId, fullnameField.text, nicknameField.text)
-            } else {
-                applicationData.addDriver(fullnameField.text, nicknameField.text)
+    Flickable {
+        id: addDialogData
+        anchors {
+            fill: parent
+            leftMargin: appTheme.paddingLarge
+            rightMargin: appTheme.paddingLarge
+        }
+        contentWidth: addDialogGrid.width
+        contentHeight: addDialogGrid.height
+        Grid {
+            id: addDialogGrid
+            columns: 1
+            spacing: appTheme.paddingMedium
+            Text {
+                text: qsTr("Full name")
+                font.pixelSize: appTheme.fontSizeMedium
+            }
+            FPTextField {
+                id: fullnameField
+                width: addDialog.width-2*appTheme.paddingLarge
+                placeholderText: qsTr("Full name")
+                maximumLength: 40
+                validator: RegExpValidator{}
+                text: editMode ? oldFullname : ""
+            }
+            Text {
+                text: qsTr("Nick name")
+                font.pixelSize: appTheme.fontSizeMedium
+            }
+            FPTextField {
+                id: nicknameField
+                width: addDialog.width-2*appTheme.paddingLarge
+                placeholderText: qsTr("Nick name")
+                maximumLength: 40
+                validator: RegExpValidator{}
+                text: editMode ? oldNickname : ""
             }
         }
 
-        content:Flickable {
-            id: addDialogData
-            height: 600
-            anchors {
-                fill: parent
-                leftMargin: appTheme.paddingLarge
-                rightMargin: appTheme.paddingLarge
-            }
-            contentWidth: addDialogGrid.width
-            contentHeight: addDialogGrid.height
-            Grid {
-                id: addDialogGrid
-                columns: 1
-                spacing: appTheme.paddingMedium
-                Text {
-                    text: qsTr("Full name")
-                    font.pixelSize: appTheme.fontSizeMedium
-                }
-                FPTextField {
-                    id: fullnameField
-                    width: addDialog.width-2*appTheme.paddingLarge
-                    placeholderText: qsTr("Full name")
-                    maximumLength: 40
-                    validator: RegExpValidator{}
-                    text: editMode ? oldFullname : ""
-                }
-                Text {
-                    text: qsTr("Nick name")
-                    font.pixelSize: appTheme.fontSizeMedium
-                }
-                FPTextField {
-                    id: nicknameField
-                    width: addDialog.width-2*appTheme.paddingLarge
-                    placeholderText: qsTr("Nick name")
-                    maximumLength: 40
-                    validator: RegExpValidator{}
-                    text: editMode ? oldNickname : ""
-                }
-            }
+    }
 
+    buttons: FPButtonRow {
+        style: FPButtonStyle { }
+        anchors.horizontalCenter: parent.horizontalCenter
+        FPButton {
+            text: editMode ? qsTr("Apply") : qsTr("Add");
+            onClicked: addDialog.accept()
         }
-
-        buttons: FPButtonRow {
-            style: FPButtonStyle { }
-            anchors.horizontalCenter: parent.horizontalCenter
-            FPButton {
-                text: editMode ? qsTr("Apply") : qsTr("Add");
-                onClicked: addDialog.accept()
-            }
-            FPButton {
-                text: qsTr("Cancel");
-                onClicked: addDialog.cancel()
-            }
-          }
-
-        onAccepted: addDialogAccepted()
-
+        FPButton {
+            text: qsTr("Cancel");
+            onClicked: addDialog.cancel()
         }
+      }
+
+    onAccepted: addDialogAccepted()
 
 }
