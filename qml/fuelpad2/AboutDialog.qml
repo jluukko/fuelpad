@@ -33,7 +33,7 @@ FPPage {
         id: appTheme
     }
 
-    FPDialog {
+    FPSimpleDialog {
         id: aboutDialog
 
         width: parent.width
