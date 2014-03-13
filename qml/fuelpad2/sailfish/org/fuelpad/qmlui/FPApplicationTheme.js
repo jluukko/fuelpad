@@ -24,7 +24,7 @@ var paddingSmall = Theme.paddingSmall
 var paddingMedium = Theme.paddingMedium
 var paddingLarge = Theme.paddingLarge
 
-var headerHeightPortrait = 3*Theme.paddingLarge
+var headerHeightPortrait = Theme.itemSizeLarge
 
 var scrollDecoratorMarginShort = Theme.paddingSmall;
 var scrollDecoratorMarginLong = Theme.paddingLarge;
