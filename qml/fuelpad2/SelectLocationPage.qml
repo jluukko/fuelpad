@@ -148,7 +148,6 @@ FPDialog {
         }
     }
     buttons: FPButtonRow {
-        style: FPButtonStyle { }
         anchors.horizontalCenter: parent.horizontalCenter
         FPButton {
             text: qsTr("Apply")

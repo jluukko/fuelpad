@@ -167,7 +167,6 @@ FPDialog {
     }
 
     buttons: FPButtonRow {
-        platformStyle: FPButtonStyle { }
         anchors.horizontalCenter: parent.horizontalCenter
         FPButton {
             text: editMode ? qsTr("Apply") : qsTr("Add");
