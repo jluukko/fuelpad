@@ -85,7 +85,7 @@ FPPage {
                 },
                 FPMenuAction {
                     text: qsTr("About")
-                    onClicked: Funcs.loadComponent("AboutDialog.qml",mainPage, {}).open()
+                    onClicked: pageStack.push(Funcs.loadComponent("AboutDialog.qml",mainPage, {}))
                 }
             ]
         }

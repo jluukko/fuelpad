@@ -21,7 +21,6 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-// Stub implementation
 Item {
     id: pageRoot
 
@@ -38,7 +37,7 @@ Item {
 
     function accept() {
         close();
-        accecpted();
+        accepted();
     }
 
     function reject() {
@@ -51,25 +50,27 @@ Item {
     }
 
     Item {
-        id:stuff
+        id:title
+        anchors.top: parent.top
+        height: childrenRect.height
+        width: childrenRect.width
+        anchors.horizontalCenter: pageRoot.horizontalCenter
+    }
 
-        Item {
-            id:title
-            anchors.bottom: content.top
-        }
+    Item {
+        id: content
+        anchors.top: title.bottom
+        height: childrenRect.height
+        width: childrenRect.width
+        anchors.horizontalCenter: pageRoot.horizontalCenter
+    }
 
-        Item {
-            id: content
-            anchors.horizontalCenter: stuff.horizontalCenter
-            anchors.verticalCenter: stuff.verticalCenter
-        }
-
-        Item {
-            id:buttons
-            width: parent.width
-            anchors.top: content.bottom
-        }
-
+    Item {
+        id:buttons
+        anchors.top: content.bottom
+        width: childrenRect.width
+        height: childrenRect.height
+        anchors.horizontalCenter: pageRoot.horizontalCenter
     }
 
 }

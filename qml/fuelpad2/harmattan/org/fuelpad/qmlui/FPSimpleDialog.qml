@@ -21,43 +21,56 @@
 import QtQuick 1.1
 import com.nokia.meego 1.1
 
-Page {
+Item {
     id: pageRoot
 
-    default property alias children: content.children
+    default property alias content: content.children
+    property alias title: title.children
     property alias buttons: buttons.children
-    property alias title: header.title
 
-    signal accepted()
-    signal done()
-    signal rejected()
+    signal accepted
+    signal rejected
+
+    function open() {
+        // Nothing to do: only for compatibility with Harmattan Dialog
+    }
 
     function accept() {
-        done()
-        pageStack.pop()
-        accepted()
+        close();
+        accepted();
     }
 
-    function cancel() {
-        done()
-        pageStack.pop()
-        rejected()
+    function reject() {
+        close();
+        rejected();
     }
 
-    PageHeader {
-        id: header
+    function close() {
+        pageStack.pop()
     }
 
     Item {
-        id:buttons
-        width: parent.width
-        height: AppTheme.headerHeightPortrait
-        anchors.top: header.bottom
+        id:title
+        anchors.top: parent.top
+        height: childrenRect.height
+        width: childrenRect.width
+        anchors.horizontalCenter: pageRoot.horizontalCenter
     }
 
     Item {
         id: content
-        anchors.top: buttons.bottom
+        anchors.top: title.bottom
+        height: childrenRect.height
+        width: childrenRect.width
+        anchors.horizontalCenter: pageRoot.horizontalCenter
+    }
+
+    Item {
+        id:buttons
+        anchors.top: content.bottom
+        width: childrenRect.width
+        height: childrenRect.height
+        anchors.horizontalCenter: pageRoot.horizontalCenter
     }
 
 }

@@ -1,7 +1,7 @@
 /*
  * This file is part of Fuelpad.
  *
- * Copyright (C) 2007-2012 Julius Luukko <julle.luukko@quicknet.inet.fi>
+ * Copyright (C) 2007-2012,2014 Julius Luukko <julle.luukko@quicknet.inet.fi>
  *
  * Fuelpad is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,16 +18,11 @@
  *
  */
 
-// import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
 
 FPPage {
-    tools: commonTools
-
-    function open() {
-        aboutDialog.open()
-    }
+    id: aboutPage
 
     FPApplicationTheme {
         id: appTheme
@@ -36,11 +31,10 @@ FPPage {
     FPSimpleDialog {
         id: aboutDialog
 
-        width: parent.width
+        width: aboutPage.width
 
         title: Column {
                 spacing: appTheme.paddingMedium
-                anchors.centerIn: parent
                 Text {
                     id: titleText
                     font.pixelSize: appTheme.fontSizeExtraLarge
@@ -51,18 +45,17 @@ FPPage {
                 Rectangle {
                     id: titleField
                     height: 2
-                    width: parent.width
+                    width: titleText.width
                     color: "red"
                 }
         }
 
         content:Item {
             id: aboutDialogData
-            height: 300
-            width: parent.width
+            height: childrenRect.height + 20
+            width: aboutPage.width
             Text {
-                anchors.centerIn: parent
-                width: 0.9*parent.width
+                width: 0.9*aboutPage.width
                 text: "<b>Copyright (C) Julius Luukko 2008-2011,2014"
                       + "<p>"
                       + "<small>This software is free software distributed under the terms of"
@@ -75,15 +68,11 @@ FPPage {
         }
 
         buttons: FPButtonRow {
-            anchors.horizontalCenter: parent.horizontalCenter
             FPButton {
                 text: qsTr("Close")
                 onClicked: aboutDialog.accept()
             }
           }
 
-//        onAccepted: aboutDialogAccepted()
-
-        }
-
+    }
 }
