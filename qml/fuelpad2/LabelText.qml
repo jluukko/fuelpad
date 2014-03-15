@@ -28,10 +28,13 @@ Item {
     width: text.width
     height: text.height
 
+    FPApplicationTheme {
+        id: appTheme
+    }
+
     Text {
         id: text
         font.pixelSize: appTheme.fontSizeSmall
         font.bold: true
-//        color: UIConstants.COLOR_SECONDARY_FOREGROUND
     }
 }
