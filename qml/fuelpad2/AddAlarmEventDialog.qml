@@ -21,6 +21,7 @@
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
+import "CommonFuncs.js" as Funcs
 
 FPDialog {
     id: addDialog
@@ -50,7 +51,7 @@ FPDialog {
     }
 
     function dateDialogAccecpted() {
-        dateField.text = dateDialog.year+"-"+dateDialog.month+"-"+dateDialog.day
+        dateField.text = "%d-%02d-%02d".$(dateDialog.year,dateDialog.month,dateDialog.day)
     }
 
     function addDialogAccepted() {

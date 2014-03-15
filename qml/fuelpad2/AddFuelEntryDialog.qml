@@ -81,7 +81,7 @@ FPDialog {
         }
 
         function dateDialogAccecpted() {
-            dateField.text = dateDialog.year+"-"+dateDialog.month+"-"+dateDialog.day
+            dateField.text = "%d-%02d-%02d".$(dateDialog.year,dateDialog.month,dateDialog.day)
         }
 
         FPDatePickerDialog {
