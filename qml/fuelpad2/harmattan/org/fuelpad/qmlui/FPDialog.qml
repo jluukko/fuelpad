@@ -49,6 +49,11 @@ Page {
     }
 
     Item {
+        id: backGround
+        anchors.fill: parent
+    }
+
+    Item {
         id:buttons
         width: parent.width
         height: AppTheme.headerHeightPortrait
@@ -58,6 +63,8 @@ Page {
     Item {
         id: content
         anchors.top: buttons.bottom
+        anchors.bottom: backGround.bottom
+        width: screen.currentOrientation == Screen.Portrait ? 480 : 854
     }
 
 }
