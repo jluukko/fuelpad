@@ -58,6 +58,7 @@ FPDialog {
         contentWidth: column.width
         contentHeight: column.height
         flickableDirection: Flickable.VerticalFlick
+        clip: true
 
         Connections {
             target: applicationData
