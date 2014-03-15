@@ -72,9 +72,9 @@ FPPage {
                 MouseArea {
                     width: parent.width
                     height: parent.height
-                    onPressAndHold: Funcs.loadComponent("DeleteFuelEntryDialog.qml", mainPage,
+                    onPressAndHold: Funcs.loadComponent("DeleteFuelEntryDialog.qml", fuelViewPage,
                                                         {databaseId: databaseid}).open()
-                    onClicked: pageStack.push(Funcs.loadComponent("AddFuelEntryDialog.qml",mainPage,
+                    onClicked: pageStack.push(Funcs.loadComponent("AddFuelEntryDialog.qml",fuelViewPage,
                                                    {carId: carId,
                                                     editMode: true,
                                                     oldId: databaseid,
@@ -255,7 +255,7 @@ FPPage {
         }
         FPToolIcon {
             iconId: "toolbar-add"
-            onClicked: pageStack.push(Funcs.loadComponent("AddFuelEntryDialog.qml",mainPage, {carId: carId}))
+            onClicked: pageStack.push(Funcs.loadComponent("AddFuelEntryDialog.qml",fuelViewPage, {carId: carId}))
         }
         FPToolIcon {
             platformIconId: "toolbar-view-menu"
