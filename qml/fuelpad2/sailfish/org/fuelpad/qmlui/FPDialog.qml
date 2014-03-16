@@ -45,6 +45,11 @@ Page {
         rejected()
     }
 
+    Item {
+        id: backGround
+        anchors.fill: parent
+    }
+
     PageHeader {
         id: header
     }
@@ -59,6 +64,9 @@ Page {
     Item {
         id: content
         anchors.top: buttons.bottom
+        anchors.bottom: backGround.bottom
+        width: isPortrait ? Screen.width : Screen.height
+        height: isPortrait ? Screen.height : Screen.width
     }
 
 }

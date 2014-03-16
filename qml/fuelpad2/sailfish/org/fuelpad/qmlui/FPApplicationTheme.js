@@ -24,7 +24,8 @@ var paddingSmall = Theme.paddingSmall
 var paddingMedium = Theme.paddingMedium
 var paddingLarge = Theme.paddingLarge
 
-var headerHeightPortrait = Theme.itemSizeLarge
+// @todo: Do not hardcode, but where to get a themed value?
+var headerHeightPortrait = 100
 
 var scrollDecoratorMarginShort = Theme.paddingSmall;
 var scrollDecoratorMarginLong = Theme.paddingLarge;
