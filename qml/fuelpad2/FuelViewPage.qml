@@ -39,6 +39,24 @@ FPPage {
         pageStack.push(Funcs.loadComponent("StatisticsPage.qml",fuelViewPage, {year: thisyear, stattype: 2}));
     }
 
+    FPToolBarLayout {
+        id: fuelViewTools
+        visible: false
+        FPToolIcon {
+            iconId: "toolbar-back"
+            onClicked: { pageStack.pop(); }
+        }
+        FPToolIcon {
+            iconId: "toolbar-add"
+            onClicked: pageStack.push(Funcs.loadComponent("AddFuelEntryDialog.qml",fuelViewPage, {carId: carId}))
+        }
+        FPToolIcon {
+            platformIconId: "toolbar-view-menu"
+            anchors.right: (parent === undefined) ? undefined : parent.right
+            onClicked: (fuelViewMenu.status === DialogStatus.Closed) ? fuelViewMenu.open() : fuelViewMenu.close()
+        }
+    }
+
     FPPageHeader {
         id: applicationHeader
         title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
@@ -243,24 +261,6 @@ FPPage {
                     }
             }
 
-        }
-    }
-
-    FPToolBarLayout {
-        id: fuelViewTools
-        visible: false
-        FPToolIcon {
-            iconId: "toolbar-back"
-            onClicked: { pageStack.pop(); }
-        }
-        FPToolIcon {
-            iconId: "toolbar-add"
-            onClicked: pageStack.push(Funcs.loadComponent("AddFuelEntryDialog.qml",fuelViewPage, {carId: carId}))
-        }
-        FPToolIcon {
-            platformIconId: "toolbar-view-menu"
-            anchors.right: (parent === undefined) ? undefined : parent.right
-            onClicked: (fuelViewMenu.status === DialogStatus.Closed) ? fuelViewMenu.open() : fuelViewMenu.close()
         }
     }
 
