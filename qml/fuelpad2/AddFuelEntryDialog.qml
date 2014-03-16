@@ -70,7 +70,7 @@ FPDialog {
         }
         contentWidth: column.width
         contentHeight: column.height
-//        flickableDirection: Flickable.VerticalFlick
+        flickableDirection: Flickable.VerticalFlick
         clip: true
 
         function launchDateDialogToToday() {
