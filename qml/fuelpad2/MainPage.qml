@@ -116,10 +116,9 @@ FPPage {
                 clip: true
             }
 
-            // If ListView is inside ScrollDecorator, buttons below won't show on Harmattan
-//            FPScrollDecorator {
-//                flickableItem: carListView
-//            }
+            FPScrollDecorator {
+                flickableItem: carListView
+            }
 
             Component {
                 id: carDelegate
@@ -212,29 +211,31 @@ FPPage {
                 }
             }
 
-            FPButton {
-                id: button1
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-//                    bottom: button4.top
-//                    topMargin: 10
-                }
-                text: qsTr("Examine service reminders")
-                onClicked: pageStack.push(Funcs.loadComponent("RemindersPage.qml",mainPage, {}))
-                width: content.width-50
-            }
-            FPButton {
-                id: button4
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-//                    bottom: content.bottom
-//                    topMargin: 10
-                }
-                text: qsTr("Log driving")
-                onClicked: pageStack.push(Funcs.loadComponent("DrivingLogPage.qml",mainPage, {}))
-                width: content.width-50
-            }
         }
 
     }
+
+    FPButton {
+        id: button1
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            bottom: button4.top
+            topMargin: 10
+            bottomMargin: 10
+        }
+        text: qsTr("Examine service reminders")
+        onClicked: pageStack.push(Funcs.loadComponent("RemindersPage.qml",mainPage, {}))
+        width: content.width-50
+    }
+    FPButton {
+        id: button4
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            bottom: mainPage.bottom
+        }
+        text: qsTr("Log driving")
+        onClicked: pageStack.push(Funcs.loadComponent("DrivingLogPage.qml",mainPage, {}))
+        width: content.width-50
+    }
+
 }
