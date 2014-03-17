@@ -134,7 +134,7 @@ FPDialog {
             }
         }
 
-        TouchSelector {
+        FPTouchSelector {
             id: fueltypeField
             anchors.top: addDialogGrid.bottom
             buttonText: qsTr("Primary fuel type")

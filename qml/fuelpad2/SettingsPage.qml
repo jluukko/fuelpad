@@ -61,7 +61,7 @@ FPPage {
 
         spacing: appTheme.paddingMedium
 
-        TouchSelector {
+        FPTouchSelector {
             id: mainUnitSelector
             buttonText: qsTr("Unit system")
             titleText: qsTr("Select unit system")
@@ -83,7 +83,7 @@ FPPage {
             }
         }
 
-        TouchSelector {
+        FPTouchSelector {
             id: lengthSelector
             visible: individualUnit.checked
             buttonText: qsTr("Unit system for length")
@@ -93,7 +93,7 @@ FPPage {
             onSelected: applicationData.setLengthUnit(selectedIndex)
         }
 
-        TouchSelector {
+        FPTouchSelector {
             visible: individualUnit.checked
             buttonText: qsTr("Unit system for volume")
             titleText: qsTr("Select unit system")
@@ -102,7 +102,7 @@ FPPage {
             onSelected: applicationData.setVolumeUnit(selectedIndex)
         }
 
-        TouchSelector {
+        FPTouchSelector {
             visible: individualUnit.checked
             buttonText: qsTr("Unit system for mass")
             titleText: qsTr("Select unit system")
@@ -111,7 +111,7 @@ FPPage {
             onSelected: applicationData.setMassUnit(selectedIndex)
         }
 
-        TouchSelector {
+        FPTouchSelector {
             visible: individualUnit.checked
             buttonText: qsTr("Unit system for consumption")
             titleText: qsTr("Select unit system")
