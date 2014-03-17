@@ -25,3 +25,4 @@ FPTextArea 1.0 FPTextArea.qml
 FPTextField 1.0 FPTextField.qml
 FPToolBarLayout 1.0 FPToolBarLayout.qml
 FPToolIcon 1.0 FPToolIcon.qml
+FPTouchSelector 1.0 FPTouchSelector.qml
