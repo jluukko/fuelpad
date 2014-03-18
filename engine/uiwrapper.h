@@ -50,6 +50,9 @@ public:
     PlotDataModel* getStatisticsModel(void);
 
     // Exposed to Qml
+    Q_INVOKABLE bool dataBaseDidNotExist(void);
+    Q_INVOKABLE void clearDataBaseDidNotExist(void);
+
     Q_INVOKABLE void saveConfig(void);
 
     Q_INVOKABLE void addFuelEntry(int carid, QString date, double km, double trip, double fill, bool notFull,

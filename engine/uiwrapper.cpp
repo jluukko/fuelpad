@@ -327,6 +327,16 @@ static void addRecordToAlarmEventModel(QStandardItemModel *model, AlarmeventData
     model->appendRow(it);
 }
 
+bool UiWrapper::dataBaseDidNotExist(void)
+{
+    return dataBase->didNotExist();
+}
+
+void UiWrapper::clearDataBaseDidNotExist(void)
+{
+    dataBase->clearDidNotExist();
+}
+
 void UiWrapper::saveConfig(void)
 {
     userConfig.settings.beginGroup("Unit");

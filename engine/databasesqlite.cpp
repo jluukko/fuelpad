@@ -115,13 +115,13 @@ bool DatabaseSqlite::create_database(void)
 
     query.exec(
                "INSERT INTO driver(fullname,nickname) "
-               "VALUES('Default Driver','Default');"
+               "VALUES('Fuelpad Driver','Driver');"
                 );
     failure |= query.lastError().type() != QSqlError::NoError;
 
     query.exec(
                "INSERT INTO car(mark,model,year,register,notes) "
-               "VALUES('Default','Model',2007,'ABC-123','');"
+               "VALUES('My Car','Mark I',2014,'ABC-123','');"
                 );
     failure |= query.lastError().type() != QSqlError::NoError;
 
@@ -518,6 +518,7 @@ bool DatabaseSqlite::unprepare_queries(void)
 // Class methods
 DatabaseSqlite::DatabaseSqlite(void)
 {
+    dbDidNotExist = false;
 }
 
 DatabaseSqlite::~DatabaseSqlite(void)
@@ -556,6 +557,7 @@ bool DatabaseSqlite::openConnection(void)
 
             if (query.lastError().type() != QSqlError::NoError) {
                 qDebug("Creating database");
+                dbDidNotExist = true;
                 if (!create_database()) {
                     qDebug("Creating failed");
                 }
@@ -617,6 +619,16 @@ void DatabaseSqlite::closeConnection(void)
 bool DatabaseSqlite::isOpen(void)
 {
     return db.isOpen();
+}
+
+bool DatabaseSqlite::didNotExist(void)
+{
+    return dbDidNotExist;
+}
+
+void DatabaseSqlite::clearDidNotExist(void)
+{
+    dbDidNotExist = false;
 }
 
 //--------------------------------------------------------------------------

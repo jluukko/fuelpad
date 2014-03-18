@@ -54,6 +54,8 @@ public:
     virtual void closeConnection(void) =0;
     void setFileName(string);
     const string getFileName(void);
+    virtual bool didNotExist(void) =0;
+    virtual void clearDidNotExist(void) =0;
 
     // Current car and driver
     virtual void setCurrentCar(int id);

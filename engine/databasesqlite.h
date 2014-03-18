@@ -39,6 +39,8 @@ public:
     bool isOpen(void);
     bool openConnection(void);
     void closeConnection(void);
+    bool didNotExist(void);
+    void clearDidNotExist(void);
 
     void setCurrentCar(int id);
     CarData getCurrentCar(void);
@@ -118,6 +120,7 @@ private:
     bool dropFillView(void);
 
     QSqlDatabase db;
+    bool dbDidNotExist;
 
     // Prepared SQL queries
 
