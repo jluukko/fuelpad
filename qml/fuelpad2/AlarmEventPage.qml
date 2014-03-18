@@ -31,160 +31,6 @@ FPPage {
     property int oldId: -1
     property string alarmName
 
-    FPPageHeader {
-        id: applicationHeader
-//        title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
-        title: alarmName + " (" + applicationData.getCarMark(-1) + ")"
-    }
-
-    ListView {
-        id: listView
-        model: alarmEventModel
-        delegate: delegate
-        anchors {
-            top: applicationHeader.bottom
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-            leftMargin: appTheme.paddingLarge
-            rightMargin: appTheme.paddingLarge
-        }
-        clip: true
-    }
-
-    FPScrollDecorator {
-        flickableItem: listView
-    }
-
-    Component {
-        id: delegate
-            Item {
-                id: delegateRec
-                height: headerText.height*1.5 + + grid.height
-                width: parent.width
-                MouseArea {
-                    width: parent.width
-                    height: parent.height
-//                    onPressAndHold: Funcs.loadComponent("DeletealarmEventDialog.qml", mainPage,
-//                                                        {databaseId: databaseid}).open()
-                    onClicked: pageStack.push(Funcs.loadComponent("AddAlarmEventDialog.qml",mainPage,
-                                                      {"editMode": true,
-                                                       "oldId": databaseid,
-                                                      "oldAlarmId": alarmId,
-                                                      "oldRecordId": recordid,
-                                                      "oldDate": date,
-                                                      "oldKm": km,
-                                                      "oldNotes": notes,
-                                                      "oldService": service,
-                                                      "oldOil": oil,
-                                                      "oldTires": tires}
-                                                   ))
-                }
-
-//                states: [
-//                    State {
-//                        name: "selected"
-//                        when: (databaseid==selectedId)
-//                        PropertyChanges {target: delegateRec; color: "red"}
-//                    }
-//                ]
-
-                Image {
-                    id: subIndicatorArrow
-                    width: sourceSize.width
-
-                    anchors {
-                        right: parent.right
-                        verticalCenter: parent.verticalCenter
-                        rightMargin: appTheme.scrollDecoratorMarginShort
-                    }
-
-                    smooth: true
-                    source: "image://theme/icon-m-common-drilldown-arrow"
-                            + (theme.inverted ? "-inverse" : "");
-                }
-
-                FPLabel {
-                    id: headerText
-                    text: date + ": " + km.toFixed(0) + " " + Units.getLengthUnit()
-                    platformStyle: MyLabelStyleTitle{}
-                    font.bold: true
-                }
-                Grid {
-                    id: grid
-                    anchors {
-                        top: headerText.bottom
-                    }
-
-                    columns: 1
-
-                    Row {
-                        Text {
-                            text: databaseid
-                            visible: false
-                        }
-
-                    }
-
-                    Row {
-                        spacing: 10
-                        visible: (service > 0)? true : false
-                        LabelText {
-                            id: serviceLabel
-                            text: qsTr("Service")
-                        }
-                        ElementText {
-                            text: service.toFixed(2) + " " + applicationData.getCurrencySymbol()
-                        }
-                    }
-
-                    Row {
-                        spacing: 10
-                        visible: (oil > 0)? true : false
-                        LabelText {
-                            id: oilLabel
-                            text: qsTr("Oil")
-                        }
-                        ElementText {
-                            text: oil
-                        }
-                    }
-
-                    Row {
-                        spacing: 10
-                        visible: (tires > 0)? true : false
-                        LabelText {
-                            id: tiresLabel
-                            text: qsTr("Tires")
-                        }
-                        ElementText {
-                            text: tires
-                        }
-                    }
-
-                    Row {
-                        spacing: 10
-                        visible: (notes == "")? false : true
-                        LabelText {
-                            id: notesLabel
-                            text: qsTr("Notes")
-                        }
-                        ElementText {
-                            text: notes
-                        }
-                    }
-
-                    Rectangle {
-                        id: itemSeperator
-                        height: 2
-                        width: listView.width
-                        color: appTheme.separatorColor
-                    }
-            }
-
-        }
-    }
-
     FPToolBarLayout {
         id: alarmEventTools
         visible: false
@@ -197,5 +43,177 @@ FPPage {
             onClicked: pageStack.push(Funcs.loadComponent("AddAlarmEventDialog.qml",mainPage, {"editMode": false}))
         }
     }
+
+    FPFlickablePageContent {
+        id: content
+
+        width: alarmTypePage.width
+        anchors.fill: parent
+
+        contentHeight: contentColumn.height
+
+        Column {
+            id: contentColumn
+            spacing: 10
+
+            FPPageHeader {
+                id: applicationHeader
+        //        title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
+                title: alarmName + " (" + applicationData.getCarMark(-1) + ")"
+            }
+
+            ListView {
+                id: listView
+                model: alarmEventModel
+                delegate: delegate
+                anchors {
+                    top: applicationHeader.bottom
+//                    left: parent.left
+//                    right: parent.right
+//                    bottom: parent.bottom
+                    leftMargin: appTheme.paddingLarge
+                    rightMargin: appTheme.paddingLarge
+                }
+                height: content.height-alarmEventTools.height
+                width: content.width
+                clip: true
+            }
+
+            FPScrollDecorator {
+                flickableItem: listView
+            }
+
+            Component {
+                id: delegate
+                    Item {
+                        id: delegateRec
+                        height: headerText.height*1.5 + + grid.height
+                        width: parent.width
+                        MouseArea {
+                            width: parent.width
+                            height: parent.height
+        //                    onPressAndHold: Funcs.loadComponent("DeletealarmEventDialog.qml", mainPage,
+        //                                                        {databaseId: databaseid}).open()
+                            onClicked: pageStack.push(Funcs.loadComponent("AddAlarmEventDialog.qml",mainPage,
+                                                              {"editMode": true,
+                                                               "oldId": databaseid,
+                                                              "oldAlarmId": alarmId,
+                                                              "oldRecordId": recordid,
+                                                              "oldDate": date,
+                                                              "oldKm": km,
+                                                              "oldNotes": notes,
+                                                              "oldService": service,
+                                                              "oldOil": oil,
+                                                              "oldTires": tires}
+                                                           ))
+                        }
+
+        //                states: [
+        //                    State {
+        //                        name: "selected"
+        //                        when: (databaseid==selectedId)
+        //                        PropertyChanges {target: delegateRec; color: "red"}
+        //                    }
+        //                ]
+
+                        Image {
+                            id: subIndicatorArrow
+                            width: sourceSize.width
+
+                            anchors {
+                                right: parent.right
+                                verticalCenter: parent.verticalCenter
+                                rightMargin: appTheme.scrollDecoratorMarginShort
+                            }
+
+                            smooth: true
+                            source: "image://theme/icon-m-common-drilldown-arrow"
+                                    + (theme.inverted ? "-inverse" : "");
+                        }
+
+                        FPLabel {
+                            id: headerText
+                            text: date + ": " + km.toFixed(0) + " " + Units.getLengthUnit()
+                            platformStyle: MyLabelStyleTitle{}
+                            font.bold: true
+                        }
+                        Grid {
+                            id: grid
+                            anchors {
+                                top: headerText.bottom
+                            }
+
+                            columns: 1
+
+                            Row {
+                                Text {
+                                    text: databaseid
+                                    visible: false
+                                }
+
+                            }
+
+                            Row {
+                                spacing: 10
+                                visible: (service > 0)? true : false
+                                LabelText {
+                                    id: serviceLabel
+                                    text: qsTr("Service")
+                                }
+                                ElementText {
+                                    text: service.toFixed(2) + " " + applicationData.getCurrencySymbol()
+                                }
+                            }
+
+                            Row {
+                                spacing: 10
+                                visible: (oil > 0)? true : false
+                                LabelText {
+                                    id: oilLabel
+                                    text: qsTr("Oil")
+                                }
+                                ElementText {
+                                    text: oil
+                                }
+                            }
+
+                            Row {
+                                spacing: 10
+                                visible: (tires > 0)? true : false
+                                LabelText {
+                                    id: tiresLabel
+                                    text: qsTr("Tires")
+                                }
+                                ElementText {
+                                    text: tires
+                                }
+                            }
+
+                            Row {
+                                spacing: 10
+                                visible: (notes == "")? false : true
+                                LabelText {
+                                    id: notesLabel
+                                    text: qsTr("Notes")
+                                }
+                                ElementText {
+                                    text: notes
+                                }
+                            }
+
+                            Rectangle {
+                                id: itemSeperator
+                                height: 2
+                                width: listView.width
+                                color: appTheme.separatorColor
+                            }
+                    }
+
+                }
+            }
+        }
+    }
+
+
 
 }
