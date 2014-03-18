@@ -29,9 +29,16 @@ FPPage {
     id: mainPage
     tools: mainTools
 
+    property bool firstRun: true
+
     function loadFuelViewPage(dbid) {
         applicationData.setCurrentCar(dbid)
         pageStack.push(Funcs.loadComponent("FuelViewPage.qml",mainPage, {"carId": dbid}))
+    }
+
+    function clearFirstRun() {
+        applicationData.clearDataBaseDidNotExist();
+        firstRun = false
     }
 
     FPApplicationTheme {
@@ -50,11 +57,13 @@ FPPage {
         z: 99
         FPToolIcon {
             iconId: "toolbar-settings"
+            visible: !firstRun
             onClicked: loadSettingsPage()
         }
         FPToolIcon {
             platformIconId: "toolbar-view-menu"
             anchors.right: (parent === undefined) ? undefined : parent.right
+            visible: !firstRun
             onClicked: (myMenu.status === DialogStatus.Closed) ? myMenu.open() : myMenu.close()
         }
     }
@@ -101,6 +110,7 @@ FPPage {
 
             ListView {
                 id: carListView
+                visible: !firstRun
                 model: carModel
                 delegate: carDelegate
                 anchors {
@@ -114,6 +124,73 @@ FPPage {
                 height: content.height-button1.height-button4.height-mainTools.height-3*contentColumn.spacing
                 width: content.width
                 clip: true
+            }
+
+            Column {
+                visible: firstRun
+                spacing: appTheme.paddingLarge
+                anchors {
+//                    verticalCenter: parent.verticalCenter
+                    horizontalCenter: parent.horizontalCenter
+                }
+                width: parent.width
+                height: children.height
+
+                Text {
+                    wrapMode: Text.WordWrap
+                    text: qsTr("<b>Welcome to Fuelpad!</b>")
+                          + qsTr("<p>It seems that this is your first run.")
+                          + qsTr("You can setup your car and driver data now") + " "
+                          + qsTr("or start using Fuelpad with the default data and update the data later.")
+                    font.pixelSize: appTheme.fontSizeExtraLarge
+                    width: parent.width
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                FPButton {
+                    text: qsTr("Set up my car")
+                    anchors {
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                    onClicked: pageStack.push(Funcs.loadComponent("ManageCarsPage.qml",mainPage, {}))
+                    width: content.width-50
+                }
+
+                FPButton {
+                    text: qsTr("Set up my drivers")
+                    anchors {
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                    onClicked: pageStack.push(Funcs.loadComponent("ManageDriversPage.qml",mainPage, {}))
+                    width: content.width-50
+                }
+
+                Text {
+                    wrapMode: Text.WordWrap
+                    text: qsTr("You should also check the used units") + " "
+                         + qsTr("and other settings before adding fuel records.")
+                    font.pixelSize: appTheme.fontSizeExtraLarge
+                    width: parent.width
+                    horizontalAlignment: Text.AlignHCenter
+                }
+
+                FPButton {
+                    text: qsTr("Check settings")
+                    anchors {
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                    onClicked: pageStack.push(Funcs.loadComponent("SettingsPage.qml",mainPage, {}))
+                    width: content.width-50
+                }
+
+                FPButton {
+                    text: qsTr("Start using Fuelpad")
+                    anchors {
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                    onClicked: clearFirstRun()
+                    width: content.width-50
+                }
             }
 
             FPScrollDecorator {
@@ -217,6 +294,7 @@ FPPage {
 
     FPButton {
         id: button1
+        visible: !firstRun
         anchors {
             horizontalCenter: parent.horizontalCenter
             bottom: button4.top
@@ -229,6 +307,7 @@ FPPage {
     }
     FPButton {
         id: button4
+        visible: !firstRun
         anchors {
             horizontalCenter: parent.horizontalCenter
             bottom: mainPage.bottom
@@ -236,6 +315,10 @@ FPPage {
         text: qsTr("Log driving")
         onClicked: pageStack.push(Funcs.loadComponent("DrivingLogPage.qml",mainPage, {}))
         width: content.width-50
+    }
+
+    Component.onCompleted: {
+        firstRun = applicationData.dataBaseDidNotExist();
     }
 
 }
