@@ -51,7 +51,7 @@ FPPage {
     FPFlickablePageContent {
         id: content
 
-        width: alarmTypePage.width
+        width: remindersPage.width
         anchors.fill: parent
 
         contentHeight: contentColumn.height
