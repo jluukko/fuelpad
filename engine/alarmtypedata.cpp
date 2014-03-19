@@ -34,6 +34,16 @@ qlonglong AlarmtypeData::getId(void)
     return id;
 }
 
+void AlarmtypeData::setCarId(qlonglong Id)
+{
+    carId = Id;
+}
+
+qlonglong AlarmtypeData::getCarId(void)
+{
+    return carId;
+}
+
 void AlarmtypeData::setShortDesc(QString desc)
 {
     shortdesc = desc;

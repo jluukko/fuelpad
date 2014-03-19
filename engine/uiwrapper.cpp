@@ -351,8 +351,9 @@ void UiWrapper::saveConfig(void)
 
 void UiWrapper::updateAllModels(void)
 {
-//    sortModel->sort(FIELD_DATE, Qt::DescendingOrder);
     sortModel->invalidate();
+    alarmSortModel->invalidate();
+    alarmEventSortModel->invalidate();
 }
 
 void UiWrapper::reReadAllModels(void)
@@ -1270,6 +1271,26 @@ void UiWrapper::deleteCar(QString id)
 // Alarms
 //
 //-------------------------------------------------------------------
+void UiWrapper::addAlarmType(qlonglong carId, QString shortDesc, quint32 interval, quint32 distance, QString longDesc)
+{
+    AlarmtypeData *alarmtype = new AlarmtypeData();
+
+    alarmtype->setCarId(carId);
+    alarmtype->setShortDesc(shortDesc);
+    alarmtype->setInterval(interval);
+    alarmtype->setDistance(distance);
+    alarmtype->setLongDesc(longDesc);
+
+    dataBase->addAlarmType(*alarmtype);
+
+    addRecordToAlarmEntryModel(alarmEntryModel, alarmtype);
+
+    delete alarmtype;
+
+    // Notify Qml side that list models have changed
+    updateAllModels();
+}
+
 void UiWrapper::addAlarmEvent(qlonglong alarmId, QString date,
                               double km, double service, double oil, double tires, QString notes)
 {

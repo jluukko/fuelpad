@@ -20,6 +20,7 @@
 
 import QtQuick 1.1
 import org.fuelpad.qmlui 1.0
+import "DialogStatus.js" as DialogStatus
 import "CommonFuncs.js" as Funcs
 import "CommonUnits.js" as Units
 
@@ -41,6 +42,11 @@ FPPage {
             iconId: "toolbar-back"
             onClicked: { pageStack.pop(); }
         }
+        FPToolIcon {
+            platformIconId: "toolbar-view-menu"
+            anchors.right: (parent === undefined) ? undefined : parent.right
+            onClicked: (alarmTypeMenu.status === DialogStatus.Closed) ? alarmTypeMenu.open() : alarmTypeMenu.close()
+        }
     }
 
     FPFlickablePageContent {
@@ -50,6 +56,17 @@ FPPage {
         anchors.fill: parent
 
         contentHeight: contentColumn.height
+
+        FPMenu {
+            id: alarmTypeMenu
+            visualParent: pageStack
+            items: [
+                FPMenuAction {
+                    text: qsTr("Add new alarm type")
+                    onClicked: pageStack.push(Funcs.loadComponent("AddAlarmTypeDialog.qml",mainPage, {"carId": carId}));
+                }
+            ]
+        }
 
         Column {
             id: contentColumn

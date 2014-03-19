@@ -233,13 +233,13 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtGetEvents = new QSqlQuery;
     ppStmtAddEvent = new QSqlQuery;
     ppStmtUpdateEvent = new QSqlQuery;
+    ppStmtAddAlarmtype = new QSqlQuery;
 
     // Statements without a ready implementation
     ppStmtCurCar = new QSqlQuery;
     ppStmtExport = new QSqlQuery;
     ppStmtExportCar = new QSqlQuery;
     ppStmtGetReport = new QSqlQuery;
-    ppStmtAddAlarmtype = new QSqlQuery;
     ppStmtGetOneAlarmtype = new QSqlQuery;
     ppStmtUpdateAlarmtype = new QSqlQuery;
     ppStmtGetOneEvent = new QSqlQuery;
@@ -436,6 +436,11 @@ bool DatabaseSqlite::prepare_queries(void)
                                         "FROM alarmtype WHERE carid=:carid;");
 
     retVal = retVal |
+            ppStmtAddAlarmtype->prepare("INSERT "
+                                        "INTO alarmtype(carid,shortdesc,distance,interval,longdesc) "
+                                        "VALUES(:carid,:shortdesc,:distance,:interval,:longdesc);");
+
+    retVal = retVal |
             ppStmtGetLastEvent->prepare("SELECT day, km FROM alarmevent WHERE alarmid=:alarmid "
                                         "ORDER BY km DESC LIMIT 1;");
 
@@ -487,12 +492,12 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtGetEvents;
     delete ppStmtAddEvent;
     delete ppStmtUpdateEvent;
+    delete ppStmtAddAlarmtype;
 
     delete ppStmtCurCar;
     delete ppStmtExport;
     delete ppStmtExportCar;
     delete ppStmtGetReport;
-    delete ppStmtAddAlarmtype;
     delete ppStmtGetOneAlarmtype;
     delete ppStmtUpdateAlarmtype;
     delete ppStmtGetOneEvent;
@@ -1666,6 +1671,32 @@ vector<AlarmtypeData> DatabaseSqlite::getAlarmTypeData(void)
     }
 
     return data;
+}
+
+//--------------------------------------------------------------------------
+// Add new alarm type
+//--------------------------------------------------------------------------
+bool DatabaseSqlite::addAlarmType(AlarmtypeData &alarmType)
+{
+    bool retVal = false;
+
+    ppStmtAddAlarmtype->bindValue(":carid",getCurrentCar().getId());
+    ppStmtAddAlarmtype->bindValue(":shortdesc",alarmType.getShortDesc());
+    ppStmtAddAlarmtype->bindValue(":distance",alarmType.getDistance());
+    ppStmtAddAlarmtype->bindValue(":interval",alarmType.getInterval());
+    ppStmtAddAlarmtype->bindValue(":longdesc",alarmType.getLongDesc());
+
+    // Finally, do the update
+    if (ppStmtAddAlarmtype->exec()) {
+        // @todo do we need to ppStmtAddAlarmtype->next()
+        qDebug("Adding an alarm type was succesful");
+        retVal = true;
+    }
+    else {
+        qDebug("Adding an alarm type was not succesful");
+    }
+
+    return retVal;
 }
 
 //--------------------------------------------------------------------------

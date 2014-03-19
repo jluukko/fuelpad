@@ -32,6 +32,9 @@ public:
     void setId(qlonglong Id);
     qlonglong getId(void);
 
+    void setCarId(qlonglong Id);
+    qlonglong getCarId(void);
+
     void setShortDesc(QString desc);
     QString getShortDesc(void);
 

@@ -97,6 +97,7 @@ public:
     vector<DriverData> getDriverData(void);
 
     vector<AlarmtypeData> getAlarmTypeData(void);
+    bool addAlarmType(AlarmtypeData &alarmType);
     bool getLastEvent(qlonglong alarmid, QString &date, double &km);
     vector<AlarmeventData> getAlarmeventData(qlonglong alarmid);
     qlonglong addNewAlarmEvent(AlarmeventData &event, UnitSystem unit);
@@ -155,13 +156,13 @@ private:
     QSqlQuery *ppStmtGetEvents;
     QSqlQuery *ppStmtAddEvent;
     QSqlQuery *ppStmtUpdateEvent;
+    QSqlQuery *ppStmtAddAlarmtype;
 
     // Statements without a ready implementation
     QSqlQuery *ppStmtCurCar;
     QSqlQuery *ppStmtExport;
     QSqlQuery *ppStmtExportCar;
     QSqlQuery *ppStmtGetReport;
-    QSqlQuery *ppStmtAddAlarmtype;
     QSqlQuery *ppStmtGetOneAlarmtype;
     QSqlQuery *ppStmtUpdateAlarmtype;
     QSqlQuery *ppStmtGetOneEvent;

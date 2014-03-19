@@ -101,6 +101,8 @@ public:
 
     Q_INVOKABLE void deleteCar(QString id);
 
+    Q_INVOKABLE void addAlarmType(qlonglong carId, QString shortDesc, quint32 interval, quint32 distance, QString longDesc);
+
     Q_INVOKABLE void addAlarmEvent(qlonglong alarmId, QString date,
                                               double km, double service, double oil, double tires, QString notes);
 
