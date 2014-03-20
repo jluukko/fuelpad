@@ -237,12 +237,12 @@ FPPage {
                         horizontalCenter: parent.horizontalCenter
                     }
                     FPButton {
-                        text: "Previous"
+                        text: qsTr("Previous")
                         width: parent.width/2
                         onClicked: changeYear(-1)
                     }
                     FPButton {
-                        text: "Next"
+                        text: qsTr("Next")
                         width: parent.width/2
                         onClicked: changeYear(+1)
                     }
