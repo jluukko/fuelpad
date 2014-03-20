@@ -44,27 +44,18 @@ FPPage {
         applicationData.getStatistics(year,stattype);
     }
 
-    FPPageHeader {
-        id: statisticsHeader
-        title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
-    }
-
-    // workaround https://bugreports.qt-project.org/browse/QTBUG-11403
-    Text { text: qsTr(name) }
-    ListModel {
-        id: statisticsSelectModel
-        ListElement { name: QT_TR_NOOP("Total monthly fill") }
-        ListElement { name: QT_TR_NOOP("Monthly driving distance") }
-        ListElement { name: QT_TR_NOOP("Monthly consumption")}
-        ListElement { name: QT_TR_NOOP("Monthly average fuel price")}
-    }
-
-    FPSelectionDialog {
-        id: statisticsSelectionDialog
-        titleText: "Choose statistics"
-        selectedIndex: stattype
-        model: statisticsSelectModel
-        onSelectedIndexChanged: changeStatType(selectedIndex)
+    FPToolBarLayout {
+        id: statisticsTools
+//        visible: false
+        FPToolIcon {
+            iconId: "toolbar-back"
+            onClicked: { pageStack.pop(); }
+        }
+        FPToolIcon {
+            platformIconId: "toolbar-view-menu"
+            anchors.right: (parent === undefined) ? undefined : parent.right
+            onClicked: (statisticsMenu.status === DialogStatus.Closed) ? statisticsMenu.open() : statisticsMenu.close()
+        }
     }
 
     ListModel {
@@ -123,6 +114,16 @@ FPPage {
     // workaround https://bugreports.qt-project.org/browse/QTBUG-11403
     Text { text: qsTr(name) }
     ListModel {
+        id: statisticsSelectModel
+        ListElement { name: QT_TR_NOOP("Total monthly fill") }
+        ListElement { name: QT_TR_NOOP("Monthly driving distance") }
+        ListElement { name: QT_TR_NOOP("Monthly consumption")}
+        ListElement { name: QT_TR_NOOP("Monthly average fuel price")}
+    }
+
+    // workaround https://bugreports.qt-project.org/browse/QTBUG-11403
+    Text { text: qsTr(name) }
+    ListModel {
         id: monthModel
         ListElement {
             name:  QT_TR_NOOP("Jan")
@@ -162,78 +163,95 @@ FPPage {
         }
     }
 
-    Column {
-        id: contentColumn
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            bottom: parent.bottom
-            top: statisticsHeader.bottom
-        }
-
-        FPLabel {
-            id: statisticsLabel
-            text: statisticsSelectModel.get(stattype).name + " " + year
-            platformStyle: MyLabelStyleTitle{}
-            anchors {
-                horizontalCenter: parent.horizontalCenter
-                top: parent.top
-            }
-        }
-
-        Plot {
-            id: plot
-            width: parent.width
-            height: inPortrait ? 400 : 250
-    //        data: testData
-            data: statisticsModel
-            xLabels: monthModel
-            autoscaleX: false
-            xMin: 1
-            xMax: 12
-        }
-
-        FPButtonRow {
-            id: buttonRow
-            exclusive: false
-            anchors {
-                horizontalCenter: parent.horizontalCenter
-            }
-            FPButton {
-                text: "Previous"
-                width: parent.width/2
-                onClicked: changeYear(-1)
-            }
-            FPButton {
-                text: "Next"
-                width: parent.width/2
-                onClicked: changeYear(+1)
-            }
-        }
+    FPSelectionDialog {
+        id: statisticsSelectionDialog
+        titleText: "Choose statistics"
+        selectedIndex: stattype
+        model: statisticsSelectModel
+        onSelectedIndexChanged: changeStatType(selectedIndex)
     }
 
-    FPToolBarLayout {
-        id: statisticsTools
-//        visible: false
-        FPToolIcon {
-            iconId: "toolbar-back"
-            onClicked: { pageStack.pop(); }
-        }
-        FPToolIcon {
-            platformIconId: "toolbar-view-menu"
-            anchors.right: (parent === undefined) ? undefined : parent.right
-            onClicked: (statisticsMenu.status === DialogStatus.Closed) ? statisticsMenu.open() : statisticsMenu.close()
-        }
-    }
+    FPFlickablePageContent {
+        id: content
 
-    FPMenu {
-        id: statisticsMenu
-        visualParent: pageStack
-        FPMenuLayout {
-            FPMenuItem {
-                text: qsTr("Select statistics")
-                onClicked: statisticsSelectionDialog.open()
-            }
+        width: statisticsPage.width
+        anchors.fill: parent
+
+        contentHeight: contentColumn.height
+
+        FPMenu {
+            id: statisticsMenu
+            visualParent: pageStack
+            items: [
+                FPMenuAction {
+                    text: qsTr("Select statistics")
+                    onClicked: statisticsSelectionDialog.open()
+                }
+            ]
         }
+
+        Column {
+            id: contentColumn
+            spacing: 10
+            width: content.width
+
+            FPPageHeader {
+                id: statisticsHeader
+                title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
+            }
+
+            Column {
+                id: insideContentColumn
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    bottom: parent.bottom
+                    top: statisticsHeader.bottom
+                }
+
+                FPLabel {
+                    id: statisticsLabel
+                    text: statisticsSelectModel.get(stattype).name + " " + year
+                    platformStyle: MyLabelStyleTitle{}
+                    anchors {
+                        horizontalCenter: parent.horizontalCenter
+                        top: parent.top
+                    }
+                }
+
+                Plot {
+                    id: plot
+                    width: parent.width
+                    height: inPortrait ? 400 : 250
+            //        data: testData
+                    data: statisticsModel
+                    xLabels: monthModel
+                    autoscaleX: false
+                    xMin: 1
+                    xMax: 12
+                }
+
+                FPButtonRow {
+                    id: buttonRow
+                    exclusive: false
+                    anchors {
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                    FPButton {
+                        text: "Previous"
+                        width: parent.width/2
+                        onClicked: changeYear(-1)
+                    }
+                    FPButton {
+                        text: "Next"
+                        width: parent.width/2
+                        onClicked: changeYear(+1)
+                    }
+                }
+
+            }
+
+        }
+
     }
 
 }
