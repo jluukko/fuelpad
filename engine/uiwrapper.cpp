@@ -351,9 +351,11 @@ void UiWrapper::saveConfig(void)
 
 void UiWrapper::updateAllModels(void)
 {
+    qDebug("Updating models");
     sortModel->invalidate();
     alarmSortModel->invalidate();
     alarmEventSortModel->invalidate();
+    qDebug("Models updated");
 }
 
 void UiWrapper::reReadAllModels(void)
@@ -817,6 +819,7 @@ void UiWrapper::addFuelEntry(int carid, QString date, double km, double trip, do
         if (affectedItem != 0) {
             qDebug("Found affected id from model and trying to update it");
             setDataToFuelEntryModel(affectedItem, dataBase->queryOneRecord(affectedId, *unitSystem));
+            qDebug("Record updated");
         }
         else {
             qDebug("Did not find affected id from model");
@@ -871,7 +874,7 @@ void UiWrapper::updateFuelEntry(int carid, QString id, QString date, double km, 
               << "Service: " << record->getService().toString().toStdString() << SEPARATOR
               << std::endl;
 
-    // Commented out at this point of testing
+    // Update the record in database
     affectedId = dataBase->updateRecord(*record, notFull);
 
     // Change the data in the model
@@ -879,6 +882,7 @@ void UiWrapper::updateFuelEntry(int carid, QString id, QString date, double km, 
     if (currentItem != 0) {
         qDebug("Found current id from model and trying to update it");
         setDataToFuelEntryModel(currentItem, dataBase->queryOneRecord(id.toLong(), *unitSystem));
+        qDebug("Record updated");
     }
     else {
         qDebug("Did not find current id from model");
@@ -1342,7 +1346,7 @@ void UiWrapper::setSortColumn(int col, Qt::SortOrder order = Qt::DescendingOrder
 
 void UiWrapper::setCurrentCar(int carid)
 {
-    if (carid != -1) {
+    if ((carid != -1) && (dataBase->getCurrentCar().getId() != carid)) {
         dataBase->setCurrentCar(carid);
 
         reReadAllModels();
