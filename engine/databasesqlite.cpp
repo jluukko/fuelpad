@@ -364,7 +364,7 @@ bool DatabaseSqlite::prepare_queries(void)
     // Simple statistics
     //--------------------------------------------------------------------------
     retVal = retVal |
-            ppStmtGetKmOverall->prepare("SELECT MAX(km)-MIN(KM) FROM record "
+            ppStmtGetKmOverall->prepare("SELECT MAX(km)-MIN(km) FROM record "
                                         "WHERE carid=:carid;");
 
     retVal = retVal |
