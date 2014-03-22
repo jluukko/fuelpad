@@ -762,7 +762,7 @@ qlonglong DatabaseSqlite::addNewRecord(Fuelrecord &record, bool notFull)
     oil = record.getOil().toDouble();
     tires = record.getTires().toDouble();
     consum = record.getConsum().toDouble();
-    pricepertrip = record.getConsum().toDouble();
+    pricepertrip = record.getPpt().toDouble();
     ppl = record.getPpl().toDouble();
 
     // The actual adding of the record
@@ -825,7 +825,7 @@ qlonglong DatabaseSqlite::updateRecord(Fuelrecord &record, bool notFull)
     oil = record.getOil().toDouble();
     tires = record.getTires().toDouble();
     consum = record.getConsum().toDouble();
-    pricepertrip = record.getConsum().toDouble();
+    pricepertrip = record.getPpt().toDouble();
     ppl = record.getPpl().toDouble();
 
     // The actual updating of the record
