@@ -108,6 +108,14 @@ FPPage {
                             height: parent.height
         //                    onPressAndHold: Funcs.loadComponent("DeleteAlarmTypeDialog.qml", mainPage,
         //                                                        {databaseId: databaseid}).open()
+                            onPressAndHold: pageStack.push(Funcs.loadComponent("AddAlarmTypeDialog.qml",mainPage,
+                                                                               {"editMode": true,
+                                                                                "carId": carId,
+                                                                                   "oldShort": description,
+                                                                                   "oldIntervalKm": kmlimit,
+                                                                                   "oldIntervalMonths": timelimit,
+                                                                                   "oldLong": longdesc
+                                                                               }));
                             onClicked: loadAlarmEventPage(databaseid, description)
                         }
 

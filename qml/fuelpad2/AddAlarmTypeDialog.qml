@@ -26,14 +26,26 @@ FPDialog {
     id: addDialog
 
     property string carId
+    property bool editMode: false
+    property string oldId
+    property string oldShort
+    property string oldIntervalKm
+    property string oldIntervalMonths
+    property string oldLong
 
     width: parent.width
 
     title: qsTr("Add alarm type")
 
     function addDialogAccepted() {
-        console.log("Adding a new alarm type...");
-        applicationData.addAlarmType(carId, shortDescField.text, intervalMonthsField.text, intervalKmField.text, longDescField.text);
+        if (editMode) {
+            console.log("Would update if backend existed...");
+//            applicationData.updateAlarmType(oldId, shortDescField.text, intervalMonthsField.text, intervalKmField.text, longDescField.text);
+        }
+        else {
+            console.log("Adding a new alarm type...");
+            applicationData.addAlarmType(carId, shortDescField.text, intervalMonthsField.text, intervalKmField.text, longDescField.text);
+        }
     }
 
     Flickable {
@@ -64,6 +76,7 @@ FPDialog {
                     placeholderText: qsTr("Add short description")
                     maximumLength: 40
                     validator: RegExpValidator{}
+                    text: editMode ? oldShort : ""
                 }
                 Text {
                     text: qsTr("Service interval ") + "(" + Units.getLengthUnit() + ")"
@@ -75,6 +88,7 @@ FPDialog {
                     placeholderText: "Set to zero if only time limit used"
                     maximumLength: 40
                     validator: IntValidator{bottom: 0}
+                    text: editMode ? oldIntervalKm : ""
                 }
                 Text {
                     text: qsTr("Service interval (months)")
@@ -87,6 +101,7 @@ FPDialog {
                     maximumLength: 4
                     validator: IntValidator{bottom: 0; top: 240}
                     inputMethodHints: Qt.ImhFormattedNumbersOnly
+                    text: editMode ? oldIntervalMonths : ""
                 }
                 Text {
                     text: qsTr("Long description")
@@ -97,6 +112,7 @@ FPDialog {
                     width: addDialog.width-2*appTheme.paddingLarge
                     height: 4*appTheme.fontSizeMedium
                     placeholderText: qsTr("Add long description")
+                    text: editMode ? oldLong : ""
                 }
             }
         }
