@@ -16,6 +16,7 @@ FPMenuLayout 1.0 FPMenuLayout.qml
 FPPage 1.0 FPPage.qml
 FPPageHeader 1.0 FPPageHeader.qml
 FPPageStackWindow 1.0 FPPageStackWindow.qml
+FPQueryDialog 1.0 FPQueryDialog.qml
 FPScrollDecorator 1.0 FPScrollDecorator.qml
 FPSelectionDialog 1.0 FPSelectionDialog.qml
 FPSheet 1.0 FPSheet.qml
