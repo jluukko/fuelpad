@@ -120,6 +120,7 @@ struct DriverEntry {
 struct AlarmEntry {
     enum AlarmEntryRoles {
         DescrptionRole = Qt::UserRole + 1,
+        LongDescriptionRole,
         KmLimitRole,
         TimeLimitRole,
         NextKmRole,
@@ -277,6 +278,7 @@ static void setDataToAlarmEntryModel(QStandardItem *it, AlarmtypeData *data)
     int id = data->getId();
     it->setData(data->getShortDesc(), AlarmEntry::DescrptionRole);
     it->setData(data->getDistance(), AlarmEntry::KmLimitRole);
+    it->setData(data->getLongDesc(), AlarmEntry::LongDescriptionRole);
     it->setData(data->getInterval(), AlarmEntry::TimeLimitRole);
 
     // @todo Calculate next km
@@ -668,6 +670,7 @@ void UiWrapper::createAlarmEntryModel(void)
 {
     QHash<int, QByteArray> roleNames;
     roleNames[AlarmEntry::DescrptionRole] =  "description";
+    roleNames[AlarmEntry::LongDescriptionRole] = "longdesc";
     roleNames[AlarmEntry::KmLimitRole] =  "kmlimit";
     roleNames[AlarmEntry::TimeLimitRole] =  "timelimit";
     roleNames[AlarmEntry::NextKmRole] =  "nextkm";
