@@ -221,7 +221,7 @@ FPPage {
                 Plot {
                     id: plot
                     width: parent.width
-                    height: inPortrait ? 400 : 250
+                    height: isPortrait ? 400 : 250
             //        data: testData
                     data: statisticsModel
                     xLabels: monthModel
