@@ -17,10 +17,13 @@ HEADERS += sailfish/line.h
 
 INCLUDEPATH += sailfish
 
+#QT += positioning
+
 include(engine/engine.pri)
 
 OTHER_FILES += qml/fuelpad2/AboutDialog.qml \
     qml/fuelpad2/AddAlarmEventDialog.qml \
+    qml/fuelpad2/AddAlarmTypeDialog.qml \
     qml/fuelpad2/AddCarDialog.qml \
     qml/fuelpad2/AddDriverDialog.qml \
     qml/fuelpad2/AddFuelEntryDialog.qml \
@@ -53,4 +56,3 @@ OTHER_FILES += qml/fuelpad2/AboutDialog.qml \
     rpm/fuelpad2-sailfish.spec \
     rpm/fuelpad2-sailfish.yaml \
     fuelpad2-sailfish.desktop
-
