@@ -90,6 +90,7 @@ FPDialog {
             titleText: qsTr("Entry date")
             acceptButtonText: qsTr("OK")
             rejectButtonText: qsTr("Cancel")
+            minimumYear: 2000
             onAccepted: addDialogData.dateDialogAccecpted()
         }
 

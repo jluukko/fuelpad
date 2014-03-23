@@ -5,4 +5,6 @@ DatePickerDialog {
    property string titleText
    property string acceptButtonText
    property string rejectButtonText
+   property int minimumYear
+   property int maximumYear
 }
