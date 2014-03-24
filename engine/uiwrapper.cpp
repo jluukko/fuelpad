@@ -228,6 +228,22 @@ static void addRecordToFuelEntryModel(QStandardItemModel *model, Fuelrecord *dat
 //    model->insertRow(0, it);
 }
 
+static void setStatDataToCarEntryModel(QStandardItem *it, qlonglong id,
+                                   double totalKm, double lastMonthKm, double lastYearKm,
+                                   double totalFill, double lastMonthFill, double lastYearFill,
+                                   double totalConsum, double lastMonthConsum, double lastYearConsum)
+{
+    it->setData(QVariant(totalKm), CarEntry::TotalKmRole);
+    it->setData(QVariant(lastMonthKm), CarEntry::LastMonthKmRole);
+    it->setData(QVariant(lastYearKm), CarEntry::LastYearKmRole);
+    it->setData(QVariant(totalFill), CarEntry::TotalFillRole);
+    it->setData(QVariant(lastMonthFill), CarEntry::LastMonthFillRole);
+    it->setData(QVariant(lastYearFill), CarEntry::LastYearFillRole);
+    it->setData(QVariant(totalConsum), CarEntry::TotalConsumptionRole);
+    it->setData(QVariant(lastMonthConsum), CarEntry::LastMonthConsumptionRole);
+    it->setData(QVariant(lastYearConsum), CarEntry::LastYearConsumptionRole);
+}
+
 static void setDataToCarEntryModel(QStandardItem *it, CarData *data,
                                    double totalKm, double lastMonthKm, double lastYearKm,
                                    double totalFill, double lastMonthFill, double lastYearFill,
@@ -241,15 +257,10 @@ static void setDataToCarEntryModel(QStandardItem *it, CarData *data,
     it->setData(data->getNotes(), CarEntry::NotesRole);
     it->setData(data->getFuelType(), CarEntry::FueltypeRole);
     it->setData(id, CarEntry::IdRole);
-    it->setData(QVariant(totalKm), CarEntry::TotalKmRole);
-    it->setData(QVariant(lastMonthKm), CarEntry::LastMonthKmRole);
-    it->setData(QVariant(lastYearKm), CarEntry::LastYearKmRole);
-    it->setData(QVariant(totalFill), CarEntry::TotalFillRole);
-    it->setData(QVariant(lastMonthFill), CarEntry::LastMonthFillRole);
-    it->setData(QVariant(lastYearFill), CarEntry::LastYearFillRole);
-    it->setData(QVariant(totalConsum), CarEntry::TotalConsumptionRole);
-    it->setData(QVariant(lastMonthConsum), CarEntry::LastMonthConsumptionRole);
-    it->setData(QVariant(lastYearConsum), CarEntry::LastYearConsumptionRole);
+
+    setStatDataToCarEntryModel(it, id, totalKm, lastMonthKm, lastYearKm, totalFill, lastMonthFill, lastYearFill,
+                               totalConsum, lastMonthConsum, lastYearConsum);
+
 }
 
 static void addRecordToCarEntryModel(QStandardItemModel *model, CarData *data,
@@ -771,6 +782,24 @@ PlotDataModel* UiWrapper::getStatisticsModel(void)
     return statisticsModel;
 }
 
+void UiWrapper::calcCarStatistics(QString id, double &totalKm, double &lastMonthKm, double &lastYearKm,
+                                    double &totalFill, double &lastMonthFill, double &lastYearFill,
+                                    double &totalConsum, double &lastMonthConsum, double &lastYearConsum)
+{
+    qlonglong Id = id.toLongLong();
+
+    totalKm = getTotalKm(Id);
+    lastMonthKm = getLastMonthKm(Id);
+    lastYearKm = getLastYearKm(Id);
+    totalFill = getTotalFill(Id);
+    lastMonthFill = getLastMonthFill(Id);
+    lastYearFill = getLastYearFill(Id);
+    totalConsum = getTotalConsum(Id);
+    lastMonthConsum = getLastMonthConsum(Id);
+    lastYearConsum = getLastYearConsum(Id);
+
+}
+
 void UiWrapper::addFuelEntry(int carid, QString date, double km, double trip, double fill, bool notFull,
                              double price, double service, double oil, double tires, double lat, double lon,
                              QString place, QString notes)
@@ -780,6 +809,10 @@ void UiWrapper::addFuelEntry(int carid, QString date, double km, double trip, do
     Fuelrecord *record = new Fuelrecord(*unitSystem);
     qlonglong affectedId;
     QStandardItem *affectedItem;
+    QStandardItem *carItem;
+    double totalKm, lastMonthKm, lastYearKm;
+    double totalFill, lastMonthFill, lastYearFill;
+    double totalConsum, lastMonthConsum, lastYearConsum;
 
     record->setAllValuesUserUnit(date,
                                  km,
@@ -829,6 +862,20 @@ void UiWrapper::addFuelEntry(int carid, QString date, double km, double trip, do
         }
     }
 
+    // Update car statistics
+    // Change the statistics data in the model
+    carItem = findCar(QString("%1").arg(carid));
+    if (carItem != 0) {
+        qDebug("Found current id from model and trying to update it");
+        calcCarStatistics(QString("%1").arg(carid), totalKm, lastMonthKm, lastYearKm, totalFill, lastMonthFill, lastYearFill,
+                totalConsum, lastMonthConsum, lastYearConsum);
+        setStatDataToCarEntryModel(carItem, carid, totalKm, lastMonthKm, lastYearKm, totalFill, lastMonthFill, lastYearFill,
+                               totalConsum, lastMonthConsum, lastYearConsum);
+    }
+    else {
+        qDebug("Did not find current id from model");
+    }
+
     // Notify Qml side that list models have changed
     updateAllModels();
 
@@ -846,6 +893,10 @@ void UiWrapper::updateFuelEntry(int carid, QString id, QString date, double km, 
     QStandardItem *currentItem;
     qlonglong affectedId;
     QStandardItem *affectedItem;
+    QStandardItem *carItem;
+    double totalKm, lastMonthKm, lastYearKm;
+    double totalFill, lastMonthFill, lastYearFill;
+    double totalConsum, lastMonthConsum, lastYearConsum;
 
     record->setAllValuesUserUnit(date,
                                  km,
@@ -903,10 +954,21 @@ void UiWrapper::updateFuelEntry(int carid, QString id, QString date, double km, 
         }
     }
 
-    // @todo Notify Qml side somehow that the model has changed
-//    sortModel->sort(FIELD_DATE, Qt::DescendingOrder);
-//    fuelEntryModel->sort(FIELD_DATE, Qt::DescendingOrder);
-//    sortModel->invalidate();
+    // Update car statistics
+    // Change the statistics data in the model
+    carItem = findCar(QString("%1").arg(carid));
+    if (carItem != 0) {
+        qDebug("Found current id from model and trying to update it");
+        calcCarStatistics(QString("%1").arg(carid), totalKm, lastMonthKm, lastYearKm, totalFill, lastMonthFill, lastYearFill,
+                totalConsum, lastMonthConsum, lastYearConsum);
+        setStatDataToCarEntryModel(carItem, carid, totalKm, lastMonthKm, lastYearKm, totalFill, lastMonthFill, lastYearFill,
+                               totalConsum, lastMonthConsum, lastYearConsum);
+    }
+    else {
+        qDebug("Did not find current id from model");
+    }
+
+    // Notify Qml side somehow that the model has changed
     updateAllModels();
 
 }
@@ -1223,6 +1285,9 @@ void UiWrapper::updateCar(QString id, QString mark, QString model, QString year,
     qlonglong Id = id.toLongLong();
     CarData *record = new CarData();
     QStandardItem *currentItem;
+    double totalKm, lastMonthKm, lastYearKm;
+    double totalFill, lastMonthFill, lastYearFill;
+    double totalConsum, lastMonthConsum, lastYearConsum;
 
     record->setMark(mark);
     record->setModel(model);
@@ -1235,13 +1300,14 @@ void UiWrapper::updateCar(QString id, QString mark, QString model, QString year,
     dataBase->updateCar(id.toLongLong(), mark.toStdString(), model.toStdString(),
                         year.toStdString(), regist.toStdString(), notes.toStdString(), fueltype);
 
-    // Change the data in the model
+    // Change the statistics data in the model
     currentItem = findCar(id);
     if (currentItem != 0) {
         qDebug("Found current id from model and trying to update it");
-        setDataToCarEntryModel(currentItem, record, getTotalKm(Id), getLastMonthKm(Id), getLastYearKm(Id),
-                               getTotalFill(Id), getLastMonthFill(Id), getLastYearFill(Id),
-                               getTotalConsum(Id), getLastMonthConsum(Id), getLastYearConsum(Id));
+        calcCarStatistics(id, totalKm, lastMonthKm, lastYearKm, totalFill, lastMonthFill, lastYearFill,
+                totalConsum, lastMonthConsum, lastYearConsum);
+        setDataToCarEntryModel(currentItem, record, totalKm, lastMonthKm, lastYearKm, totalFill, lastMonthFill, lastYearFill,
+                               totalConsum, lastMonthConsum, lastYearConsum);
     }
     else {
         qDebug("Did not find current id from model");

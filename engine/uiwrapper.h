@@ -48,6 +48,9 @@ public:
     MySortFilterProxyModel* getAlarmEntryModel(void);
     MySortFilterProxyModel* getAlarmEventModel(void);
     PlotDataModel* getStatisticsModel(void);
+    void calcCarStatistics(QString id, double &totalKm, double &lastMonthKm, double &lastYearKm,
+                             double &totalFill, double &lastMonthFill, double &lastYearFill,
+                             double &totalConsum, double &lastMonthConsum, double &lastYearConsum);
 
     // Exposed to Qml
     Q_INVOKABLE bool dataBaseDidNotExist(void);
