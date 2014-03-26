@@ -43,6 +43,8 @@ FPDialog {
     property double oldLon
     property string oldPlace
 
+    property date currentDate: editMode ? oldDate : ""
+
     width: parent.width
 
     title: editMode ? qsTr("Edit fuel record") : qsTr("Add a new fuel record")
@@ -73,16 +75,22 @@ FPDialog {
         flickableDirection: Flickable.VerticalFlick
         clip: true
 
-        function launchDateDialogToToday() {
-             var d = new Date();
-             dateDialog.year = d.getFullYear();
-             dateDialog.month = d.getMonth()+1;
-             dateDialog.day = d.getDate();
-             dateDialog.open();
+        function launchDateDialogToToday(pv) {
+            if (pv!="Invalid Date") {
+                var d = new Date(pv);
+            }
+            else {
+                var d = new Date();
+            }
+            dateDialog.year = d.getFullYear();
+            dateDialog.month = d.getMonth()+1;
+            dateDialog.day = d.getDate();
+            dateDialog.open();
         }
 
         function dateDialogAccecpted() {
             dateField.text = "%d-%02d-%02d".$(dateDialog.year,dateDialog.month,dateDialog.day)
+            currentDate = dateField.text
         }
 
         FPDatePickerDialog {
@@ -108,7 +116,7 @@ FPDialog {
                      id: dateButton
                      text: qsTr("Pick date")
                      width: text.width
-                     onClicked: addDialogData.launchDateDialogToToday()
+                     onClicked: addDialogData.launchDateDialogToToday(currentDate)
                 }
                 FPTextField {
                     id: dateField
