@@ -961,7 +961,7 @@
     <message>
         <location filename="../SettingsPage.qml" line="89"/>
         <source>Unit system for length</source>
-        <translation>Pituusden yksikköjärjestelmä</translation>
+        <translation>Pituuden yksikköjärjestelmä</translation>
     </message>
     <message>
         <location filename="../SettingsPage.qml" line="98"/>
