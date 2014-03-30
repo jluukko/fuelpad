@@ -44,6 +44,14 @@ include(engine/engine.pri)
 include(qmlapplicationviewer/qmlapplicationviewer.pri)
 qtcAddDeployment()
 
+lupdate_only {
+  SOURCES = qml/fuelpad2/*.qml
+}
+
+TRANSLATIONS += \
+    qml/fuelpad2/translations/qml-translation.en_GB.ts \
+    qml/fuelpad2/translations/qml-translation.fi_FI.ts
+
 OTHER_FILES += \
     qtc_packaging/debian_harmattan/rules \
     qtc_packaging/debian_harmattan/README \
@@ -57,3 +65,6 @@ OTHER_FILES += \
     qtc_packaging/debian_fremantle/control \
     qtc_packaging/debian_fremantle/compat \
     qtc_packaging/debian_fremantle/changelog
+
+RESOURCES += \
+    translations.qrc

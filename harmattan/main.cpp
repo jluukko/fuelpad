@@ -36,6 +36,14 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     QScopedPointer<QApplication> app(createApplication(argc, argv));
     QmlApplicationViewer viewer;
+    QTranslator qtTranslator;
+
+    if (qtTranslator.load("qml/fuelpad2/translations/qml-translation." + QLocale::system().name(), ":/")) {
+        app->installTranslator(&qtTranslator);
+    }
+    else {
+        qDebug("Did not manage to find translation for language %s",QLocale::system().name().toStdString().c_str());
+    }
 
     UiEngine uiEngine;
 

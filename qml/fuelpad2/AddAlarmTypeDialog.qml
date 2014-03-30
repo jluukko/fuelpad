@@ -85,7 +85,7 @@ FPDialog {
                 FPTextField {
                     id: intervalKmField
                     width: addDialog.width-2*appTheme.paddingLarge
-                    placeholderText: "Set to zero if only time limit used"
+                    placeholderText: qsTr("Set to zero if only time limit used")
                     maximumLength: 40
                     validator: IntValidator{bottom: 0}
                     text: editMode ? oldIntervalKm : ""
@@ -97,7 +97,7 @@ FPDialog {
                 FPTextField {
                     id: intervalMonthsField
                     width: addDialog.width-2*appTheme.paddingLarge
-                    placeholderText: "Set to zero if only length limit used"
+                    placeholderText: qsTr("Set to zero if only length limit used")
                     maximumLength: 4
                     validator: IntValidator{bottom: 0; top: 240}
                     inputMethodHints: Qt.ImhFormattedNumbersOnly

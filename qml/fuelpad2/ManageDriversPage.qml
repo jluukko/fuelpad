@@ -34,7 +34,7 @@ FPPage {
 
     FPPageHeader {
         id: applicationHeader
-        title: "Drivers"
+        title: qsTr("Drivers")
     }
 
     ListView {

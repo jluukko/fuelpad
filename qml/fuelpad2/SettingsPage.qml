@@ -51,7 +51,7 @@ FPPage {
 
     FPPageHeader {
         id: applicationHeader
-        title: "Settings"
+        title: qsTr("Settings")
     }
 
     Column {
@@ -73,7 +73,7 @@ FPPage {
         Row {
 
             FPLabel {
-                text: "Select units individually"
+                text: qsTr("Select units individually")
             }
 
             FPSwitch {

@@ -27,7 +27,7 @@ FPPage {
 
     FPPageHeader {
         id: applicationHeader
-        title: "Driving log"
+        title: qsTr("Driving log")
     }
 
     Text {

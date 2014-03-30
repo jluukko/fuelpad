@@ -62,7 +62,7 @@ FPPage {
 
             FPPageHeader {
                 id: applicationHeader
-                title: "Reminders"
+                title: qsTr("Reminders")
             }
 
             ListView {

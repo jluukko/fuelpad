@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/fuelpad2/translations/qml-translation.fi_FI.qm</file>
+        <file>qml/fuelpad2/translations/qml-translation.en_GB.qm</file>
+    </qresource>
+</RCC>
