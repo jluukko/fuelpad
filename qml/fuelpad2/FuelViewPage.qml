@@ -162,7 +162,7 @@ FPPage {
 
                         FPLabel {
                             id: dateText
-                            text: date + ": " + km.toFixed(0) + " " + Units.getLengthUnit() + " " + price.toFixed(2)
+                            text: date + ": " + km.toFixed(0) + " " + Units.getLengthUnit() + " " + (price+service+oil+tires).toFixed(2)
                                   + applicationData.getCurrencySymbol()
                             platformStyle: MyLabelStyleTitle{}
                             font.bold: true
