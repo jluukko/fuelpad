@@ -39,7 +39,17 @@ QHash<int, QByteArray> MySortFilterProxyModel::roleNames() const
 bool MySortFilterProxyModel::filterAcceptsRow(int sourceRow,
         const QModelIndex &sourceParent) const
 {
-    return true;
+    Q_UNUSED( sourceParent );
+    bool accept = false;
+    QHashIterator<int, QByteArray> i(m_roleNames);
+    while (i.hasNext()) {
+       i.next();
+       QModelIndex idx = sourceModel()->index(sourceRow,0);
+       if (idx.data(i.key()).toString().contains(filterRegExp())) {
+           accept = true;
+       }
+    }
+    return accept;
 }
 
 bool MySortFilterProxyModel::lessThan(const QModelIndex &left,
