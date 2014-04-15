@@ -362,6 +362,19 @@ void UiWrapper::saveConfig(void)
     userConfig.settings.endGroup();
 }
 
+void UiWrapper::setSearchExpression(QString searchExp)
+{
+    QRegExp regExp(searchExp, Qt::CaseInsensitive, QRegExp::Wildcard);
+    sortModel->setFilterRegExp(regExp);
+    sortModel->invalidate();
+}
+
+QString UiWrapper::getSearchExpression(void)
+{
+    QRegExp regExp = sortModel->filterRegExp();
+    return regExp.pattern();
+}
+
 void UiWrapper::updateAllModels(void)
 {
     qDebug("Updating models");

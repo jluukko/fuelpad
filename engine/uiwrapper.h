@@ -58,6 +58,10 @@ public:
 
     Q_INVOKABLE void saveConfig(void);
 
+    Q_INVOKABLE void setSearchExpression(QString searchExp);
+
+    Q_INVOKABLE QString getSearchExpression(void);
+
     Q_INVOKABLE void addFuelEntry(int carid, QString date, double km, double trip, double fill, bool notFull,
                                   double price, double service, double oil, double tires, double lat, double lon,
                                   QString place, QString notes);
