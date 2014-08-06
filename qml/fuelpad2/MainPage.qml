@@ -18,7 +18,7 @@
  *
  */
 
-import QtQuick 1.1
+import QtQuick 2.0
 import org.fuelpad.qmlui 1.0
 import org.fuelpad.components 1.0
 import "CommonFuncs.js" as Funcs
