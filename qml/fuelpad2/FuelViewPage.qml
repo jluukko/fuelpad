@@ -32,11 +32,17 @@ FPPage {
 
     property int carId: -1
 
+    property bool searchBarVisible: false
+
     function loadStatisticsPage(dbid) {
         var today = new Date()
         var thisyear = Qt.formatDate(today, "yyyy");
         applicationData.getStatistics(thisyear,2);
         pageStack.push(Funcs.loadComponent("StatisticsPage.qml",fuelViewPage, {year: thisyear, stattype: 2}));
+    }
+
+    function updateSearchExp(searchExp) {
+        applicationData.setSearchExpression(searchExp)
     }
 
     FPToolBarLayout {
@@ -85,12 +91,40 @@ FPPage {
                 title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
             }
 
+            FPTextField {
+                id: searchBar
+                anchors.top: applicationHeader.bottom
+                width: content.width
+                placeholderText: applicationData.getSearchExpression() == "" ? qsTr("Search") : ""
+                text: applicationData.getSearchExpression() == "" ? "" : applicationData.getSearchExpression()
+                onActiveFocusChanged: updateSearchExp(searchBar.text)
+                visible: searchBarVisible
+            }
+
+            FPToolIcon {
+                id: clearSearchBar
+                iconId: "toolbar-cancle"
+                anchors.right: executeSearch.left
+                anchors.top: searchBar.top
+                onClicked: searchBar.text = ""
+                visible: searchBarVisible
+            }
+
+            FPToolIcon {
+                id: executeSearch
+                iconId: "toolbar-search"
+                anchors.right: searchBar.right
+                anchors.top: searchBar.top
+                onClicked: updateSearchExp(searchBar.text)
+                visible: searchBarVisible
+            }
+
             ListView {
                 id: listView
                 model: fuelModel
                 delegate: delegate
                 anchors {
-                    top: applicationHeader.bottom
+                      top: searchBarVisible ? searchBar.bottom : applicationHeader.bottom
 //                    left: parent.left
 //                    right: parent.right
 //                    bottom: parent.bottom
@@ -100,6 +134,11 @@ FPPage {
                 height: content.height-fuelViewTools.height
                 width: content.width
                 clip: true
+                onContentYChanged: {
+                    if (contentY < -50) {
+                                       searchBarVisible = true
+                                   }
+                }
             }
 
             FPScrollDecorator {
