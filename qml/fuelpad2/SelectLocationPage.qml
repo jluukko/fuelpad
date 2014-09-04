@@ -44,7 +44,7 @@ FPDialog {
     }
 
     function locationDialogAccepted() {
-        addressFound(placeField.text);
+            addDialogData.addressFound(placeField.text, latField.text, lonField.text);
     }
 
 
@@ -143,7 +143,7 @@ FPDialog {
                 width: locationDialog.width-2*appTheme.paddingLarge
                 height: 4*appTheme.fontSizeMedium
                 placeholderText: qsTr("Place")
-                readOnly: true
+//                readOnly: true
             }
 
         }

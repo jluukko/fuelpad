@@ -102,8 +102,10 @@ FPDialog {
             onAccepted: addDialogData.dateDialogAccecpted()
         }
 
-        function addressFound(address) {
+        function addressFound(address, lat, lon) {
             placeField.text = address;
+            latField.text = lat;
+            lonField.text = lon
         }
 
         Column{
@@ -241,25 +243,25 @@ FPDialog {
                 Text {
                     text: qsTr("Latitude")
                     font.pixelSize: appTheme.fontSizeMedium
-                    visible: false
+//                    visible: false
                 }
                 FPTextField {
                     id: latField
                     width: addDialog.width-2*appTheme.paddingLarge
                     text: editMode ? oldLat : positionSource.position.coordinate.latitude.toFixed(8)
-                    visible: false
+//                    visible: false
                 }
 
                 Text {
                     text: qsTr("Longitude")
                     font.pixelSize: appTheme.fontSizeMedium
-                    visible: false
+//                    visible: false
                 }
                 FPTextField {
                     id: lonField
                     width: addDialog.width-2*appTheme.paddingLarge
                     text: editMode ? oldLon : positionSource.position.coordinate.longitude.toFixed(8)
-                    visible: false
+//                    visible: false
                 }
 
                 FPListButton {

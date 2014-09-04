@@ -317,6 +317,39 @@ FPPage {
                                 }
                             }
 
+                            Row {
+                                spacing: 10
+                                visible: (latitude == 0)? false : true
+                                LabelText {
+                                    text: qsTr("Latitude")
+                                }
+                                ElementText {
+                                    text: latitude
+                                }
+                            }
+
+                            Row {
+                                spacing: 10
+                                visible: (longitude == 0)? false : true
+                                LabelText {
+                                    text: qsTr("Longitude")
+                                }
+                                ElementText {
+                                    text: longitude
+                                }
+                            }
+
+                            Row {
+                                spacing: 10
+                                visible: (place == "")? false : true
+                                LabelText {
+                                    text: qsTr("Address")
+                                }
+                                ElementText {
+                                    text: place
+                                }
+                            }
+
                             Rectangle {
                                 id: itemSeperator
                                 height: 2
