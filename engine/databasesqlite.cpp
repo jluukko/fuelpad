@@ -340,8 +340,10 @@ bool DatabaseSqlite::prepare_queries(void)
     //--------------------------------------------------------------------------
     retVal = retVal |
             ppStmtAddRecord->prepare("INSERT INTO "
-                                     "record(carid,driverid,day,km,trip,fill,consum,price,priceperlitre,pricepertrip,service,oil,tires,notes) "
-                                     "VALUES(:carid,:driverid,:day,:km,:trip,:fill,:consum,:price,:ppl,:ppt,:service,:oil,:tires,:notes);");
+                                     "record(carid,driverid,day,km,trip,fill,consum,price,priceperlitre,pricepertrip,service,oil,tires,"
+                                     "lat,lon,place,notes) "
+                                     "VALUES(:carid,:driverid,:day,:km,:trip,:fill,:consum,:price,:ppl,:ppt,:service,:oil,:tires,"
+                                     ":lat,:lon,:place,:notes);");
 
     //--------------------------------------------------------------------------
     // Update a fuel record
@@ -351,7 +353,8 @@ bool DatabaseSqlite::prepare_queries(void)
             ppStmtUpdateRecord->prepare("UPDATE record "
                                         "SET carid=:carid, driverid=:driverid, day=:day, km=:km, trip=:trip, "
                                         "fill=:fill, consum=:consum, price=:price, priceperlitre=:ppl, "
-                                        "pricepertrip=:ppt, service=:service, oil=:oil, tires=:tires, notes=:notes WHERE id=:id;");
+                                        "pricepertrip=:ppt, service=:service, oil=:oil, tires=:tires, lat=:lat, lon=:lon, "
+                                        "place=:place, notes=:notes WHERE id=:id;");
 
     //--------------------------------------------------------------------------
     // Delete a fuel record
@@ -748,6 +751,8 @@ qlonglong DatabaseSqlite::addNewRecord(Fuelrecord &record, bool notFull)
     double service;
     double oil;
     double tires;
+    double lat;
+    double lon;
     qlonglong retFullId = 0;
 
     // Update calculated fields and check if other records need to be updated
@@ -764,6 +769,8 @@ qlonglong DatabaseSqlite::addNewRecord(Fuelrecord &record, bool notFull)
     consum = record.getConsum().toDouble();
     pricepertrip = record.getPpt().toDouble();
     ppl = record.getPpl().toDouble();
+    lat = record.getLatitude().toDouble();
+    lon = record.getLongitude().toDouble();
 
     // The actual adding of the record
     ppStmtAddRecord->bindValue(":carid",getCurrentCar().getId());
@@ -779,6 +786,9 @@ qlonglong DatabaseSqlite::addNewRecord(Fuelrecord &record, bool notFull)
     ppStmtAddRecord->bindValue(":service",service);
     ppStmtAddRecord->bindValue(":oil",oil);
     ppStmtAddRecord->bindValue(":tires",tires);
+    ppStmtAddRecord->bindValue(":lat",lat);
+    ppStmtAddRecord->bindValue(":lon",lon);
+    ppStmtAddRecord->bindValue(":place",record.getPlace().toString());
     ppStmtAddRecord->bindValue(":notes",record.getNotes().toString());
 
     // Finally, do the update
@@ -809,6 +819,8 @@ qlonglong DatabaseSqlite::updateRecord(Fuelrecord &record, bool notFull)
     double service;
     double oil;
     double tires;
+    double lat;
+    double lon;
     qlonglong retFullId = 0;
 
     qDebug("%s called",__PRETTY_FUNCTION__);
@@ -827,6 +839,8 @@ qlonglong DatabaseSqlite::updateRecord(Fuelrecord &record, bool notFull)
     consum = record.getConsum().toDouble();
     pricepertrip = record.getPpt().toDouble();
     ppl = record.getPpl().toDouble();
+    lat = record.getLatitude().toDouble();
+    lon = record.getLongitude().toDouble();
 
     // The actual updating of the record
     ppStmtUpdateRecord->bindValue(":carid",getCurrentCar().getId());
@@ -842,6 +856,9 @@ qlonglong DatabaseSqlite::updateRecord(Fuelrecord &record, bool notFull)
     ppStmtUpdateRecord->bindValue(":service",service);
     ppStmtUpdateRecord->bindValue(":oil",oil);
     ppStmtUpdateRecord->bindValue(":tires",tires);
+    ppStmtUpdateRecord->bindValue(":lat",lat);
+    ppStmtUpdateRecord->bindValue(":lon",lon);
+    ppStmtUpdateRecord->bindValue(":place",record.getPlace().toString());
     ppStmtUpdateRecord->bindValue(":notes",record.getNotes().toString());
     ppStmtUpdateRecord->bindValue(":id",record.getId().toLongLong());
 

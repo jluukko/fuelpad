@@ -852,6 +852,9 @@ void UiWrapper::addFuelEntry(int carid, QString date, double km, double trip, do
               << "Consumption: " << record->getConsum().toString().toStdString() << SEPARATOR
               << "Price/trip: " << record->getPpt().toString().toStdString() << SEPARATOR
               << "Notes: " << record->getNotes().toString().toStdString() << SEPARATOR
+              << "Latitude: " << record->getLatitude().toString().toStdString() << SEPARATOR
+              << "Longitude: " << record->getLongitude().toString().toStdString() << SEPARATOR
+              << "Place: " << record->getPlace().toString().toStdString() << SEPARATOR
               << "Oil: " << record->getOil().toString().toStdString() << SEPARATOR
               << "Service: " << record->getService().toString().toStdString() << SEPARATOR
               << std::endl;
@@ -937,6 +940,9 @@ void UiWrapper::updateFuelEntry(int carid, QString id, QString date, double km, 
               << "Consumption: " << record->getConsum().toString().toStdString() << SEPARATOR
               << "Price/trip: " << record->getPpt().toString().toStdString() << SEPARATOR
               << "Notes: " << record->getNotes().toString().toStdString() << SEPARATOR
+              << "Latitude: " << record->getLatitude().toString().toStdString() << SEPARATOR
+              << "Longitude: " << record->getLongitude().toString().toStdString() << SEPARATOR
+              << "Place: " << record->getPlace().toString().toStdString() << SEPARATOR
               << "Oil: " << record->getOil().toString().toStdString() << SEPARATOR
               << "Service: " << record->getService().toString().toStdString() << SEPARATOR
               << std::endl;
