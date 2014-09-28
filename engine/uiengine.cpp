@@ -24,6 +24,10 @@
 
 #include <qplatformdefs.h> // MEEGO_EDITION_HARMATTAN
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QStandardPaths>
+#endif
+
 UiEngine::UiEngine(void)
 {
     dataBase = &sqliteDatabase;
@@ -35,7 +39,9 @@ UiEngine::UiEngine(void)
     dbFileDir.mkdir(QString(".fuelpad"));
     dataBase->setFileName((dbFileDir.path() + QString("/fuelpad.db")).toStdString());
 #else
-    dataBase->setFileName("fuelpad.db");
+    QString homeLocation = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QString(), QStandardPaths::LocateDirectory);
+    dataBase->setFileName((homeLocation + QString("/fuelpad.db")).toStdString());
+    qDebug("home location = %s", homeLocation.toStdString().c_str());
 #endif
     dataBase->openConnection();
 
