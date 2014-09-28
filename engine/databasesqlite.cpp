@@ -125,7 +125,7 @@ bool DatabaseSqlite::create_database(void)
                 );
     failure |= query.lastError().type() != QSqlError::NoError;
 
-    failure |= create_drivinglog_tables();
+    failure |= !create_drivinglog_tables();
 
     return !failure;
 }
