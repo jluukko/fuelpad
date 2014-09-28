@@ -1,0 +1,39 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/fuelpad2/mainqtcreator.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPPageStackWindow.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/qmldir</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPApplicationTheme.js</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPApplicationTheme.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPButton.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPButtonRow.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPButtonStyle.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPDatePickerDialog.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPDialog.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPFlickablePageContent.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPLabel.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPLabelStyle.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPListButton.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPMenu.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPMenuAction.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPMenuItem.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPMenuLayout.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPPage.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPPageHeader.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPQueryDialog.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPScrollDecorator.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPSelectionDialog.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPSheet.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPSimpleDialog.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPSwitch.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPTextArea.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPTextField.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPToolBarLayout.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPToolIcon.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPTouchSelector.qml</file>
+        <file>qml/fuelpad2/ElementText.qml</file>
+        <file>qml/fuelpad2/LabelText.qml</file>
+        <file>qml/fuelpad2/android/org/fuelpad/qmlui/UIConstants.js</file>
+        <file>qml/fuelpad2/CommonUnits.js</file>
+    </qresource>
+</RCC>
