@@ -13,7 +13,7 @@ RESOURCES += qml-android.qrc
 QML_IMPORT_PATH =
 
 # Default rules for deployment.
-include(deployment.pri)
+include(deployment-android.pri)
 
 HEADERS += \
     android-src/line.h
