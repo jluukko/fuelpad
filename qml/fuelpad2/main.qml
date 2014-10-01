@@ -65,24 +65,24 @@ FPPageStackWindow {
     FPMenu {
         id: myMenu
         visualParent: pageStack
-        FPMenuLayout {
-            FPMenuItem {
+        items: [
+            FPMenuAction {
                 text: qsTr("Settings")
                 onClicked: pageStack.push(Funcs.loadComponent("SettingsPage.qml",parent, {}))
-            }
-            FPMenuItem {
+            },
+            FPMenuAction {
                 text: qsTr("Manage cars")
                 onClicked: pageStack.push(Funcs.loadComponent("ManageCarsPage.qml",parent, {}))
-            }
-            FPMenuItem {
+            },
+            FPMenuAction {
                 text: qsTr("Manage drivers")
                 onClicked: pageStack.push(Funcs.loadComponent("ManageDriversPage.qml",parent, {}))
-            }
-            FPMenuItem {
+            },
+            FPMenuAction {
                 text: qsTr("About")
                 onClicked: pageStack.push(Funcs.loadComponent("AboutDialog.qml",parent, {}))
             }
-        }
+        ]
     }
 
 }
