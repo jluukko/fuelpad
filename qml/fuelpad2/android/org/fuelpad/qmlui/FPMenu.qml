@@ -23,13 +23,17 @@ import QtQuick.Controls 1.2
 
 MenuBar {
     property variant visualParent
-    property alias items: menuModel.children
+    property alias items: repeater.model
     property variant dummy
 
     dummy: Item { id: menuModel }
 
     menus: Menu {
-        Repeater {
+        id: menu
+        Instantiator {
+            id: repeater
+            onObjectAdded: menu.insertItem(index, object)
+            onObjectRemoved: menu.removeItem(object)
             model: menuModel.children
             MenuItem {
                 text: modelData.text
