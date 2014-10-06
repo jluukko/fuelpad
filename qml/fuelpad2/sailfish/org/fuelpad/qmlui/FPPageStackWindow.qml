@@ -5,4 +5,9 @@ ApplicationWindow {
     property bool showStatusBar
     property bool showToolBar
     property variant tools
+    property alias mainMenuItems: menuBarItems.children
+
+    Item {
+        id: menuBarItems
+    }
 }

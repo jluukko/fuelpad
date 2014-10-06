@@ -62,27 +62,31 @@ FPPageStackWindow {
         }
     }
 
-    FPMenu {
+    property list<FPMenuAction> menuModel
+
+    menuModel: [
+        FPMenuAction {
+            text: qsTr("Settings")
+            onClicked: pageStack.push(Funcs.loadComponent("SettingsPage.qml",parent, {}))
+        },
+        FPMenuAction {
+            text: qsTr("Manage cars")
+            onClicked: pageStack.push(Funcs.loadComponent("ManageCarsPage.qml",parent, {}))
+        },
+        FPMenuAction {
+            text: qsTr("Manage drivers")
+            onClicked: pageStack.push(Funcs.loadComponent("ManageDriversPage.qml",parent, {}))
+        },
+        FPMenuAction {
+            text: qsTr("About")
+            onClicked: pageStack.push(Funcs.loadComponent("AboutDialog.qml",parent, {}))
+        }
+    ]
+
+    mainMenuItems: FPMenu {
         id: myMenu
         visualParent: pageStack
-        items: [
-            FPMenuAction {
-                text: qsTr("Settings")
-                onClicked: pageStack.push(Funcs.loadComponent("SettingsPage.qml",parent, {}))
-            },
-            FPMenuAction {
-                text: qsTr("Manage cars")
-                onClicked: pageStack.push(Funcs.loadComponent("ManageCarsPage.qml",parent, {}))
-            },
-            FPMenuAction {
-                text: qsTr("Manage drivers")
-                onClicked: pageStack.push(Funcs.loadComponent("ManageDriversPage.qml",parent, {}))
-            },
-            FPMenuAction {
-                text: qsTr("About")
-                onClicked: pageStack.push(Funcs.loadComponent("AboutDialog.qml",parent, {}))
-            }
-        ]
+        items: menuModel
     }
 
 }
