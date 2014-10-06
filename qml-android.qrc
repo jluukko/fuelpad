@@ -37,5 +37,32 @@
         <file>qml/fuelpad2/LabelText.qml</file>
         <file>qml/fuelpad2/android/org/fuelpad/qmlui/UIConstants.js</file>
         <file>qml/fuelpad2/CommonUnits.js</file>
+        <file>qml/fuelpad2/AboutDialog.qml</file>
+        <file>qml/fuelpad2/AddAlarmEventDialog.qml</file>
+        <file>qml/fuelpad2/AddAlarmTypeDialog.qml</file>
+        <file>qml/fuelpad2/AddCarDialog.qml</file>
+        <file>qml/fuelpad2/AddDriverDialog.qml</file>
+        <file>qml/fuelpad2/AddFuelEntryDialog.qml</file>
+        <file>qml/fuelpad2/AlarmEventPage.qml</file>
+        <file>qml/fuelpad2/AlarmTypePage.qml</file>
+        <file>qml/fuelpad2/CommonFuncs.js</file>
+        <file>qml/fuelpad2/DeleteCarDialog.qml</file>
+        <file>qml/fuelpad2/DeleteDriverDialog.qml</file>
+        <file>qml/fuelpad2/DeleteFuelEntryDialog.qml</file>
+        <file>qml/fuelpad2/DialogStatus.js</file>
+        <file>qml/fuelpad2/DrivingLogPage.qml</file>
+        <file>qml/fuelpad2/FuelViewPage.qml</file>
+        <file>qml/fuelpad2/main.qml</file>
+        <file>qml/fuelpad2/MainPage.qml</file>
+        <file>qml/fuelpad2/ManageCarsPage.qml</file>
+        <file>qml/fuelpad2/ManageDriversPage.qml</file>
+        <file>qml/fuelpad2/MyDialog.qml</file>
+        <file>qml/fuelpad2/MyLabelStyleTitle.qml</file>
+        <file>qml/fuelpad2/Plot.qml</file>
+        <file>qml/fuelpad2/RemindersPage.qml</file>
+        <file>qml/fuelpad2/SelectLocationPage.qml</file>
+        <file>qml/fuelpad2/SettingsPage.qml</file>
+        <file>qml/fuelpad2/StatisticsPage.qml</file>
+        <file>qml/fuelpad2/TouchSelector.qml</file>
     </qresource>
 </RCC>
