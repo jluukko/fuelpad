@@ -50,7 +50,7 @@ FPPage {
         visible: false
         FPToolIcon {
             iconId: "toolbar-back"
-            onClicked: { pageStack.pop(); }
+            onClicked: { fuelViewMenu.close(); pageStack.pop(); }
         }
         FPToolIcon {
             iconId: "toolbar-add"

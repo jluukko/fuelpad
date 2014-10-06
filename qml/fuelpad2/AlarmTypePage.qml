@@ -40,7 +40,7 @@ FPPage {
         visible: false
         FPToolIcon {
             iconId: "toolbar-back"
-            onClicked: { pageStack.pop(); }
+            onClicked: { alarmTypeMenu.close(); pageStack.pop(); }
         }
         FPToolIcon {
             platformIconId: "toolbar-view-menu"
