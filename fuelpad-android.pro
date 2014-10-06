@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick widgets
+QT += qml quick positioning widgets
 
 SOURCES += android-src/main.cpp \
     android-src/line.cpp
