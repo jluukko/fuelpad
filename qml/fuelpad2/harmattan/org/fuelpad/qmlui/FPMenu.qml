@@ -22,13 +22,13 @@ import QtQuick 1.1
 import com.nokia.meego 1.1
 
 Menu {
-    property alias items: menuModel.children
+    property alias items: repeater.model
 
     Item { id: menuModel }
 
     MenuLayout {
         Repeater {
-            model: menuModel.children
+            id: repeater
             MenuItem {
                 text: modelData.text
                 onClicked: modelData.clicked()
