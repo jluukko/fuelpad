@@ -49,6 +49,15 @@ FPPage {
         }
     }
 
+    property list<FPMenuAction> alarmTypeMenuModel
+
+    alarmTypeMenuModel: [
+        FPMenuAction {
+            text: qsTr("Add new alarm type")
+            onClicked: pageStack.push(Funcs.loadComponent("AddAlarmTypeDialog.qml",mainPage, {"carId": carId}));
+        }
+    ]
+
     FPFlickablePageContent {
         id: content
 
@@ -60,12 +69,7 @@ FPPage {
         FPMenu {
             id: alarmTypeMenu
             visualParent: pageStack
-            items: [
-                FPMenuAction {
-                    text: qsTr("Add new alarm type")
-                    onClicked: pageStack.push(Funcs.loadComponent("AddAlarmTypeDialog.qml",mainPage, {"carId": carId}));
-                }
-            ]
+            items: alarmTypeMenuModel
         }
 
         Column {

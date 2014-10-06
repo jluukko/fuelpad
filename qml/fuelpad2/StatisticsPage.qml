@@ -171,6 +171,15 @@ FPPage {
         onSelectedIndexChanged: changeStatType(selectedIndex)
     }
 
+    property list<FPMenuAction> statisticsMenuModel
+
+    statisticsMenuModel: [
+        FPMenuAction {
+            text: qsTr("Select statistics")
+            onClicked: statisticsSelectionDialog.open()
+        }
+    ]
+
     FPFlickablePageContent {
         id: content
 
@@ -182,12 +191,7 @@ FPPage {
         FPMenu {
             id: statisticsMenu
             visualParent: pageStack
-            items: [
-                FPMenuAction {
-                    text: qsTr("Select statistics")
-                    onClicked: statisticsSelectionDialog.open()
-                }
-            ]
+            items: statisticsMenuModel
         }
 
         Column {

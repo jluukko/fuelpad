@@ -63,6 +63,15 @@ FPPage {
         }
     }
 
+    property list<FPMenuAction> fuelMenuModel
+
+    fuelMenuModel: [
+        FPMenuAction {
+            text: qsTr("Statistics")
+            onClicked: loadStatisticsPage()
+        }
+    ]
+
     FPFlickablePageContent {
         id: content
 
@@ -74,12 +83,7 @@ FPPage {
         FPMenu {
             id: fuelViewMenu
             visualParent: pageStack
-            items: [
-                FPMenuAction {
-                    text: qsTr("Statistics")
-                    onClicked: loadStatisticsPage()
-                }
-            ]
+            items: fuelMenuModel
         }
 
         Column {

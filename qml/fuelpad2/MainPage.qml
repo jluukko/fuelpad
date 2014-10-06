@@ -76,27 +76,31 @@ FPPage {
 
         contentHeight: contentColumn.height
 
+        property list<FPMenuAction> menuModel
+
+        menuModel: [
+            FPMenuAction {
+                text: qsTr("Settings")
+                onClicked: pageStack.push(Funcs.loadComponent("SettingsPage.qml",mainPage, {}))
+            },
+            FPMenuAction {
+                text: qsTr("Manage cars")
+                onClicked: pageStack.push(Funcs.loadComponent("ManageCarsPage.qml",mainPage, {}))
+            },
+            FPMenuAction {
+                text: qsTr("Manage drivers")
+                onClicked: pageStack.push(Funcs.loadComponent("ManageDriversPage.qml",mainPage, {}))
+            },
+            FPMenuAction {
+                text: qsTr("About")
+                onClicked: pageStack.push(Funcs.loadComponent("AboutDialog.qml",mainPage, {}))
+            }
+        ]
+
         FPMenu {
             id: mainMenu
             visualParent: mainPage
-            items: [
-                FPMenuAction {
-                    text: qsTr("Settings")
-                    onClicked: pageStack.push(Funcs.loadComponent("SettingsPage.qml",mainPage, {}))
-                },
-                FPMenuAction {
-                    text: qsTr("Manage cars")
-                    onClicked: pageStack.push(Funcs.loadComponent("ManageCarsPage.qml",mainPage, {}))
-                },
-                FPMenuAction {
-                    text: qsTr("Manage drivers")
-                    onClicked: pageStack.push(Funcs.loadComponent("ManageDriversPage.qml",mainPage, {}))
-                },
-                FPMenuAction {
-                    text: qsTr("About")
-                    onClicked: pageStack.push(Funcs.loadComponent("AboutDialog.qml",mainPage, {}))
-                }
-            ]
+            items: menuModel
         }
 
         Column {
