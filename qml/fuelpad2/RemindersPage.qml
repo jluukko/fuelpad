@@ -34,6 +34,11 @@ FPPage {
         pageStack.push(Funcs.loadComponent("AlarmTypePage.qml",remindersPage, {"carId": dbid}))
     }
 
+    FPPageHeader {
+        id: applicationHeader
+        title: qsTr("Reminders")
+    }
+
     FPToolBarLayout {
         id: remindersTools
         visible: false
@@ -52,18 +57,14 @@ FPPage {
         id: content
 
         width: remindersPage.width
-        anchors.fill: parent
+        anchors.top: applicationHeader.bottom
+        anchors.bottom: parent.bottom
 
         contentHeight: contentColumn.height
 
         Column {
             id: contentColumn
             spacing: 10
-
-            FPPageHeader {
-                id: applicationHeader
-                title: qsTr("Reminders")
-            }
 
             ListView {
                 id: listView
@@ -77,7 +78,7 @@ FPPage {
                     leftMargin: appTheme.paddingLarge
                     rightMargin: appTheme.paddingLarge
                 }
-                height: content.height-remindersTools.height
+                height: content.height
                 width: content.width
                 clip: true
             }

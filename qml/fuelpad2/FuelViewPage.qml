@@ -45,6 +45,11 @@ FPPage {
         applicationData.setSearchExpression(searchExp)
     }
 
+    FPPageHeader {
+        id: applicationHeader
+        title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
+    }
+
     FPToolBarLayout {
         id: fuelViewTools
         visible: false
@@ -76,7 +81,8 @@ FPPage {
         id: content
 
         width: fuelViewPage.width
-        anchors.fill: parent
+        anchors.top: applicationHeader.bottom
+        anchors.bottom: parent.bottom
 
         contentHeight: contentColumn.height
 
@@ -89,11 +95,6 @@ FPPage {
         Column {
             id: contentColumn
             spacing: 10
-
-            FPPageHeader {
-                id: applicationHeader
-                title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
-            }
 
             FPTextField {
                 id: searchBar
@@ -135,7 +136,7 @@ FPPage {
                     leftMargin: appTheme.paddingLarge
                     rightMargin: appTheme.paddingLarge
                 }
-                height: content.height-fuelViewTools.height
+                height: content.height
                 width: content.width
                 clip: true
                 onContentYChanged: {

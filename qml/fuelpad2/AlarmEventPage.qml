@@ -31,6 +31,12 @@ FPPage {
     property int oldId: -1
     property string alarmName
 
+    FPPageHeader {
+        id: applicationHeader
+        //        title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
+        title: alarmName + " (" + applicationData.getCarMark(-1) + ")"
+    }
+
     FPToolBarLayout {
         id: alarmEventTools
         visible: false
@@ -48,19 +54,14 @@ FPPage {
         id: content
 
         width: alarmTypePage.width
-        anchors.fill: parent
+        anchors.top: applicationHeader.bottom
+        anchors.bottom: parent.bottom
 
         contentHeight: contentColumn.height
 
         Column {
             id: contentColumn
             spacing: 10
-
-            FPPageHeader {
-                id: applicationHeader
-        //        title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
-                title: alarmName + " (" + applicationData.getCarMark(-1) + ")"
-            }
 
             ListView {
                 id: listView
@@ -74,7 +75,7 @@ FPPage {
                     leftMargin: appTheme.paddingLarge
                     rightMargin: appTheme.paddingLarge
                 }
-                height: content.height-alarmEventTools.height
+                height: content.height
                 width: content.width
                 clip: true
             }

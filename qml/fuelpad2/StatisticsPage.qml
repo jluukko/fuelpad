@@ -44,6 +44,11 @@ FPPage {
         applicationData.getStatistics(year,stattype);
     }
 
+    FPPageHeader {
+        id: statisticsHeader
+        title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
+    }
+
     FPToolBarLayout {
         id: statisticsTools
 //        visible: false
@@ -184,7 +189,8 @@ FPPage {
         id: content
 
         width: statisticsPage.width
-        anchors.fill: parent
+        anchors.top: statisticsHeader.bottom
+        anchors.bottom: parent.bottom
 
         contentHeight: contentColumn.height
 
@@ -198,11 +204,6 @@ FPPage {
             id: contentColumn
             spacing: 10
             width: content.width
-
-            FPPageHeader {
-                id: statisticsHeader
-                title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
-            }
 
             Column {
                 id: insideContentColumn

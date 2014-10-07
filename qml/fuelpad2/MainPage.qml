@@ -51,6 +51,11 @@ FPPage {
         active: false
     }
 
+    FPPageHeader {
+        id: applicationHeader
+        title: "Fuelpad"
+    }
+
     FPToolBarLayout {
         id: mainTools
         visible: false
@@ -72,7 +77,8 @@ FPPage {
         id: content
 
         width: mainPage.width
-        anchors.fill: parent
+        anchors.top: applicationHeader.bottom
+        anchors.bottom: parent.bottom
 
         contentHeight: contentColumn.height
 
@@ -107,11 +113,6 @@ FPPage {
             id: contentColumn
             spacing: 10
 
-            FPPageHeader {
-                id: applicationHeader
-                title: "Fuelpad"
-            }
-
             ListView {
                 id: carListView
                 visible: !firstRun
@@ -125,7 +126,7 @@ FPPage {
                 }
 //                height: mainPage.height-applicationHeader.height-button1.height-button4.height-mainTools.height-3*contentColumn.spacing
 //                height: contentHeight-button1.height-button4.height-mainTools.height-3*contentColumn.spacing
-                height: content.height-button1.height-button4.height-mainTools.height-3*contentColumn.spacing
+                height: content.height-button1.height-button4.height-3*contentColumn.spacing
                 width: content.width
                 clip: true
             }
