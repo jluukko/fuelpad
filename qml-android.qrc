@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>qml/fuelpad2/mainqtcreator.qml</file>
         <file>qml/fuelpad2/android/org/fuelpad/components/qmldir</file>
         <file>qml/fuelpad2/android/org/fuelpad/components/FPPositionSource.qml</file>
         <file>qml/fuelpad2/android/org/fuelpad/qmlui/FPPageStackWindow.qml</file>

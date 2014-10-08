@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     // Where to find the UI abstraction layer
     engine.addImportPath("qrc:/qml/fuelpad2/android");
 
-    engine.load(QUrl(QStringLiteral("qrc:/qml/fuelpad2/mainqtcreator.qml")));
+    engine.load(QUrl(QStringLiteral("qrc:/qml/fuelpad2/main.qml")));
 
     return app.exec();
 }
