@@ -37,6 +37,8 @@ FPDialog {
     property double oldOil
     property double oldTires
 
+    property date currentDate: editMode ? oldDate : "2014-01-01"
+
     width: parent.width
 
     title: editMode ? qsTr("Edit event") : qsTr("Add a new event")
@@ -71,14 +73,6 @@ FPDialog {
         }
     }
 
-    FPDatePickerDialog {
-        id: dateDialog
-        titleText: qsTr("Event date")
-        acceptButtonText: qsTr("OK")
-        rejectButtonText: qsTr("Cancel")
-        onAccepted: addDialog.dateDialogAccecpted()
-    }
-
     Flickable {
         id: addDialogData
         anchors {
@@ -87,6 +81,16 @@ FPDialog {
             rightMargin: appTheme.paddingLarge
         }
         width: parent.width
+
+        FPDatePickerDialog {
+            id: dateDialog
+            titleText: qsTr("Event date")
+            acceptButtonText: qsTr("OK")
+            rejectButtonText: qsTr("Cancel")
+            minimumYear: 2000
+            onAccepted: addDialog.dateDialogAccecpted()
+        }
+
         Grid {
             id: addDialogGrid
             columns: 2
