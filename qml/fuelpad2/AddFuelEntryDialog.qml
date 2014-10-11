@@ -43,7 +43,7 @@ FPDialog {
     property double oldLon
     property string oldPlace
 
-    property date currentDate: editMode ? oldDate : ""
+    property date currentDate: editMode ? oldDate : "2014-01-01"
 
     width: parent.width
 
@@ -76,7 +76,7 @@ FPDialog {
         clip: true
 
         function launchDateDialogToToday(pv) {
-            if (pv!="Invalid Date") {
+            if (editMode) {
                 var d = new Date(pv);
             }
             else {
