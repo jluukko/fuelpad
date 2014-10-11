@@ -20,9 +20,10 @@
 
 import QtQuick 2.3
 import QtQuick.Controls 1.2
+import "."
 import "FPApplicationTheme.js" as AppTheme
 
-StackView {
+FPPage {
     id: pageRoot
 
     default property alias children: content.children
@@ -50,7 +51,7 @@ StackView {
         anchors.fill: parent
     }
 
-    PageHeader {
+    FPPageHeader {
         id: header
     }
 
@@ -65,8 +66,11 @@ StackView {
         id: content
         anchors.top: buttons.bottom
         anchors.bottom: backGround.bottom
-        width: isPortrait ? Screen.width : Screen.height
-        height: isPortrait ? Screen.height : Screen.width
+        //@todo: Fix size hardcoding
+//        width: isPortrait ? Screen.width : Screen.height
+//        height: isPortrait ? Screen.height : Screen.width
+        width: 800
+        height: 480
     }
 
 }
