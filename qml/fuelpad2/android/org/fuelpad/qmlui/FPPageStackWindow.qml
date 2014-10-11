@@ -21,6 +21,17 @@ ApplicationWindow {
         StackView {
             id: stack
             anchors.fill: parent
+
+            focus: true
+
+            Keys.onReleased: {
+               if ((event.key === Qt.Key_Back ||
+                (event.key === Qt.Key_Left && (event.modifiers & Qt.AltModifier))) &&
+                stack.depth > 1) {
+                    event.accepted = true
+                    stack.pop()
+                }
+            }
         }
 
     }
