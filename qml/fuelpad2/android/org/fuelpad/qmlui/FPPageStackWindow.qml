@@ -9,6 +9,11 @@ ApplicationWindow {
     property alias pageStack: stack
     property alias initialPage: stack.initialItem
 
+    visible: true
+    //@todo: Fix size hardcoding
+    width: 640
+    height: 480
+
     Item {
         id: contentArea
         anchors { top: parent.top; left: parent.left; right: parent.right; bottom: parent.bottom; }
