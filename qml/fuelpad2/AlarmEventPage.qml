@@ -46,7 +46,9 @@ FPPage {
         }
         FPToolIcon {
             iconId: "toolbar-add"
-            onClicked: pageStack.push(Funcs.loadComponent("AddAlarmEventDialog.qml",mainPage, {"editMode": false}))
+            onClicked: pageStack.push(Funcs.loadComponent("AddAlarmEventDialog.qml",mainPage,
+                                                          {"editMode": false,
+                                                           "oldAlarmId": alarmId}))
         }
     }
 
