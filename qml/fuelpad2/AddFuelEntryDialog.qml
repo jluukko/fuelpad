@@ -208,7 +208,7 @@ FPDialog {
                     id: serviceField
                     width: addDialog.width-2*appTheme.paddingLarge
                     placeholderText: qsTr("Add service cost")
-                    maximumLength: 5
+                    maximumLength: 10
                     validator: DoubleValidator{bottom: 0.0}
                     inputMethodHints: Qt.ImhFormattedNumbersOnly
                     text: editMode ? oldService : ""
@@ -221,7 +221,7 @@ FPDialog {
                     id: oilField
                     width: addDialog.width-2*appTheme.paddingLarge
                     placeholderText: qsTr("Add oil cost")
-                    maximumLength: 5
+                    maximumLength: 10
                     validator: DoubleValidator{bottom: 0.0}
                     inputMethodHints: Qt.ImhFormattedNumbersOnly
                     text: editMode ? oldOil : ""
@@ -234,7 +234,7 @@ FPDialog {
                     id: tiresField
                     width: addDialog.width-2*appTheme.paddingLarge
                     placeholderText: qsTr("Add tires cost")
-                    maximumLength: 5
+                    maximumLength: 10
                     validator: DoubleValidator{bottom: 0.0}
                     inputMethodHints: Qt.ImhFormattedNumbersOnly
                     text: editMode ? oldTires : ""
