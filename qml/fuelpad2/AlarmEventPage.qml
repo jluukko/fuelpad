@@ -95,8 +95,8 @@ FPPage {
                         MouseArea {
                             width: parent.width
                             height: parent.height
-        //                    onPressAndHold: Funcs.loadComponent("DeletealarmEventDialog.qml", mainPage,
-        //                                                        {databaseId: databaseid}).open()
+                            onPressAndHold: Funcs.loadComponent("DeleteAlarmEventDialog.qml", mainPage,
+                                                                {databaseId: databaseid}).open()
                             onClicked: pageStack.push(Funcs.loadComponent("AddAlarmEventDialog.qml",mainPage,
                                                               {"editMode": true,
                                                                "oldId": databaseid,
