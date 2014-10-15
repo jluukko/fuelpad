@@ -436,6 +436,18 @@ QStandardItem* UiWrapper::findDriver(QString id)
     return it;
 }
 
+QStandardItem* UiWrapper::findAlarmEvent(QString id)
+{
+    QStandardItem *it = 0;
+    QList<QModelIndex> items = alarmEventModel->match(fuelEntryModel->index(0,0), AlarmEventEntry::IdRole, QVariant(id));
+    if (items.size() == 1) {
+        it = alarmEventModel->itemFromIndex(items.at(0));
+    }
+
+    return it;
+}
+
+
 void UiWrapper::addAllRecordsToFuelEntryModel(QStandardItemModel *model)
 {
     Fuelrecord *data;
@@ -906,6 +918,7 @@ void UiWrapper::updateFuelEntry(int carid, QString id, QString date, double km, 
     setCurrentCar(carid);
 
     Fuelrecord *record = new Fuelrecord(*unitSystem);
+    Fuelrecord* oldRecord;
     QStandardItem *currentItem;
     qlonglong affectedId;
     QStandardItem *affectedItem;
@@ -914,21 +927,23 @@ void UiWrapper::updateFuelEntry(int carid, QString id, QString date, double km, 
     double totalFill, lastMonthFill, lastYearFill;
     double totalConsum, lastMonthConsum, lastYearConsum;
 
+    oldRecord = dataBase->queryOneRecord(id.toLongLong(), *unitSystem);
+
     record->setAllValuesUserUnit(date,
-                                 km,
-                                 trip,
-                                 fill,
+                                 (km < 0.0)    ? oldRecord->getKm().toDouble() : km,
+                                 (trip < 0.0)  ? oldRecord->getTrip().toDouble() : trip,
+                                 (fill < 0.0)  ? oldRecord->getFill().toDouble() : fill,
                                  0.0 /* consumption is calculated in database add method */,
-                                 price,
+                                 (price < 0.0) ? oldRecord->getPrice().toDouble() : price,
                                  0.0 /* price/litre is calculated in database add method */,
                                  0.0 /* price/trip is calculated in database add method */,
-                                 service,
-                                 oil,
-                                 tires,
-                                 lat,
-                                 lon,
-                                 place,
-                                 notes,
+                                 (service < 0.0) ? oldRecord->getService().toDouble() : service,
+                                 (oil < 0.0) ? oldRecord->getOil().toDouble() : oil,
+                                 (tires < 0.0) ? oldRecord->getTires().toDouble() : tires,
+                                 (lat < -90.0) ? oldRecord->getLatitude().toDouble() : lat,
+                                 (lon < -180.0) ? oldRecord->getLongitude().toDouble() : lon,
+                                 (place.isNull()) ? oldRecord->getPlace().toString() : place,
+                                 (notes.isNull()) ? oldRecord->getNotes().toString() : notes,
                                  id.toLongLong());
 
     std::cout << "Record before editing:" << "Id: " << record->getId().toString().toStdString() << SEPARATOR
@@ -998,7 +1013,8 @@ void UiWrapper::deleteRecord(QString id)
 
     qDebug("%s",__PRETTY_FUNCTION__);
 
-    dataBase->deleteRecord(id.toLongLong());
+    //@todo Get the second parameter (event delete confirmation) from UI
+    dataBase->deleteRecord(id.toLongLong(), true);
     currentItem = findFuelEntry(id);
     if (currentItem != 0) {
         fuelEntryModel->removeRows(currentItem->row(), 1);
@@ -1408,6 +1424,24 @@ void UiWrapper::updateAlarmEvent(qlonglong id, qlonglong alarmid, qlonglong reco
 {
     AlarmeventData *event = new AlarmeventData();
 
+    // Update the entry in fuel database
+    updateFuelEntry(-1, // Do not change the current car
+                    QString("%1").arg(recordId),
+                    date,
+                    km,
+                    -1.0, // Do not change trip
+                    -1.0, // Do not change fill
+                    false, // Just guessing, could go wrong if the user has altered in fuel database
+                    -1.0, // Do not change price
+                    service,
+                    oil,
+                    tires,
+                    -360.0, // Do not change the latitude
+                    -360.0, // Do not change the longitude
+                    QString(), // Do not change place
+                    QString() // Do not change notes
+                    );
+
     event->setId(id);
     event->setAlarmId(alarmid);
     event->setRecordId(recordId);
@@ -1424,6 +1458,26 @@ void UiWrapper::updateAlarmEvent(qlonglong id, qlonglong alarmid, qlonglong reco
 
     delete event;
 }
+
+void UiWrapper::deleteEvent(QString id)
+{
+    qDebug("%s called!\n",__PRETTY_FUNCTION__);
+    QStandardItem *currentItem;
+
+    //@todo Get the second parameter (event delete confirmation) from UI
+    dataBase->deleteEvent(id.toLongLong(), true);
+
+    currentItem = findAlarmEvent(id);
+    if (currentItem != 0) {
+        alarmEventModel->removeRows(currentItem->row(), 1);
+    }
+    else {
+        qDebug("Did not find current id from model, can't delete it");
+    }
+
+    addAllRecordsToAlarmEventModel(id.toLongLong());
+}
+
 
 void UiWrapper::setSortColumn(int col, Qt::SortOrder order = Qt::DescendingOrder)
 {

@@ -79,7 +79,7 @@ public:
     virtual qlonglong updateRecord(Fuelrecord &record, bool notFull) =0;
 
     // Deleting record
-    virtual qlonglong deleteRecord(qlonglong id) =0;
+    virtual qlonglong deleteRecord(qlonglong id, bool deleteEvents) =0;
 
     // Querying simple statistics
     virtual dbtimespan getTotalKm(UnitSystem unit) =0;
@@ -118,6 +118,9 @@ public:
     virtual vector<AlarmeventData> getAlarmeventData(qlonglong alarmid) =0;
     virtual qlonglong addNewAlarmEvent(AlarmeventData &event, UnitSystem unit) =0;
     virtual qlonglong updateAlarmEvent(AlarmeventData &event, UnitSystem unit) =0;
+    virtual int getNumOfRecordEvents(qlonglong id) =0;
+    virtual bool deleteEventWithRecordId(qlonglong id) =0;
+    virtual bool deleteEvent(qlonglong id, bool deleteFuelRecord) =0;
 
 protected:
     QString fileName;
