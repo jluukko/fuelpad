@@ -18,20 +18,31 @@
  *
  */
 
-import QtQuick 1.1
-import com.nokia.meego 1.1
+import QtQuick 2.3
+import QtQuick.Controls 1.2
 
-Menu {
-    property alias items: repeater.model
+ComboBox {
+    id: selectionDialog
+    property string titleText
+    property int selectedIndex
+    property alias model: menuRepeater.model
 
-    Item { id: menuModel }
+    signal selectedIndexChanged(int selectedIndex)
 
-    MenuLayout {
+    function open() {
+        cntxMenu.show(selectionDialog.parent)
+    }
+
+    label: titleText
+    currentIndex: selectedIndex
+
+    menu: ContextMenu {
+        id: cntxMenu
         Repeater {
-            id: repeater
+            id: menuRepeater
             MenuItem {
                 text: modelData.text
-                onClicked: modelData.clicked()
+                onClicked: selectedIndexChanged(index)
             }
         }
     }

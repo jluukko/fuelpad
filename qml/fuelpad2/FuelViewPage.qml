@@ -45,12 +45,17 @@ FPPage {
         applicationData.setSearchExpression(searchExp)
     }
 
+    FPPageHeader {
+        id: applicationHeader
+        title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
+    }
+
     FPToolBarLayout {
         id: fuelViewTools
         visible: false
         FPToolIcon {
             iconId: "toolbar-back"
-            onClicked: { pageStack.pop(); }
+            onClicked: { fuelViewMenu.close(); pageStack.pop(); }
         }
         FPToolIcon {
             iconId: "toolbar-add"
@@ -63,33 +68,33 @@ FPPage {
         }
     }
 
+    property list<FPMenuAction> fuelMenuModel
+
+    fuelMenuModel: [
+        FPMenuAction {
+            text: qsTr("Statistics")
+            onClicked: loadStatisticsPage()
+        }
+    ]
+
     FPFlickablePageContent {
         id: content
 
         width: fuelViewPage.width
-        anchors.fill: parent
+        anchors.top: applicationHeader.bottom
+        anchors.bottom: parent.bottom
 
         contentHeight: contentColumn.height
 
         FPMenu {
             id: fuelViewMenu
             visualParent: pageStack
-            items: [
-                FPMenuAction {
-                    text: qsTr("Statistics")
-                    onClicked: loadStatisticsPage()
-                }
-            ]
+            items: fuelMenuModel
         }
 
         Column {
             id: contentColumn
             spacing: 10
-
-            FPPageHeader {
-                id: applicationHeader
-                title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
-            }
 
             FPTextField {
                 id: searchBar
@@ -131,7 +136,7 @@ FPPage {
                     leftMargin: appTheme.paddingLarge
                     rightMargin: appTheme.paddingLarge
                 }
-                height: content.height-fuelViewTools.height
+                height: content.height
                 width: content.width
                 clip: true
                 onContentYChanged: {
@@ -314,6 +319,39 @@ FPPage {
                                 }
                                 ElementText {
                                     text: notes
+                                }
+                            }
+
+                            Row {
+                                spacing: 10
+                                visible: (latitude == 0)? false : true
+                                LabelText {
+                                    text: qsTr("Latitude")
+                                }
+                                ElementText {
+                                    text: latitude
+                                }
+                            }
+
+                            Row {
+                                spacing: 10
+                                visible: (longitude == 0)? false : true
+                                LabelText {
+                                    text: qsTr("Longitude")
+                                }
+                                ElementText {
+                                    text: longitude
+                                }
+                            }
+
+                            Row {
+                                spacing: 10
+                                visible: (place == "")? false : true
+                                LabelText {
+                                    text: qsTr("Address")
+                                }
+                                ElementText {
+                                    text: place
                                 }
                             }
 

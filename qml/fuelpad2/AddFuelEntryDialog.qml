@@ -43,7 +43,7 @@ FPDialog {
     property double oldLon
     property string oldPlace
 
-    property date currentDate: editMode ? oldDate : ""
+    property date currentDate: editMode ? oldDate : "2014-01-01"
 
     width: parent.width
 
@@ -76,7 +76,7 @@ FPDialog {
         clip: true
 
         function launchDateDialogToToday(pv) {
-            if (pv!="Invalid Date") {
+            if (editMode) {
                 var d = new Date(pv);
             }
             else {
@@ -102,8 +102,10 @@ FPDialog {
             onAccepted: addDialogData.dateDialogAccecpted()
         }
 
-        function addressFound(address) {
+        function addressFound(address, lat, lon) {
             placeField.text = address;
+            latField.text = lat;
+            lonField.text = lon
         }
 
         Column{
@@ -206,7 +208,7 @@ FPDialog {
                     id: serviceField
                     width: addDialog.width-2*appTheme.paddingLarge
                     placeholderText: qsTr("Add service cost")
-                    maximumLength: 5
+                    maximumLength: 10
                     validator: DoubleValidator{bottom: 0.0}
                     inputMethodHints: Qt.ImhFormattedNumbersOnly
                     text: editMode ? oldService : ""
@@ -219,7 +221,7 @@ FPDialog {
                     id: oilField
                     width: addDialog.width-2*appTheme.paddingLarge
                     placeholderText: qsTr("Add oil cost")
-                    maximumLength: 5
+                    maximumLength: 10
                     validator: DoubleValidator{bottom: 0.0}
                     inputMethodHints: Qt.ImhFormattedNumbersOnly
                     text: editMode ? oldOil : ""
@@ -232,7 +234,7 @@ FPDialog {
                     id: tiresField
                     width: addDialog.width-2*appTheme.paddingLarge
                     placeholderText: qsTr("Add tires cost")
-                    maximumLength: 5
+                    maximumLength: 10
                     validator: DoubleValidator{bottom: 0.0}
                     inputMethodHints: Qt.ImhFormattedNumbersOnly
                     text: editMode ? oldTires : ""
@@ -241,25 +243,25 @@ FPDialog {
                 Text {
                     text: qsTr("Latitude")
                     font.pixelSize: appTheme.fontSizeMedium
-                    visible: false
+//                    visible: false
                 }
                 FPTextField {
                     id: latField
                     width: addDialog.width-2*appTheme.paddingLarge
                     text: editMode ? oldLat : positionSource.position.coordinate.latitude.toFixed(8)
-                    visible: false
+//                    visible: false
                 }
 
                 Text {
                     text: qsTr("Longitude")
                     font.pixelSize: appTheme.fontSizeMedium
-                    visible: false
+//                    visible: false
                 }
                 FPTextField {
                     id: lonField
                     width: addDialog.width-2*appTheme.paddingLarge
                     text: editMode ? oldLon : positionSource.position.coordinate.longitude.toFixed(8)
-                    visible: false
+//                    visible: false
                 }
 
                 FPListButton {

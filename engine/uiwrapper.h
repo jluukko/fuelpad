@@ -116,6 +116,8 @@ public:
     Q_INVOKABLE void updateAlarmEvent(qlonglong id, qlonglong alarmid, qlonglong recordId, QString date,
                                                  double km, double service, double oil, double tires, QString notes);
 
+    Q_INVOKABLE void deleteEvent(QString id);
+
     Q_INVOKABLE void setSortColumn(int col, Qt::SortOrder order);
 
     Q_INVOKABLE void setCurrentCar(int carid);
@@ -180,6 +182,7 @@ private:
     QStandardItem *findFuelEntry(QString id);
     QStandardItem* findCar(QString id);
     QStandardItem* findDriver(QString id);
+    QStandardItem* findAlarmEvent(QString id);
     void addAllRecordsToCarEntryModel(QStandardItemModel *model);
     void addAllRecordsToFuelEntryModel(QStandardItemModel *model);
     void addAllRecordsToDriverEntryModel(QStandardItemModel *model);

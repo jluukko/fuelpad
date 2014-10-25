@@ -51,6 +51,11 @@ FPPage {
         active: false
     }
 
+    FPPageHeader {
+        id: applicationHeader
+        title: "Fuelpad"
+    }
+
     FPToolBarLayout {
         id: mainTools
         visible: false
@@ -64,7 +69,7 @@ FPPage {
             platformIconId: "toolbar-view-menu"
             anchors.right: (parent === undefined) ? undefined : parent.right
             visible: !firstRun
-            onClicked: (myMenu.status === DialogStatus.Closed) ? myMenu.open() : myMenu.close()
+            onClicked: (mainMenu.status === DialogStatus.Closed) ? mainMenu.open() : mainMenu.close()
         }
     }
 
@@ -72,41 +77,41 @@ FPPage {
         id: content
 
         width: mainPage.width
-        anchors.fill: parent
+        anchors.top: applicationHeader.bottom
+        anchors.bottom: parent.bottom
 
         contentHeight: contentColumn.height
+
+        property list<FPMenuAction> menuModel
+
+        menuModel: [
+            FPMenuAction {
+                text: qsTr("Settings")
+                onClicked: pageStack.push(Funcs.loadComponent("SettingsPage.qml",mainPage, {}))
+            },
+            FPMenuAction {
+                text: qsTr("Manage cars")
+                onClicked: pageStack.push(Funcs.loadComponent("ManageCarsPage.qml",mainPage, {}))
+            },
+            FPMenuAction {
+                text: qsTr("Manage drivers")
+                onClicked: pageStack.push(Funcs.loadComponent("ManageDriversPage.qml",mainPage, {}))
+            },
+            FPMenuAction {
+                text: qsTr("About")
+                onClicked: pageStack.push(Funcs.loadComponent("AboutDialog.qml",mainPage, {}))
+            }
+        ]
 
         FPMenu {
             id: mainMenu
             visualParent: mainPage
-            items: [
-                FPMenuAction {
-                    text: qsTr("Settings")
-                    onClicked: pageStack.push(Funcs.loadComponent("SettingsPage.qml",mainPage, {}))
-                },
-                FPMenuAction {
-                    text: qsTr("Manage cars")
-                    onClicked: pageStack.push(Funcs.loadComponent("ManageCarsPage.qml",mainPage, {}))
-                },
-                FPMenuAction {
-                    text: qsTr("Manage drivers")
-                    onClicked: pageStack.push(Funcs.loadComponent("ManageDriversPage.qml",mainPage, {}))
-                },
-                FPMenuAction {
-                    text: qsTr("About")
-                    onClicked: pageStack.push(Funcs.loadComponent("AboutDialog.qml",mainPage, {}))
-                }
-            ]
+            items: menuModel
         }
 
         Column {
             id: contentColumn
             spacing: 10
-
-            FPPageHeader {
-                id: applicationHeader
-                title: "Fuelpad"
-            }
 
             ListView {
                 id: carListView
@@ -121,7 +126,7 @@ FPPage {
                 }
 //                height: mainPage.height-applicationHeader.height-button1.height-button4.height-mainTools.height-3*contentColumn.spacing
 //                height: contentHeight-button1.height-button4.height-mainTools.height-3*contentColumn.spacing
-                height: content.height-button1.height-button4.height-mainTools.height-3*contentColumn.spacing
+                height: content.height-button1.height-button4.height-3*contentColumn.spacing
                 width: content.width
                 clip: true
             }

@@ -37,13 +37,20 @@ FPDialog {
     property double oldOil
     property double oldTires
 
+    property date currentDate: editMode ? oldDate : "2014-01-01"
+
     width: parent.width
 
     title: editMode ? qsTr("Edit event") : qsTr("Add a new event")
 
     // Similar function exists also in AddFuelEntryDialog
-    function launchDateDialogToToday() {
-         var d = new Date();
+    function launchDateDialogToToday(pv) {
+         if (editMode) {
+             var d = new Date(pv);
+         }
+         else {
+             var d = new Date();
+         }
          dateDialog.year = d.getFullYear();
          dateDialog.month = d.getMonth()+1;
          dateDialog.day = d.getDate();
@@ -52,6 +59,7 @@ FPDialog {
 
     function dateDialogAccecpted() {
         dateField.text = "%d-%02d-%02d".$(dateDialog.year,dateDialog.month,dateDialog.day)
+        currentDate = dateField.text
     }
 
     function addDialogAccepted() {
@@ -65,14 +73,6 @@ FPDialog {
         }
     }
 
-    FPDatePickerDialog {
-        id: dateDialog
-        titleText: qsTr("Event date")
-        acceptButtonText: qsTr("OK")
-        rejectButtonText: qsTr("Cancel")
-        onAccepted: addDialog.dateDialogAccecpted()
-    }
-
     Flickable {
         id: addDialogData
         anchors {
@@ -81,6 +81,16 @@ FPDialog {
             rightMargin: appTheme.paddingLarge
         }
         width: parent.width
+
+        FPDatePickerDialog {
+            id: dateDialog
+            titleText: qsTr("Event date")
+            acceptButtonText: qsTr("OK")
+            rejectButtonText: qsTr("Cancel")
+            minimumYear: 2000
+            onAccepted: addDialog.dateDialogAccecpted()
+        }
+
         Grid {
             id: addDialogGrid
             columns: 2
@@ -90,7 +100,7 @@ FPDialog {
                  id: dateButton
                  text: qsTr("Pick date")
                  width: text.width
-                 onClicked: addDialog.launchDateDialogToToday()
+                 onClicked: addDialog.launchDateDialogToToday(currentDate)
             }
             FPTextField {
                 id: dateField

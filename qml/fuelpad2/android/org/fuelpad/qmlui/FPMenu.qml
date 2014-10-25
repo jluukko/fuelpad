@@ -18,20 +18,26 @@
  *
  */
 
-import QtQuick 1.1
-import com.nokia.meego 1.1
+import QtQuick 2.3
+import QtQuick.Controls 1.2
 
-Menu {
+MenuBar {
+    property variant visualParent
     property alias items: repeater.model
+    property variant dummy
 
-    Item { id: menuModel }
+    dummy: Item { id: menuModel }
 
-    MenuLayout {
-        Repeater {
+    menus: Menu {
+        id: menu
+        Instantiator {
             id: repeater
+            onObjectAdded: menu.insertItem(index, object)
+            onObjectRemoved: menu.removeItem(object)
+            model: menuModel.children
             MenuItem {
                 text: modelData.text
-                onClicked: modelData.clicked()
+                onTriggered: modelData.clicked()
             }
         }
     }

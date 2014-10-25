@@ -35,12 +35,17 @@ FPPage {
         pageStack.push(Funcs.loadComponent("AlarmEventPage.qml",mainPage, {"alarmId": dbid, "alarmName": alarmname}));
     }
 
+    FPPageHeader {
+        id: applicationHeader
+        title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
+    }
+
     FPToolBarLayout {
         id: alarmTypeTools
         visible: false
         FPToolIcon {
             iconId: "toolbar-back"
-            onClicked: { pageStack.pop(); }
+            onClicked: { alarmTypeMenu.close(); pageStack.pop(); }
         }
         FPToolIcon {
             platformIconId: "toolbar-view-menu"
@@ -49,32 +54,33 @@ FPPage {
         }
     }
 
+    property list<FPMenuAction> alarmTypeMenuModel
+
+    alarmTypeMenuModel: [
+        FPMenuAction {
+            text: qsTr("Add new alarm type")
+            onClicked: pageStack.push(Funcs.loadComponent("AddAlarmTypeDialog.qml",mainPage, {"carId": carId}));
+        }
+    ]
+
     FPFlickablePageContent {
         id: content
 
         width: alarmTypePage.width
-        anchors.fill: parent
+        anchors.top: applicationHeader.bottom
+        anchors.bottom: parent.bottom
 
         contentHeight: contentColumn.height
 
         FPMenu {
             id: alarmTypeMenu
             visualParent: pageStack
-            items: [
-                FPMenuAction {
-                    text: qsTr("Add new alarm type")
-                    onClicked: pageStack.push(Funcs.loadComponent("AddAlarmTypeDialog.qml",mainPage, {"carId": carId}));
-                }
-            ]
+            items: alarmTypeMenuModel
         }
 
         Column {
             id: contentColumn
             spacing: 10
-            FPPageHeader {
-                id: applicationHeader
-                title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
-            }
 
             ListView {
                 id: listView
@@ -88,7 +94,7 @@ FPPage {
                     leftMargin: appTheme.paddingLarge
                     rightMargin: appTheme.paddingLarge
                 }
-                height: content.height-alarmTypeTools.height
+                height: content.height
                 width: content.width
                 clip: true
             }

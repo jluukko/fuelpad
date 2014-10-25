@@ -63,7 +63,7 @@ public:
     qlonglong updateRecord(Fuelrecord &record, bool notFull);
 
     // Removing record
-    qlonglong deleteRecord(qlonglong id);
+    qlonglong deleteRecord(qlonglong id, bool deleteEvents);
 
     // Querying simple statistics
     dbtimespan getTotalKm(UnitSystem unit);
@@ -102,6 +102,9 @@ public:
     vector<AlarmeventData> getAlarmeventData(qlonglong alarmid);
     qlonglong addNewAlarmEvent(AlarmeventData &event, UnitSystem unit);
     qlonglong updateAlarmEvent(AlarmeventData &event, UnitSystem unit);
+    int getNumOfRecordEvents(qlonglong id);
+    bool deleteEventWithRecordId(qlonglong id);
+    bool deleteEvent(qlonglong id, bool deleteFuelRecord);
 
 private:
     bool create_database(void);
@@ -157,6 +160,7 @@ private:
     QSqlQuery *ppStmtAddEvent;
     QSqlQuery *ppStmtUpdateEvent;
     QSqlQuery *ppStmtAddAlarmtype;
+    QSqlQuery *ppStmtGetNumOfRecordEvents;
 
     // Statements without a ready implementation
     QSqlQuery *ppStmtCurCar;

@@ -44,12 +44,17 @@ FPPage {
         applicationData.getStatistics(year,stattype);
     }
 
+    FPPageHeader {
+        id: statisticsHeader
+        title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
+    }
+
     FPToolBarLayout {
         id: statisticsTools
 //        visible: false
         FPToolIcon {
             iconId: "toolbar-back"
-            onClicked: { pageStack.pop(); }
+            onClicked: { statisticsMenu.close(); pageStack.pop(); }
         }
         FPToolIcon {
             platformIconId: "toolbar-view-menu"
@@ -171,34 +176,34 @@ FPPage {
         onSelectedIndexChanged: changeStatType(selectedIndex)
     }
 
+    property list<FPMenuAction> statisticsMenuModel
+
+    statisticsMenuModel: [
+        FPMenuAction {
+            text: qsTr("Select statistics")
+            onClicked: statisticsSelectionDialog.open()
+        }
+    ]
+
     FPFlickablePageContent {
         id: content
 
         width: statisticsPage.width
-        anchors.fill: parent
+        anchors.top: statisticsHeader.bottom
+        anchors.bottom: parent.bottom
 
         contentHeight: contentColumn.height
 
         FPMenu {
             id: statisticsMenu
             visualParent: pageStack
-            items: [
-                FPMenuAction {
-                    text: qsTr("Select statistics")
-                    onClicked: statisticsSelectionDialog.open()
-                }
-            ]
+            items: statisticsMenuModel
         }
 
         Column {
             id: contentColumn
             spacing: 10
             width: content.width
-
-            FPPageHeader {
-                id: statisticsHeader
-                title: applicationData.getCarMark(-1) + " " + applicationData.getCarModel(-1)
-            }
 
             Column {
                 id: insideContentColumn

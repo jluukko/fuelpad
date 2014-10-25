@@ -18,20 +18,27 @@
  *
  */
 
-import QtQuick 1.1
-import com.nokia.meego 1.1
+import QtQuick 2.3
+import QtQuick.Controls 1.2
 
-Menu {
-    property alias items: repeater.model
+ComboBox {
+    // titleText not used in Sailfish.Silica
+    property string buttonText
+    property string titleText
+    property int selectedIndex
+    property alias model: menuRepeater.model
 
-    Item { id: menuModel }
+    signal selected(int selectedIndex)
 
-    MenuLayout {
+    label: buttonText
+    currentIndex: selectedIndex
+
+    menu: ContextMenu {
         Repeater {
-            id: repeater
+            id: menuRepeater
             MenuItem {
-                text: modelData.text
-                onClicked: modelData.clicked()
+                text: modelData.name
+                onClicked: selected(index)
             }
         }
     }

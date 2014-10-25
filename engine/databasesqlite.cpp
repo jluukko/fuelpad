@@ -125,7 +125,7 @@ bool DatabaseSqlite::create_database(void)
                 );
     failure |= query.lastError().type() != QSqlError::NoError;
 
-    failure |= create_drivinglog_tables();
+    failure |= !create_drivinglog_tables();
 
     return !failure;
 }
@@ -234,6 +234,10 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtAddEvent = new QSqlQuery;
     ppStmtUpdateEvent = new QSqlQuery;
     ppStmtAddAlarmtype = new QSqlQuery;
+    ppStmtGetNumOfRecordEvents = new QSqlQuery;
+    ppStmtDeleteEventwithRecordid = new QSqlQuery;
+    ppStmtDeleteEvent = new QSqlQuery;
+    ppStmtGetOneEvent = new QSqlQuery;
 
     // Statements without a ready implementation
     ppStmtCurCar = new QSqlQuery;
@@ -242,9 +246,6 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtGetReport = new QSqlQuery;
     ppStmtGetOneAlarmtype = new QSqlQuery;
     ppStmtUpdateAlarmtype = new QSqlQuery;
-    ppStmtGetOneEvent = new QSqlQuery;
-    ppStmtDeleteEvent = new QSqlQuery;
-    ppStmtDeleteEventwithRecordid = new QSqlQuery;
 
     ppStmtGetYears = new QSqlQuery;
     ppStmtAddLog = new QSqlQuery;
@@ -340,8 +341,10 @@ bool DatabaseSqlite::prepare_queries(void)
     //--------------------------------------------------------------------------
     retVal = retVal |
             ppStmtAddRecord->prepare("INSERT INTO "
-                                     "record(carid,driverid,day,km,trip,fill,consum,price,priceperlitre,pricepertrip,service,oil,tires,notes) "
-                                     "VALUES(:carid,:driverid,:day,:km,:trip,:fill,:consum,:price,:ppl,:ppt,:service,:oil,:tires,:notes);");
+                                     "record(carid,driverid,day,km,trip,fill,consum,price,priceperlitre,pricepertrip,service,oil,tires,"
+                                     "lat,lon,place,notes) "
+                                     "VALUES(:carid,:driverid,:day,:km,:trip,:fill,:consum,:price,:ppl,:ppt,:service,:oil,:tires,"
+                                     ":lat,:lon,:place,:notes);");
 
     //--------------------------------------------------------------------------
     // Update a fuel record
@@ -351,7 +354,8 @@ bool DatabaseSqlite::prepare_queries(void)
             ppStmtUpdateRecord->prepare("UPDATE record "
                                         "SET carid=:carid, driverid=:driverid, day=:day, km=:km, trip=:trip, "
                                         "fill=:fill, consum=:consum, price=:price, priceperlitre=:ppl, "
-                                        "pricepertrip=:ppt, service=:service, oil=:oil, tires=:tires, notes=:notes WHERE id=:id;");
+                                        "pricepertrip=:ppt, service=:service, oil=:oil, tires=:tires, lat=:lat, lon=:lon, "
+                                        "place=:place, notes=:notes WHERE id=:id;");
 
     //--------------------------------------------------------------------------
     // Delete a fuel record
@@ -457,6 +461,18 @@ bool DatabaseSqlite::prepare_queries(void)
             ppStmtUpdateEvent->prepare("UPDATE alarmevent "
                                        "SET day=:day, km=:km WHERE id=:id;");
 
+    retVal = retVal |
+            ppStmtGetNumOfRecordEvents->prepare("SELECT COUNT(*) FROM alarmevent WHERE recordid=:recordid;");
+
+    retVal = retVal |
+            ppStmtDeleteEventwithRecordid->prepare("DELETE FROM alarmevent WHERE recordid=:recordid;");
+
+    retVal = retVal |
+            ppStmtDeleteEvent->prepare("DELETE FROM alarmevent WHERE id=:id;");
+
+    retVal = retVal |
+            ppStmtGetOneEvent->prepare("SELECT day,km,recordid FROM alarmevent WHERE id=:id;");
+
     return retVal;
 }
 
@@ -493,6 +509,8 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtAddEvent;
     delete ppStmtUpdateEvent;
     delete ppStmtAddAlarmtype;
+    delete ppStmtGetNumOfRecordEvents;
+    delete ppStmtDeleteEventwithRecordid;
 
     delete ppStmtCurCar;
     delete ppStmtExport;
@@ -502,7 +520,6 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtUpdateAlarmtype;
     delete ppStmtGetOneEvent;
     delete ppStmtDeleteEvent;
-    delete ppStmtDeleteEventwithRecordid;
 
     delete ppStmtGetYears;
     delete ppStmtAddLog;
@@ -748,6 +765,8 @@ qlonglong DatabaseSqlite::addNewRecord(Fuelrecord &record, bool notFull)
     double service;
     double oil;
     double tires;
+    double lat;
+    double lon;
     qlonglong retFullId = 0;
 
     // Update calculated fields and check if other records need to be updated
@@ -764,6 +783,8 @@ qlonglong DatabaseSqlite::addNewRecord(Fuelrecord &record, bool notFull)
     consum = record.getConsum().toDouble();
     pricepertrip = record.getPpt().toDouble();
     ppl = record.getPpl().toDouble();
+    lat = record.getLatitude().toDouble();
+    lon = record.getLongitude().toDouble();
 
     // The actual adding of the record
     ppStmtAddRecord->bindValue(":carid",getCurrentCar().getId());
@@ -779,6 +800,9 @@ qlonglong DatabaseSqlite::addNewRecord(Fuelrecord &record, bool notFull)
     ppStmtAddRecord->bindValue(":service",service);
     ppStmtAddRecord->bindValue(":oil",oil);
     ppStmtAddRecord->bindValue(":tires",tires);
+    ppStmtAddRecord->bindValue(":lat",lat);
+    ppStmtAddRecord->bindValue(":lon",lon);
+    ppStmtAddRecord->bindValue(":place",record.getPlace().toString());
     ppStmtAddRecord->bindValue(":notes",record.getNotes().toString());
 
     // Finally, do the update
@@ -809,6 +833,8 @@ qlonglong DatabaseSqlite::updateRecord(Fuelrecord &record, bool notFull)
     double service;
     double oil;
     double tires;
+    double lat;
+    double lon;
     qlonglong retFullId = 0;
 
     qDebug("%s called",__PRETTY_FUNCTION__);
@@ -827,6 +853,8 @@ qlonglong DatabaseSqlite::updateRecord(Fuelrecord &record, bool notFull)
     consum = record.getConsum().toDouble();
     pricepertrip = record.getPpt().toDouble();
     ppl = record.getPpl().toDouble();
+    lat = record.getLatitude().toDouble();
+    lon = record.getLongitude().toDouble();
 
     // The actual updating of the record
     ppStmtUpdateRecord->bindValue(":carid",getCurrentCar().getId());
@@ -842,6 +870,9 @@ qlonglong DatabaseSqlite::updateRecord(Fuelrecord &record, bool notFull)
     ppStmtUpdateRecord->bindValue(":service",service);
     ppStmtUpdateRecord->bindValue(":oil",oil);
     ppStmtUpdateRecord->bindValue(":tires",tires);
+    ppStmtUpdateRecord->bindValue(":lat",lat);
+    ppStmtUpdateRecord->bindValue(":lon",lon);
+    ppStmtUpdateRecord->bindValue(":place",record.getPlace().toString());
     ppStmtUpdateRecord->bindValue(":notes",record.getNotes().toString());
     ppStmtUpdateRecord->bindValue(":id",record.getId().toLongLong());
 
@@ -857,7 +888,7 @@ qlonglong DatabaseSqlite::updateRecord(Fuelrecord &record, bool notFull)
     return retFullId;
 }
 
-qlonglong DatabaseSqlite::deleteRecord(qlonglong id)
+qlonglong DatabaseSqlite::deleteRecord(qlonglong id, bool deleteEvents)
 {
     double km;
     double trip;
@@ -872,6 +903,7 @@ qlonglong DatabaseSqlite::deleteRecord(qlonglong id)
     qlonglong retFullId = 0;
     UnitSystem unitSystem;
     Fuelrecord *record = queryOneRecord(id, unitSystem);
+    int numEvents = getNumOfRecordEvents(id);
 
     // Get the values from the record object for easier access and recalculations
     km  = record->getKm().toDouble();
@@ -924,6 +956,11 @@ qlonglong DatabaseSqlite::deleteRecord(qlonglong id)
 
                 }
             }
+        }
+
+        // Remove the associated alarm events
+        if (numEvents > 0 && deleteEvents) {
+            deleteEventWithRecordId(id);
         }
 
     }
@@ -1835,4 +1872,59 @@ qlonglong DatabaseSqlite::updateAlarmEvent(AlarmeventData &event, UnitSystem uni
     delete record;
 
     return addedId;
+}
+
+int DatabaseSqlite::getNumOfRecordEvents(qlonglong id)
+{
+    int numEvents = 0;
+
+    ppStmtGetNumOfRecordEvents->bindValue(":recordid",id);
+
+    if (ppStmtGetNumOfRecordEvents->exec() && ppStmtGetNumOfRecordEvents->next()) {
+        numEvents = ppStmtGetNumOfRecordEvents->value(0).toInt();
+    }
+
+    return numEvents;
+}
+
+bool DatabaseSqlite::deleteEventWithRecordId(qlonglong id)
+{
+    int success = false;
+
+    ppStmtDeleteEventwithRecordid->bindValue(":recordid",id);
+
+    if (ppStmtDeleteEventwithRecordid->exec() && ppStmtDeleteEventwithRecordid->next()) {
+        success = true;
+    }
+
+    return success;
+}
+
+bool DatabaseSqlite::deleteEvent(qlonglong id, bool deleteFuelRecord)
+{
+    bool success = false;
+    qlonglong recordId;
+
+    ppStmtDeleteEvent->bindValue(":id",id);
+    ppStmtGetOneEvent->bindValue(":id",id);
+
+    // 1. Fetch the record from database
+    if (ppStmtGetOneEvent->exec() && ppStmtGetOneEvent->next()) {
+        // 2. Take a note of the recordid
+        recordId = ppStmtGetOneEvent->value(2).toLongLong();
+
+        // 3. Remove the event
+        if (ppStmtDeleteEvent->exec() /*&& ppStmtDeleteEvent->next()*/) {
+
+            success = true;
+
+            // 4. Remove the record from fuel database
+            if (deleteFuelRecord) {
+                deleteRecord(recordId, false);
+            }
+        }
+
+    }
+
+    return success;
 }
