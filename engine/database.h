@@ -69,6 +69,8 @@ public:
     virtual bool stepRecordQuery(void) =0;
     virtual Fuelrecord *getValuesRecordQuery(UnitSystem unit) =0;
     virtual Fuelrecord *queryOneRecord(qlonglong id, UnitSystem unit) =0;
+    virtual float getLastRefill(float newkm) =0;
+    virtual float getLastKm(void) =0;
 
     // Adding record
     virtual qlonglong addNewRecord(Fuelrecord &record, bool notFull) =0;

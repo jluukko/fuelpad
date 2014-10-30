@@ -70,6 +70,8 @@ public:
                                      double price, double service, double oil, double tires, double lat, double lon,
                                      QString place, QString notes);
 
+    Q_INVOKABLE float calcTrip(double newkm, double trip);
+
     Q_INVOKABLE void deleteRecord(QString id);
 
     Q_INVOKABLE void getStatistics(int year, int statSelect);

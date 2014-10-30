@@ -206,6 +206,8 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtRecords = new QSqlQuery;
     ppStmtOneRecord = new QSqlQuery;
     ppStmtOneCar = new QSqlQuery;
+    ppStmtLastRefill = new QSqlQuery;
+    ppStmtLastKm = new QSqlQuery;
     ppStmtMonthlyData = new QSqlQuery;
     ppStmtCar = new QSqlQuery;
     ppStmtOneDriver = new QSqlQuery;
@@ -286,6 +288,18 @@ bool DatabaseSqlite::prepare_queries(void)
     //--------------------------------------------------------------------------
     retVal = retVal |
             ppStmtOneCar->prepare("SELECT mark,model,year,register,notes,fueltype FROM car where id=:carid;");
+
+    //--------------------------------------------------------------------------
+    // Query last refill
+    //--------------------------------------------------------------------------
+    retVal = retVal |
+            ppStmtLastRefill->prepare("SELECT km FROM record WHERE carid=:carid AND trip>0 AND km<:km ORDER BY km DESC LIMIT 1;");
+
+    //--------------------------------------------------------------------------
+    // Query last km = maximum km
+    //--------------------------------------------------------------------------
+    retVal = retVal |
+            ppStmtLastKm->prepare("SELECT max(km) FROM record WHERE carid=:carid;");
 
     //--------------------------------------------------------------------------
     // Query monthly statistics
@@ -481,6 +495,8 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtRecords;
     delete ppStmtOneRecord;
     delete ppStmtOneCar;
+    delete ppStmtLastRefill;
+    delete ppStmtLastKm;
     delete ppStmtMonthlyData;
     delete ppStmtCar;
     delete ppStmtOneDriver;
@@ -746,6 +762,36 @@ Fuelrecord *DatabaseSqlite::queryOneRecord(qlonglong id, UnitSystem unit)
     return record;
 }
 
+//--------------------------------------------------------------------------
+// Query last refill
+//--------------------------------------------------------------------------
+float DatabaseSqlite::getLastRefill(float newkm)
+{
+    float lastRefill = 0.0;
+
+    ppStmtLastRefill->bindValue(":carid",getCurrentCar().getId());
+    ppStmtLastRefill->bindValue(":km",newkm);
+    if (ppStmtLastRefill->exec() && ppStmtLastRefill->next()) {
+        lastRefill = ppStmtLastRefill->value(0).toFloat();
+    }
+
+    return lastRefill;
+}
+
+//--------------------------------------------------------------------------
+// Query last km = maximum km
+//--------------------------------------------------------------------------
+float DatabaseSqlite::getLastKm(void)
+{
+    float lastKm = 0.0;
+
+    ppStmtLastKm->bindValue(":carid",getCurrentCar().getId());
+    if (ppStmtLastKm->exec() && ppStmtLastKm->next()) {
+        lastKm = ppStmtLastKm->value(0).toFloat();
+    }
+
+    return lastKm;
+}
 
 //--------------------------------------------------------------------------
 // Adding and deleting record related methods

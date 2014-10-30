@@ -53,6 +53,8 @@ public:
     bool stepRecordQuery(void);
     Fuelrecord *getValuesRecordQuery(UnitSystem unit);
     Fuelrecord *queryOneRecord(qlonglong id, UnitSystem unit);
+    float getLastRefill(float newkm);
+    float getLastKm(void);
 
     // Adding record
     qlonglong addNewRecord(Fuelrecord &record, bool notFull);
@@ -135,6 +137,8 @@ private:
     QSqlQuery *ppStmtMonthlyData;
     QSqlQuery *ppStmtCar;
     QSqlQuery *ppStmtOneDriver;
+    QSqlQuery *ppStmtLastRefill;
+    QSqlQuery *ppStmtLastKm;
     QSqlQuery *ppStmtDriver;
     QSqlQuery *ppStmtNextFull;
     QSqlQuery *ppStmtPrevFull;

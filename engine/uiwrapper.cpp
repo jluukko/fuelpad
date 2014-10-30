@@ -1005,6 +1005,28 @@ void UiWrapper::updateFuelEntry(int carid, QString id, QString date, double km, 
     // Notify Qml side somehow that the model has changed
     updateAllModels();
 
+    delete record;
+
+}
+
+float UiWrapper::calcTrip(double newkm, double trip)
+{
+    Datafield *distance = new Datafield(*unitSystem);
+    float lastkm;
+    float calculatedTrip=trip;
+
+    if (trip<0.1 && newkm>0) {
+      lastkm=dataBase->getLastRefill(newkm);
+      if (lastkm<0.1) {
+        lastkm=dataBase->getLastKm();
+      }
+      distance->setValueUserUnit(newkm-lastkm, Datafield::LENGTH);
+      calculatedTrip = distance->getValueUserUnit().toFloat();
+    }
+
+    delete distance;
+
+    return calculatedTrip;
 }
 
 void UiWrapper::deleteRecord(QString id)
