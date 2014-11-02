@@ -37,6 +37,7 @@ private:
     Datafield fill;               /* column 3 */
     Datafield consum;             /* column 4 */
     Datafield price;              /* column 5 */
+    Datafield fueltype;
     Datafield ppl;                /* column 6 */
     Datafield ppt;                /* column 7 */
     Datafield service;            /* column 8 */
@@ -46,6 +47,7 @@ private:
     Datafield lon;
     Datafield place;
     Datafield notes;             /* column 11 */
+    Datafield co2emission;
     Datafield id;              /* column 12, should be sqlite_int64 */
     UnitSystem unit;
 public:
@@ -55,13 +57,13 @@ public:
     UnitSystem getUnitSystem(void);
 
     void setAllValues(QString Date, double Km,
-                      double Trip, double Fill, double Consum, double Price,
+                      double Trip, double Fill, double Consum, double Price, int Fueltype,
                       double Ppl, double Ppt, double Service, double Oil,
                       double Tires, double Latitude, double Longitude, QString Place,
                       QString Notes, qlonglong Id);
 
     void setAllValuesUserUnit(QString Date, double Km,
-                      double Trip, double Fill, double Consum, double Price,
+                      double Trip, double Fill, double Consum, double Price, int Fueltype,
                       double Ppl, double Ppt, double Service, double Oil,
                       double Tires, double Latitude, double Longitude, QString Place,
                       QString Notes, qlonglong Id);
@@ -72,6 +74,7 @@ public:
     void setFill(double Fill);
     void setConsum(double Consum);
     void setPrice(double Price);
+    void setFueltype(int Fueltype);
     void setPpl(double Ppl);
     void setPpt(double Ppt);
     void setService(double Service);
@@ -89,6 +92,7 @@ public:
     QVariant getFill(void);
     QVariant getConsum(void);
     QVariant getPrice(void);
+    QVariant getFueltype(void);
     QVariant getPpl(void);
     QVariant getPpt(void);
     QVariant getService(void);
@@ -97,6 +101,7 @@ public:
     QVariant getLatitude(void);
     QVariant getLongitude(void);
     QVariant getPlace(void);
+    QVariant getCO2Emission(void);
 
     QVariant getDateUserUnit(void);
     QVariant getKmUserUnit(void);
@@ -104,16 +109,20 @@ public:
     QVariant getFillUserUnit(void);
     QVariant getConsumUserUnit(void);
     QVariant getPriceUserUnit(void);
+    QVariant getFueltypeUserUnit(void);
     QVariant getPplUserUnit(void);
     QVariant getPptUserUnit(void);
     QVariant getServiceUserUnit(void);
     QVariant getOilUserUnit(void);
     QVariant getTiresUserUnit(void);
+    QVariant getCO2EmissionUserUnit(void);
     QVariant getNotes(void);
     QVariant getId(void);
     bool getNotFullFill(void);
 
-
+private:
+    double calc_co2_emission(double consum, int fueltype);
+    double get_emission_per_litre(int fueltype);
 };
 
 #endif // FUELRECORD_H

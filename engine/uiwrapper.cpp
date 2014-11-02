@@ -74,6 +74,7 @@ struct FuelEntry {
         FillRole,
         NotFullRole,
         ConsumRole,
+        CO2Role,
         PriceRole,
         PptRole,
         PplRole,
@@ -207,6 +208,7 @@ static void setDataToFuelEntryModel(QStandardItem *it, Fuelrecord *data)
     it->setData(data->getFillUserUnit(), FuelEntry::FillRole);
     it->setData(data->getNotFullFill(), FuelEntry::NotFullRole);
     it->setData(data->getConsumUserUnit(), FuelEntry::ConsumRole);
+    it->setData(data->getCO2EmissionUserUnit(), FuelEntry::CO2Role);
     it->setData(data->getPriceUserUnit(), FuelEntry::PriceRole);
     it->setData(data->getPptUserUnit(), FuelEntry::PptRole);
     it->setData(data->getPplUserUnit(), FuelEntry::PplRole);
@@ -632,6 +634,7 @@ void UiWrapper::createFuelEntryModel(void)
     roleNames[FuelEntry::FillRole] =  "fill";
     roleNames[FuelEntry::NotFullRole] =  "notfull";
     roleNames[FuelEntry::ConsumRole] =  "consum";
+    roleNames[FuelEntry::CO2Role] = "co2";
     roleNames[FuelEntry::PriceRole] =  "price";
     roleNames[FuelEntry::PptRole] =  "ppt";
     roleNames[FuelEntry::PplRole] =  "ppl";
@@ -845,6 +848,7 @@ void UiWrapper::addFuelEntry(int carid, QString date, double km, double trip, do
                                  fill,
                                  0.0 /* consumption is calculated in database add method */,
                                  price,
+                                 carData->getFuelType(), // @todo Get fueltype from UI
                                  0.0 /* price/litre is calculated in database add method */,
                                  0.0 /* price/trip is calculated in database add method */,
                                  service,
@@ -935,6 +939,7 @@ void UiWrapper::updateFuelEntry(int carid, QString id, QString date, double km, 
                                  (fill < 0.0)  ? oldRecord->getFill().toDouble() : fill,
                                  0.0 /* consumption is calculated in database add method */,
                                  (price < 0.0) ? oldRecord->getPrice().toDouble() : price,
+                                 carData->getFuelType(), // @todo Get fueltype from UI
                                  0.0 /* price/litre is calculated in database add method */,
                                  0.0 /* price/trip is calculated in database add method */,
                                  (service < 0.0) ? oldRecord->getService().toDouble() : service,

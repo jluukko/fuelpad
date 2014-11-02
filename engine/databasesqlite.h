@@ -112,6 +112,7 @@ private:
     bool create_database(void);
     bool create_drivinglog_tables(void);
     bool add_location_fields(void);
+    bool add_fueltype_field(void);
     bool prepare_queries(void);
     bool unprepare_queries(void);
 

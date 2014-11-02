@@ -76,6 +76,7 @@ bool DatabaseSqlite::create_database(void)
                "fill REAL,"
                "consum REAL,"
                "price REAL,"
+               "fueltype INTEGER,"
                "priceperlitre REAL,"
                "pricepertrip REAL,"
                "service REAL,"
@@ -198,6 +199,21 @@ bool DatabaseSqlite::add_location_fields(void)
     return !failure;
 }
 
+bool DatabaseSqlite::add_fueltype_field(void)
+{
+    bool failure = false;
+
+    QSqlQuery query;
+
+    query.exec(
+                "ALTER TABLE record "
+                "ADD COLUMN fueltype INTEGER;"
+               );
+    failure = query.lastError().type() != QSqlError::NoError;
+
+    return !failure;
+}
+
 bool DatabaseSqlite::prepare_queries(void)
 {
     bool retVal;
@@ -269,7 +285,7 @@ bool DatabaseSqlite::prepare_queries(void)
     //--------------------------------------------------------------------------
     // Bind with query.bindValue(":carid", 1001);
     retVal = retVal |
-            ppStmtRecords->prepare( "SELECT day,km,trip,fill,consum,price,"
+            ppStmtRecords->prepare( "SELECT day,km,trip,fill,consum,price,fueltype,"
                            "priceperlitre,pricepertrip,service,oil,tires,lat,lon,place,notes,"
                            "id FROM record WHERE carid=:carid ORDER BY km;");
 
@@ -279,7 +295,7 @@ bool DatabaseSqlite::prepare_queries(void)
     //--------------------------------------------------------------------------
     retVal = retVal |
             ppStmtOneRecord->prepare(
-                "SELECT day,km,trip,fill,consum,price,"
+                "SELECT day,km,trip,fill,consum,price,fueltype,"
                 "priceperlitre,pricepertrip,service,oil,tires,lat,lon,place,notes,"
                 "id FROM record WHERE id=:id;");
 
@@ -337,7 +353,7 @@ bool DatabaseSqlite::prepare_queries(void)
     // Consumption is marked as nonzero for full records
     //--------------------------------------------------------------------------
     retVal = retVal |
-            ppStmtNextFull->prepare("SELECT day,km,trip,fill,consum,price,"
+            ppStmtNextFull->prepare("SELECT day,km,trip,fill,consum,price,fueltype,"
                                     "priceperlitre,pricepertrip,service,oil,tires,notes,"
                                     "id FROM record WHERE carid=:carid AND km>:km AND fill>0 AND consum>0 ORDER BY km LIMIT 1;");
 
@@ -635,6 +651,22 @@ bool DatabaseSqlite::openConnection(void)
                             qDebug("Added location fields");
                         }
                 }
+
+                // Check if the new fuel entry fueltype field exists
+                // (GTK Fuelpad's did not)
+                query.exec("SELECT fueltype FROM record LIMIT 1;");
+                query.first();
+
+                if (query.lastError().type() != QSqlError::NoError) {
+                        // We'll need to add the location fields
+                        if (!add_fueltype_field()) {
+                            qDebug("Adding fueltype field failed");
+                        }
+                        else {
+                            qDebug("Added fueltype field");
+                            // @todo Set the fueltype field of all existing records
+                        }
+                }
             }
 
             if (!prepare_queries()) {
@@ -729,11 +761,12 @@ Fuelrecord *DatabaseSqlite::getValuesRecordQuery(UnitSystem unit)
     record->setAllValues(ppStmtRecords->value(0).toString(), ppStmtRecords->value(1).toDouble(),
                             ppStmtRecords->value(2).toDouble(), ppStmtRecords->value(3).toDouble(),
                             ppStmtRecords->value(4).toDouble(), ppStmtRecords->value(5).toDouble(),
-                            ppStmtRecords->value(6).toDouble(), ppStmtRecords->value(7).toDouble(),
+                            ppStmtRecords->value(6).toInt(), ppStmtRecords->value(7).toDouble(),
                             ppStmtRecords->value(8).toDouble(), ppStmtRecords->value(9).toDouble(),
                             ppStmtRecords->value(10).toDouble(), ppStmtRecords->value(11).toDouble(),
-                            ppStmtRecords->value(12).toDouble(), ppStmtRecords->value(13).toString(),
-                            ppStmtRecords->value(14).toString(), ppStmtRecords->value(15).toLongLong());
+                            ppStmtRecords->value(12).toDouble(), ppStmtRecords->value(13).toDouble(),
+                            ppStmtRecords->value(14).toString(), ppStmtRecords->value(15).toString(),
+                            ppStmtRecords->value(16).toLongLong());
 
     return record;
 }
@@ -751,11 +784,12 @@ Fuelrecord *DatabaseSqlite::queryOneRecord(qlonglong id, UnitSystem unit)
         record->setAllValues(ppStmtOneRecord->value(0).toString(), ppStmtOneRecord->value(1).toDouble(),
                                 ppStmtOneRecord->value(2).toDouble(), ppStmtOneRecord->value(3).toDouble(),
                                 ppStmtOneRecord->value(4).toDouble(), ppStmtOneRecord->value(5).toDouble(),
-                                ppStmtOneRecord->value(6).toDouble(), ppStmtOneRecord->value(7).toDouble(),
+                                ppStmtOneRecord->value(6).toInt(), ppStmtOneRecord->value(7).toDouble(),
                                 ppStmtOneRecord->value(8).toDouble(), ppStmtOneRecord->value(9).toDouble(),
                                 ppStmtOneRecord->value(10).toDouble(), ppStmtOneRecord->value(11).toDouble(),
-                                ppStmtOneRecord->value(12).toDouble(), ppStmtOneRecord->value(13).toString(),
-                                ppStmtOneRecord->value(14).toString(), ppStmtOneRecord->value(15).toLongLong());
+                                ppStmtOneRecord->value(12).toDouble(), ppStmtOneRecord->value(13).toDouble(),
+                                ppStmtOneRecord->value(14).toString(), ppStmtOneRecord->value(15).toString(),
+                             ppStmtOneRecord->value(16).toLongLong());
 
     }
 
@@ -1027,11 +1061,12 @@ bool DatabaseSqlite::getNextFullFill(float km, Fuelrecord &record)
         record.setAllValues(ppStmtNextFull->value(0).toString(), ppStmtNextFull->value(1).toDouble(),
                                 ppStmtNextFull->value(2).toDouble(), ppStmtNextFull->value(3).toDouble(),
                                 ppStmtNextFull->value(4).toDouble(), ppStmtNextFull->value(5).toDouble(),
-                                ppStmtNextFull->value(6).toDouble(), ppStmtNextFull->value(7).toDouble(),
+                                ppStmtNextFull->value(6).toInt(), ppStmtNextFull->value(7).toDouble(),
                                 ppStmtNextFull->value(8).toDouble(), ppStmtNextFull->value(9).toDouble(),
                                 ppStmtNextFull->value(10).toDouble(), ppStmtNextFull->value(11).toDouble(),
-                                ppStmtNextFull->value(12).toDouble(), ppStmtNextFull->value(13).toString(),
-                                ppStmtNextFull->value(14).toString(), ppStmtNextFull->value(15).toLongLong());
+                                ppStmtNextFull->value(12).toDouble(), ppStmtNextFull->value(13).toDouble(),
+                                ppStmtNextFull->value(14).toString(), ppStmtNextFull->value(15).toString(),
+                            ppStmtNextFull->value(16).toLongLong());
         retVal = true;
     }
 
@@ -1856,7 +1891,7 @@ qlonglong DatabaseSqlite::addNewAlarmEvent(AlarmeventData &event, UnitSystem uni
     double tires = event.getTires();
     QString notes = event.getNotes();
 
-    record->setAllValuesUserUnit(date, km, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    record->setAllValuesUserUnit(date, km, 0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0,
                                  service, oil, tires,
                                  0.0, 0.0, "", /* @todo Add geographical location */
                                  notes,
@@ -1897,7 +1932,7 @@ qlonglong DatabaseSqlite::updateAlarmEvent(AlarmeventData &event, UnitSystem uni
     double tires = event.getTires();
     QString notes = event.getNotes();
 
-    record->setAllValuesUserUnit(date, km, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    record->setAllValuesUserUnit(date, km, 0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0,
                                  service, oil, tires,
                                  0.0, 0.0, "", /* @todo Add geographical location */
                                  notes,
