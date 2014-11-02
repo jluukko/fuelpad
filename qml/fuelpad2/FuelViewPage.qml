@@ -263,6 +263,9 @@ FPPage {
                                 ElementText {
                                     text: consum.toFixed(2) + " " + Units.getConsumeUnit()
                                 }
+                                ElementText {
+                                    text: "(" + co2.toFixed(0) + " " + Units.getEmissionUnit() + ")"
+                                }
                             }
 
                             Row {
