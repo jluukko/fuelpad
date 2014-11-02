@@ -293,12 +293,8 @@ static void setDataToAlarmEntryModel(QStandardItem *it, AlarmtypeData *data)
     it->setData(data->getDistance(), AlarmEntry::KmLimitRole);
     it->setData(data->getLongDesc(), AlarmEntry::LongDescriptionRole);
     it->setData(data->getInterval(), AlarmEntry::TimeLimitRole);
-
-    // @todo Calculate next km
-//    it->setData(nextkm, AlarmEntry::NextKmRole);
-
-    // @todo Calculate next date
-//    it->setData(nextdate, AlarmEntry::NextDateRole);
+    it->setData(data->getNextKm(), AlarmEntry::NextKmRole);
+    it->setData(data->getNextDate(), AlarmEntry::NextDateRole);
 
     it->setData(data->getLastKm(), AlarmEntry::LastKmRole);
     it->setData(data->getLastDate(), AlarmEntry::LastDateRole);
