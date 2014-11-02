@@ -771,6 +771,36 @@ Fuelrecord *DatabaseSqlite::getValuesRecordQuery(UnitSystem unit)
     return record;
 }
 
+//--------------------------------------------------------------------------
+// Query current car's fuel record data and return it as a vector
+//--------------------------------------------------------------------------
+vector<Fuelrecord> DatabaseSqlite::getRecordData(UnitSystem unit)
+{
+    vector<Fuelrecord> data;
+    // QSqlQuery.bindValue is void, we'll have to assume it worked
+
+    ppStmtRecords->bindValue(":carid",getCurrentCar().getId());
+
+    if (ppStmtRecords->exec()) {
+        while (ppStmtRecords->next()) {
+            Fuelrecord fuelRecord(unit);
+
+            fuelRecord.setAllValues(ppStmtRecords->value(0).toString(), ppStmtRecords->value(1).toDouble(),
+                                    ppStmtRecords->value(2).toDouble(), ppStmtRecords->value(3).toDouble(),
+                                    ppStmtRecords->value(4).toDouble(), ppStmtRecords->value(5).toDouble(),
+                                    ppStmtRecords->value(6).toInt(), ppStmtRecords->value(7).toDouble(),
+                                    ppStmtRecords->value(8).toDouble(), ppStmtRecords->value(9).toDouble(),
+                                    ppStmtRecords->value(10).toDouble(), ppStmtRecords->value(11).toDouble(),
+                                    ppStmtRecords->value(12).toDouble(), ppStmtRecords->value(13).toDouble(),
+                                    ppStmtRecords->value(14).toString(), ppStmtRecords->value(15).toString(),
+                                    ppStmtRecords->value(16).toLongLong());
+            // Store to vector
+            data.push_back(fuelRecord);
+        }
+    }
+
+    return data;
+}
 
 //--------------------------------------------------------------------------
 // Query one record

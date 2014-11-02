@@ -68,6 +68,7 @@ public:
     virtual void resetRecordQuery(void) =0;
     virtual bool stepRecordQuery(void) =0;
     virtual Fuelrecord *getValuesRecordQuery(UnitSystem unit) =0;
+    virtual vector<Fuelrecord> getRecordData(UnitSystem unit) =0;
     virtual Fuelrecord *queryOneRecord(qlonglong id, UnitSystem unit) =0;
     virtual float getLastRefill(float newkm) =0;
     virtual float getLastKm(void) =0;

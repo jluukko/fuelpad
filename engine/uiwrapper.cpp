@@ -452,23 +452,16 @@ QStandardItem* UiWrapper::findAlarmEvent(QString id)
 
 void UiWrapper::addAllRecordsToFuelEntryModel(QStandardItemModel *model)
 {
-    Fuelrecord *data;
+    vector<Fuelrecord> fuelData;
 
     if (dataBase->isOpen()) {
 
-        if (dataBase->initRecordQuery()) {
-            while  (dataBase->stepRecordQuery()) {
-                data = dataBase->getValuesRecordQuery(*unitSystem);
+        fuelData = dataBase->getRecordData(*unitSystem);
 
-                addRecordToFuelEntryModel(model, data);
+        for (vector<Fuelrecord>::size_type i=0; i < fuelData.size(); i++) {
+            addRecordToFuelEntryModel(model, &fuelData[i]);
+        }
 
-                delete data;
-            }
-            qDebug("records added to model");
-        }
-        else {
-            qDebug("initRecordQuery() not succesful");
-        }
     }
 }
 

@@ -52,6 +52,7 @@ public:
     void resetRecordQuery(void);
     bool stepRecordQuery(void);
     Fuelrecord *getValuesRecordQuery(UnitSystem unit);
+    vector<Fuelrecord> getRecordData(UnitSystem unit);
     Fuelrecord *queryOneRecord(qlonglong id, UnitSystem unit);
     float getLastRefill(float newkm);
     float getLastKm(void);
