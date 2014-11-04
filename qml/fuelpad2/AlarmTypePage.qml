@@ -217,6 +217,7 @@ FPPage {
                             }
 
                             Row {
+                                visible: kmlimit > 0
                                 spacing: 10
                                 LabelText {
                                     id: nextkmLabel
@@ -224,10 +225,12 @@ FPPage {
                                 }
                                 ElementText {
                                     text: nextkm.toFixed(0) + " " + Units.getLengthUnit()
+                                    color: kmexpired ? appTheme.redColor : appTheme.greenColor
                                 }
                             }
 
                             Row {
+                                visible: timelimit > 0
                                 spacing: 10
                                 LabelText {
                                     id: nextdateLabel
@@ -235,6 +238,7 @@ FPPage {
                                 }
                                 ElementText {
                                     text: nextdate
+                                    color: dateexpired ? appTheme.redColor : appTheme.greenColor
                                 }
                             }
 
