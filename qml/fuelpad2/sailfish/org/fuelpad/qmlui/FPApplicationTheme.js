@@ -15,6 +15,8 @@ var primaryColor = Theme.primaryColor
 var secondaryColor = Theme.secondaryColor
 var highlightColor = Theme.highlightColor
 var secondaryHighlightColor = Theme.secondaryHighlightColor
+var redColor = "red"
+var greenColor = "green"
 
 var itemSizeSmall = Theme.itemSizeSmall
 var itemSizeMedium = Theme.itemSizeMedium

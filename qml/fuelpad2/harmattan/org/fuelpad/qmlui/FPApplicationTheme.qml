@@ -35,6 +35,8 @@ Item {
     property variant secondaryColor: AppTheme.secondaryColor
     property variant highlightColor: AppTheme.highlightColor
     property variant secondaryHighlightColor: AppTheme.secondaryHighlightColor
+    property variant redColor: AppTheme.redColor
+    property variant greenColor: AppTheme.greenColor
 
     property variant itemSizeSmall: AppTheme.itemSizeSmall
     property variant itemSizeMedium: AppTheme.itemSizeMedium

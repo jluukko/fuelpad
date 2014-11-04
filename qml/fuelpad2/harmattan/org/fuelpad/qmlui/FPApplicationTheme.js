@@ -16,6 +16,8 @@ var primaryColor = COLOR_FOREGROUND
 var secondaryColor = COLOR_FOREGROUND
 var highlightColor = COLOR_INVERTED_FOREGROUND
 var secondaryHighlightColor = COLOR_INVERTED_SECONDARY_FOREGROUND
+var redColor = "red"
+var greenColor = "green"
 
 var itemSizeSmall = LIST_ITEM_HEIGHT_SMALL
 var itemSizeMedium = LIST_ITEM_HEIGHT_DEFAULT
