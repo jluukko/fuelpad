@@ -24,6 +24,7 @@ import org.fuelpad.qmlui 1.0
 Item {
     id: elementText
     property alias text: text.text
+    property alias color: text.color
 
     width: text.width
     height: text.height
