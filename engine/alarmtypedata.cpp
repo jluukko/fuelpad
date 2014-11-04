@@ -119,3 +119,15 @@ QString AlarmtypeData::getNextDate(void)
     // @todo Add estimation of next date based on recent driving
     return nextDate.addMonths(interval).toString("yyyy-MM-dd");
 }
+
+bool AlarmtypeData::getKmExpired(double currentKm)
+{
+    return getNextKm() < currentKm;
+}
+
+bool AlarmtypeData::getDateExpired(void)
+{
+    QDate today = QDate::currentDate();
+
+    return QDate(QDate::fromString(getNextDate(), "yyyy-MM-dd")) < today;
+}

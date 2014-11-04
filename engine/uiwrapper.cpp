@@ -128,6 +128,8 @@ struct AlarmEntry {
         NextDateRole,
         LastKmRole,
         LastDateRole,
+        KmExpiredRole,
+        DateExpiredRole,
         IdRole
     };
 };
@@ -286,7 +288,7 @@ static void setDataToDriverEntryModel(QStandardItem *it, DriverData *data)
     it->setData(id, DriverEntry::IdRole);
 }
 
-static void setDataToAlarmEntryModel(QStandardItem *it, AlarmtypeData *data)
+static void setDataToAlarmEntryModel(QStandardItem *it, AlarmtypeData *data, double currentKm)
 {
     int id = data->getId();
     it->setData(data->getShortDesc(), AlarmEntry::DescrptionRole);
@@ -298,6 +300,9 @@ static void setDataToAlarmEntryModel(QStandardItem *it, AlarmtypeData *data)
 
     it->setData(data->getLastKm(), AlarmEntry::LastKmRole);
     it->setData(data->getLastDate(), AlarmEntry::LastDateRole);
+
+    it->setData(data->getKmExpired(currentKm), AlarmEntry::KmExpiredRole);
+    it->setData(data->getDateExpired(), AlarmEntry::DateExpiredRole);
 
     it->setData(id, AlarmEntry::IdRole);
 }
@@ -324,10 +329,10 @@ static void addRecordToDriverEntryModel(QStandardItemModel *model, DriverData *d
 //    model->insertRow(0, it);
 }
 
-static void addRecordToAlarmEntryModel(QStandardItemModel *model, AlarmtypeData *data)
+static void addRecordToAlarmEntryModel(QStandardItemModel *model, AlarmtypeData *data, double currentKm)
 {
     QStandardItem* it = new QStandardItem();
-    setDataToAlarmEntryModel(it, data);
+    setDataToAlarmEntryModel(it, data, currentKm);
     model->appendRow(it);
 }
 
@@ -517,17 +522,15 @@ void UiWrapper::addAllRecordsToDriverEntryModel(QStandardItemModel *model)
 void UiWrapper::addAllRecordsToAlarmEntryModel(QStandardItemModel *model)
 {
     vector<AlarmtypeData> alarmData;
-//    int activeIndex;
+    double currentKm;
 
     if (dataBase->isOpen()) {
 
         alarmData = dataBase->getAlarmTypeData();
+        currentKm = dataBase->getLastKm();
 
         for (vector<AlarmtypeData>::size_type i=0; i < alarmData.size(); i++) {
-            addRecordToAlarmEntryModel(model, &alarmData[i]);
-//            if (alarmData[i].getId() == dataBase->getCurrentCar().getId()) {
-//                activeIndex = i;
-//            }
+            addRecordToAlarmEntryModel(model, &alarmData[i], currentKm);
         }
 
     }
@@ -705,6 +708,8 @@ void UiWrapper::createAlarmEntryModel(void)
     roleNames[AlarmEntry::NextDateRole] =  "nextdate";
     roleNames[AlarmEntry::LastKmRole] =  "lastkm";
     roleNames[AlarmEntry::LastDateRole] =  "lastdate";
+    roleNames[AlarmEntry::KmExpiredRole] =  "kmexpired";
+    roleNames[AlarmEntry::DateExpiredRole] =  "dateexpired";
     roleNames[AlarmEntry::IdRole] =  "databaseid";
     RoleItemModel *model = new RoleItemModel(roleNames);
 
@@ -1407,7 +1412,7 @@ void UiWrapper::addAlarmType(qlonglong carId, QString shortDesc, quint32 interva
 
     dataBase->addAlarmType(*alarmtype);
 
-    addRecordToAlarmEntryModel(alarmEntryModel, alarmtype);
+    addRecordToAlarmEntryModel(alarmEntryModel, alarmtype, dataBase->getLastKm());
 
     delete alarmtype;
 
