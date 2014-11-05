@@ -33,6 +33,7 @@ using namespace std;
 #include "fuelrecord.h"
 #include "unitsystem.h"
 #include "cardata.h"
+#include "carstatistics.h"
 #include "driverdata.h"
 #include "alarmtypedata.h"
 #include "alarmeventdata.h"
@@ -124,6 +125,9 @@ public:
     virtual int getNumOfRecordEvents(qlonglong id) =0;
     virtual bool deleteEventWithRecordId(qlonglong id) =0;
     virtual bool deleteEvent(qlonglong id, bool deleteFuelRecord) =0;
+
+    // Car statistics
+    virtual vector<CarStatistics> getCarStatistics(void) =0;
 
 protected:
     QString fileName;

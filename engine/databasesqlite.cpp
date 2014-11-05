@@ -256,12 +256,12 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtDeleteEventwithRecordid = new QSqlQuery;
     ppStmtDeleteEvent = new QSqlQuery;
     ppStmtGetOneEvent = new QSqlQuery;
+    ppStmtGetReport = new QSqlQuery;
 
     // Statements without a ready implementation
     ppStmtCurCar = new QSqlQuery;
     ppStmtExport = new QSqlQuery;
     ppStmtExportCar = new QSqlQuery;
-    ppStmtGetReport = new QSqlQuery;
     ppStmtGetOneAlarmtype = new QSqlQuery;
     ppStmtUpdateAlarmtype = new QSqlQuery;
 
@@ -503,6 +503,29 @@ bool DatabaseSqlite::prepare_queries(void)
     retVal = retVal |
             ppStmtGetOneEvent->prepare("SELECT day,km,recordid FROM alarmevent WHERE id=:id;");
 
+    //--------------------------------------------------------------------------
+    // Reporting
+    //--------------------------------------------------------------------------
+    retVal = retVal |
+            ppStmtGetReport->prepare("SELECT STRFTIME('%Y',day),MIN(km),MAX(km),MAX(km)-MIN(km),"
+/*                                     "SUM(fill),SUM(price),SUM(fill)/SUM(trip)*100,"            */
+                                     "SUM(fill),SUM(price),SUM(trip),"
+                                     "SUM(price)/SUM(fill),SUM(price)/SUM(trip),SUM(oil),"
+                                     "SUM(oil)/(MAX(km)-MIN(km)),SUM(service),"
+                                     "SUM(service)/(MAX(km)-MIN(km)),SUM(tires),"
+                                     "SUM(tires)/(MAX(km)-MIN(km)) FROM record "
+                                     "WHERE carid=:carid AND km NOT IN (0) "
+                                     "GROUP BY STRFTIME('%Y',DATE(day)) "
+                                     "UNION "
+                                     "SELECT 'Total',MIN(km),MAX(km),MAX(km)-MIN(km),"
+/*                                     "SUM(fill),SUM(price),SUM(fill)/SUM(trip)*100,"            */
+                                     "SUM(fill),SUM(price),SUM(trip),"
+                                     "SUM(price)/SUM(fill),SUM(price)/SUM(trip),SUM(oil),"
+                                     "SUM(oil)/(MAX(km)-MIN(km)),SUM(service),"
+                                     "SUM(service)/(MAX(km)-MIN(km)),SUM(tires),"
+                                     "SUM(tires)/(MAX(km)-MIN(km)) FROM record "
+                                     "WHERE carid=:carid2 AND km NOT IN (0);");
+
     return retVal;
 }
 
@@ -543,11 +566,11 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtAddAlarmtype;
     delete ppStmtGetNumOfRecordEvents;
     delete ppStmtDeleteEventwithRecordid;
+    delete ppStmtGetReport;
 
     delete ppStmtCurCar;
     delete ppStmtExport;
     delete ppStmtExportCar;
-    delete ppStmtGetReport;
     delete ppStmtGetOneAlarmtype;
     delete ppStmtUpdateAlarmtype;
     delete ppStmtGetOneEvent;
@@ -2038,4 +2061,36 @@ bool DatabaseSqlite::deleteEvent(qlonglong id, bool deleteFuelRecord)
     }
 
     return success;
+}
+
+//--------------------------------------------------------------------------
+// Query all car data and return in as a vector
+//--------------------------------------------------------------------------
+vector<CarStatistics> DatabaseSqlite::getCarStatistics(void)
+{
+    vector<CarStatistics> data;
+
+    ppStmtGetReport->bindValue(":carid",getCurrentCar().getId());
+    ppStmtGetReport->bindValue(":carid2",getCurrentCar().getId());
+
+    if (ppStmtGetReport->exec()) {
+        while (ppStmtGetReport->next()) {
+            CarStatistics carStatistics;
+
+            carStatistics.setYear(ppStmtGetReport->value(0).toString());
+            carStatistics.setMinKm(ppStmtGetReport->value(1).toDouble());
+            carStatistics.setMaxKm(ppStmtGetReport->value(2).toDouble());
+            carStatistics.setTotalFill(ppStmtGetReport->value(4).toDouble());
+            carStatistics.setTotalPrice(ppStmtGetReport->value(5).toDouble());
+            carStatistics.setTotalTrip(ppStmtGetReport->value(6).toDouble());
+            carStatistics.setTotalOil(ppStmtGetReport->value(9).toDouble());
+            carStatistics.setTotalService(ppStmtGetReport->value(11).toDouble());
+            carStatistics.setTotalTires(ppStmtGetReport->value(13).toDouble());
+
+            // Store to vector
+            data.push_back(carStatistics);
+        }
+    }
+
+    return data;
 }

@@ -47,6 +47,7 @@ public:
     RoleItemModel* getDriverEntryModel(void);
     MySortFilterProxyModel* getAlarmEntryModel(void);
     MySortFilterProxyModel* getAlarmEventModel(void);
+    MySortFilterProxyModel* getCarStatisticsModel(void);
     PlotDataModel* getStatisticsModel(void);
     void calcCarStatistics(QString id, double &totalKm, double &lastMonthKm, double &lastYearKm,
                              double &totalFill, double &lastMonthFill, double &lastYearFill,
@@ -174,9 +175,11 @@ private:
     RoleItemModel *driverDataModel;
     RoleItemModel *alarmEntryModel;
     RoleItemModel *alarmEventModel;
+    RoleItemModel *carStatisticsModel;
     MySortFilterProxyModel *sortModel;
     MySortFilterProxyModel *alarmSortModel;
     MySortFilterProxyModel *alarmEventSortModel;
+    MySortFilterProxyModel *carStatisticsSortModel;
     PlotDataModel *statisticsModel;
 
     void updateAllModels(void);
@@ -190,12 +193,15 @@ private:
     void addAllRecordsToDriverEntryModel(QStandardItemModel *model);
     void addAllRecordsToAlarmEntryModel(QStandardItemModel *model);
     void addDataToStatisticsModel(PlotDataModel *model, double x, double y);
+    void addDataToCarStatisticsModel(QStandardItemModel *model);
+
     void createFuelEntryModel(void);
     void createCarDataModel(void);
     void createDriverDataModel(void);
     void createAlarmEntryModel(void);
     void createAlarmEventModel(void);
     void createStatisticsModel(void);
+    void createCarStatisticsModel(void);
 };
 
 #endif // UIWRAPPER_H

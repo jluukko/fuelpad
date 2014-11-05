@@ -155,6 +155,21 @@ struct StatisticsData {
     };
 };
 
+struct CarStatisticsEntry {
+    enum CarStatisticsEntryRoles {
+        YearRole = Qt::UserRole + 1,
+        MinKmRole,
+        MaxKmRole,
+        TotalFillRole,
+        TotalPriceRole,
+        TotalTripRole,
+        TotalOilRole,
+        TotalServiceRole,
+        TotalTiresRole
+    };
+};
+
+
 UiWrapper::UiWrapper(Database *db, Geocode *gc)
 {
     dataBase = db;
@@ -192,6 +207,7 @@ UiWrapper::UiWrapper(Database *db, Geocode *gc)
     createAlarmEntryModel();
     createAlarmEventModel();
     createStatisticsModel();
+    createCarStatisticsModel();
 
 }
 
@@ -321,6 +337,7 @@ static void setDataToAlarmEventModel(QStandardItem *it, AlarmeventData *data)
     it->setData(id, AlarmEventEntry::IdRole);
 }
 
+
 static void addRecordToDriverEntryModel(QStandardItemModel *model, DriverData *data)
 {
     QStandardItem* it = new QStandardItem();
@@ -340,6 +357,25 @@ static void addRecordToAlarmEventModel(QStandardItemModel *model, AlarmeventData
 {
     QStandardItem* it = new QStandardItem();
     setDataToAlarmEventModel(it, data);
+    model->appendRow(it);
+}
+
+static void setDataToCarStatisticsModel(QStandardItem *it, CarStatistics *data)
+{
+    it->setData(data->getYear(), CarStatisticsEntry::YearRole);
+    it->setData(data->getMinKm(), CarStatisticsEntry::MinKmRole);
+    it->setData(data->getMaxKm(), CarStatisticsEntry::MaxKmRole);
+    it->setData(data->getTotalFill(), CarStatisticsEntry::TotalFillRole);
+    it->setData(data->getTotalPrice(), CarStatisticsEntry::TotalPriceRole);
+    it->setData(data->getTotalTrip(), CarStatisticsEntry::TotalTripRole);
+    it->setData(data->getTotalOil(), CarStatisticsEntry::TotalOilRole);
+    it->setData(data->getTotalTires(), CarStatisticsEntry::TotalTiresRole);
+}
+
+static void addRecordToCarStatisticsModel(QStandardItemModel *model, CarStatistics *data)
+{
+    QStandardItem* it = new QStandardItem();
+    setDataToCarStatisticsModel(it, data);
     model->appendRow(it);
 }
 
@@ -404,6 +440,10 @@ void UiWrapper::reReadAllModels(void)
     // Alarm types model
     alarmEntryModel->clear();
     addAllRecordsToAlarmEntryModel(alarmEntryModel);
+
+    // Car statistics model
+    carStatisticsModel->clear();
+    addDataToCarStatisticsModel(carStatisticsModel);
 }
 
 QStandardItem* UiWrapper::findFuelEntry(QString id)
@@ -551,6 +591,21 @@ void UiWrapper::addAllRecordsToAlarmEventModel(qlonglong alarmid)
 //            if (alarmData[i].getId() == dataBase->getCurrentCar().getId()) {
 //                activeIndex = i;
 //            }
+        }
+
+    }
+}
+
+void UiWrapper::addDataToCarStatisticsModel(QStandardItemModel *model)
+{
+    vector<CarStatistics> carStatistics;
+
+    if (dataBase->isOpen()) {
+
+        carStatistics = dataBase->getCarStatistics();
+
+        for (vector<CarStatistics>::size_type i=0; i < carStatistics.size(); i++) {
+            addRecordToCarStatisticsModel(model, &carStatistics[i]);
         }
 
     }
@@ -772,6 +827,36 @@ void UiWrapper::createStatisticsModel(void)
 
 }
 
+void UiWrapper::createCarStatisticsModel(void)
+{
+    QHash<int, QByteArray> roleNames;
+    roleNames[CarStatisticsEntry::YearRole] =  "year";
+    roleNames[CarStatisticsEntry::MinKmRole] =  "minkm";
+    roleNames[CarStatisticsEntry::MaxKmRole] =  "maxkm";
+    roleNames[CarStatisticsEntry::TotalFillRole] =  "totalfill";
+    roleNames[CarStatisticsEntry::TotalPriceRole] =  "totalprice";
+    roleNames[CarStatisticsEntry::TotalTripRole] =  "totaltrip";
+    roleNames[CarStatisticsEntry::TotalOilRole] =  "totaloil";
+    roleNames[CarStatisticsEntry::TotalServiceRole] =  "totalservice";
+    roleNames[CarStatisticsEntry::TotalTiresRole] =  "totaltires";
+    RoleItemModel *model = new RoleItemModel(roleNames);
+
+    carStatisticsSortModel = new MySortFilterProxyModel(this, roleNames);
+
+    addDataToCarStatisticsModel(model);
+
+    carStatisticsModel = model;
+
+    carStatisticsSortModel->setSourceModel(carStatisticsModel);
+    carStatisticsSortModel->sort(0, Qt::AscendingOrder);
+    carStatisticsSortModel->setDynamicSortFilter(true);
+    carStatisticsSortModel->beginResetModel();
+    carStatisticsSortModel->setSortRole(CarStatisticsEntry::YearRole);
+    carStatisticsSortModel->endResetModel();
+    carStatisticsSortModel->invalidate();
+
+}
+
 
 MySortFilterProxyModel *UiWrapper::getFuelEntryModel(void)
 {
@@ -797,6 +882,11 @@ MySortFilterProxyModel *UiWrapper::getAlarmEntryModel(void)
 MySortFilterProxyModel *UiWrapper::getAlarmEventModel(void)
 {
     return alarmEventSortModel;
+}
+
+MySortFilterProxyModel *UiWrapper::getCarStatisticsModel(void)
+{
+    return carStatisticsSortModel;
 }
 
 PlotDataModel* UiWrapper::getStatisticsModel(void)

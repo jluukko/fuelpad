@@ -55,6 +55,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     viewer.rootContext()->setContextProperty("driverModel", uiEngine.getDriverEntryModel());
     viewer.rootContext()->setContextProperty("alarmTypeModel", uiEngine.getAlarmEntryModel());
     viewer.rootContext()->setContextProperty("alarmEventModel", uiEngine.getAlarmEventModel());
+    viewer.rootContext()->setContextProperty("carStatisticsModel", uiEngine.getCarStatisticsModel());
     viewer.rootContext()->setContextProperty("statisticsModel", uiEngine.getStatisticsModel());
     viewer.rootContext()->setContextProperty("applicationData", uiEngine.getApplicationData());
 

@@ -109,6 +109,9 @@ public:
     bool deleteEventWithRecordId(qlonglong id);
     bool deleteEvent(qlonglong id, bool deleteFuelRecord);
 
+    // Car statistics
+    vector<CarStatistics> getCarStatistics(void);
+
 private:
     bool create_database(void);
     bool create_drivinglog_tables(void);
@@ -167,12 +170,12 @@ private:
     QSqlQuery *ppStmtUpdateEvent;
     QSqlQuery *ppStmtAddAlarmtype;
     QSqlQuery *ppStmtGetNumOfRecordEvents;
+    QSqlQuery *ppStmtGetReport;
 
     // Statements without a ready implementation
     QSqlQuery *ppStmtCurCar;
     QSqlQuery *ppStmtExport;
     QSqlQuery *ppStmtExportCar;
-    QSqlQuery *ppStmtGetReport;
     QSqlQuery *ppStmtGetOneAlarmtype;
     QSqlQuery *ppStmtUpdateAlarmtype;
     QSqlQuery *ppStmtGetOneEvent;

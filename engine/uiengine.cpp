@@ -52,6 +52,7 @@ UiEngine::UiEngine(void)
     alarmEntryModel = uiWrapper->getAlarmEntryModel();
     alarmEventModel = uiWrapper->getAlarmEventModel();
     statisticsModel = uiWrapper->getStatisticsModel();
+    carStatisticsModel = uiWrapper->getCarStatisticsModel();
 
 }
 
@@ -88,6 +89,11 @@ MySortFilterProxyModel* UiEngine::getAlarmEntryModel(void)
 MySortFilterProxyModel* UiEngine::getAlarmEventModel(void)
 {
     return alarmEventModel;
+}
+
+MySortFilterProxyModel* UiEngine::getCarStatisticsModel(void)
+{
+    return carStatisticsModel;
 }
 
 PlotDataModel* UiEngine::getStatisticsModel(void)

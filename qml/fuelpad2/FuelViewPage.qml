@@ -41,6 +41,10 @@ FPPage {
         pageStack.push(Funcs.loadComponent("StatisticsPage.qml",fuelViewPage, {year: thisyear, stattype: 2}));
     }
 
+    function loadReportPage(dbid) {
+        pageStack.push(Funcs.loadComponent("ReportPage.qml",fuelViewPage, {}));
+    }
+
     function updateSearchExp(searchExp) {
         applicationData.setSearchExpression(searchExp)
     }
@@ -74,6 +78,10 @@ FPPage {
         FPMenuAction {
             text: qsTr("Statistics")
             onClicked: loadStatisticsPage()
+        },
+        FPMenuAction {
+            text: qsTr("Report")
+            onClicked: loadReportPage()
         }
     ]
 
@@ -232,7 +240,6 @@ FPPage {
                             }
 
                             Row {
-                                spacing: 10
                                 visible: (trip > 0)? true : false
                                 LabelText {
                                     id: tripLabel
