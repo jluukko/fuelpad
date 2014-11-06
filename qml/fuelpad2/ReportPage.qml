@@ -117,6 +117,56 @@ FPPage {
                             }
                         }
 
+                        Row {
+                            spacing: appTheme.paddingSmall
+                            LabelText {
+                                text: qsTr("Average consumption")
+                            }
+                            ElementText {
+                                text: avgconsum.toFixed(1) + " " + Units.getConsumeUnit()
+                            }
+                        }
+
+                        Row {
+                            spacing: appTheme.paddingSmall
+                            LabelText {
+                                text: qsTr("Fuel expenses")
+                            }
+                            ElementText {
+                                text: totalprice.toFixed(2) + " " + applicationData.getCurrencySymbol()
+                            }
+                        }
+
+                        Row {
+                            spacing: appTheme.paddingSmall
+                            LabelText {
+                                text: qsTr("Oil expenses")
+                            }
+                            ElementText {
+                                text: totaloil.toFixed(2) + " " + applicationData.getCurrencySymbol()
+                            }
+                        }
+
+                        Row {
+                            spacing: appTheme.paddingSmall
+                            LabelText {
+                                text: qsTr("Service expenses")
+                            }
+                            ElementText {
+                                text: totalservice.toFixed(2) + " " + applicationData.getCurrencySymbol()
+                            }
+                        }
+
+                        Row {
+                            spacing: appTheme.paddingSmall
+                            LabelText {
+                                text: qsTr("Tires expenses")
+                            }
+                            ElementText {
+                                text: totaltires.toFixed(2) + " " + applicationData.getCurrencySymbol()
+                            }
+                        }
+
                         Rectangle {
                             id: itemSeperator
                             height: 2
