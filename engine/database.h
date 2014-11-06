@@ -127,7 +127,7 @@ public:
     virtual bool deleteEvent(qlonglong id, bool deleteFuelRecord) =0;
 
     // Car statistics
-    virtual vector<CarStatistics> getCarStatistics(void) =0;
+    virtual vector<CarStatistics> getCarStatistics(UnitSystem unit) =0;
 
 protected:
     QString fileName;

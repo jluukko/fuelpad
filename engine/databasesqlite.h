@@ -110,7 +110,7 @@ public:
     bool deleteEvent(qlonglong id, bool deleteFuelRecord);
 
     // Car statistics
-    vector<CarStatistics> getCarStatistics(void);
+    vector<CarStatistics> getCarStatistics(UnitSystem unit);
 
 private:
     bool create_database(void);

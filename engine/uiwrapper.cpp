@@ -160,6 +160,7 @@ struct CarStatisticsEntry {
         YearRole = Qt::UserRole + 1,
         MinKmRole,
         MaxKmRole,
+        AverageConsumptionRole,
         TotalFillRole,
         TotalPriceRole,
         TotalTripRole,
@@ -365,10 +366,12 @@ static void setDataToCarStatisticsModel(QStandardItem *it, CarStatistics *data)
     it->setData(data->getYear(), CarStatisticsEntry::YearRole);
     it->setData(data->getMinKm(), CarStatisticsEntry::MinKmRole);
     it->setData(data->getMaxKm(), CarStatisticsEntry::MaxKmRole);
+    it->setData(data->getAverageConsumption(), CarStatisticsEntry::AverageConsumptionRole);
     it->setData(data->getTotalFill(), CarStatisticsEntry::TotalFillRole);
     it->setData(data->getTotalPrice(), CarStatisticsEntry::TotalPriceRole);
     it->setData(data->getTotalTrip(), CarStatisticsEntry::TotalTripRole);
     it->setData(data->getTotalOil(), CarStatisticsEntry::TotalOilRole);
+    it->setData(data->getTotalService(), CarStatisticsEntry::TotalServiceRole);
     it->setData(data->getTotalTires(), CarStatisticsEntry::TotalTiresRole);
 }
 
@@ -602,7 +605,7 @@ void UiWrapper::addDataToCarStatisticsModel(QStandardItemModel *model)
 
     if (dataBase->isOpen()) {
 
-        carStatistics = dataBase->getCarStatistics();
+        carStatistics = dataBase->getCarStatistics(*unitSystem);
 
         for (vector<CarStatistics>::size_type i=0; i < carStatistics.size(); i++) {
             addRecordToCarStatisticsModel(model, &carStatistics[i]);
@@ -833,6 +836,7 @@ void UiWrapper::createCarStatisticsModel(void)
     roleNames[CarStatisticsEntry::YearRole] =  "year";
     roleNames[CarStatisticsEntry::MinKmRole] =  "minkm";
     roleNames[CarStatisticsEntry::MaxKmRole] =  "maxkm";
+    roleNames[CarStatisticsEntry::AverageConsumptionRole] = "avgconsum";
     roleNames[CarStatisticsEntry::TotalFillRole] =  "totalfill";
     roleNames[CarStatisticsEntry::TotalPriceRole] =  "totalprice";
     roleNames[CarStatisticsEntry::TotalTripRole] =  "totaltrip";

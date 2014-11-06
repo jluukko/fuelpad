@@ -2066,7 +2066,7 @@ bool DatabaseSqlite::deleteEvent(qlonglong id, bool deleteFuelRecord)
 //--------------------------------------------------------------------------
 // Query all car data and return in as a vector
 //--------------------------------------------------------------------------
-vector<CarStatistics> DatabaseSqlite::getCarStatistics(void)
+vector<CarStatistics> DatabaseSqlite::getCarStatistics(UnitSystem unit)
 {
     vector<CarStatistics> data;
 
@@ -2075,7 +2075,7 @@ vector<CarStatistics> DatabaseSqlite::getCarStatistics(void)
 
     if (ppStmtGetReport->exec()) {
         while (ppStmtGetReport->next()) {
-            CarStatistics carStatistics;
+            CarStatistics carStatistics(unit);
 
             carStatistics.setYear(ppStmtGetReport->value(0).toString());
             carStatistics.setMinKm(ppStmtGetReport->value(1).toDouble());

@@ -24,10 +24,12 @@
 #include <QtGlobal>
 #include <QString>
 
+#include "unitsystem.h"
+
 class CarStatistics
 {
 public:
-    CarStatistics();
+    CarStatistics(UnitSystem u);
 
     void setYear(QString year);
     QString getYear(void);
@@ -56,7 +58,9 @@ public:
     void setTotalTires(double totalTires);
     double getTotalTires(void);
 
+    double getAverageConsumption(void);
 private:
+    UnitSystem m_unit;
     QString m_year;
     double m_maxKm;
     double m_minKm;

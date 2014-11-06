@@ -1,6 +1,7 @@
 #include "carstatistics.h"
+#include "datafield.h"
 
-CarStatistics::CarStatistics()
+CarStatistics::CarStatistics(UnitSystem u) : m_unit(u)
 {
 }
 
@@ -92,4 +93,13 @@ void CarStatistics::setTotalTires(double totalTires)
 double CarStatistics::getTotalTires(void)
 {
     return m_totalTires;
+}
+
+double CarStatistics::getAverageConsumption(void)
+{
+    Datafield consum(m_unit);
+
+    consum.setValue(m_totalFill/m_totalTrip*100.0, Datafield::CONSUMPTION);
+
+    return consum.getValueUserUnit().toDouble();
 }
