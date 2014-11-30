@@ -144,8 +144,6 @@ FPDialog {
                         inputMethodHints: Qt.ImhFormattedNumbersOnly
                         onActiveFocusChanged: {
                             if (!focus) {
-                                console.log("Km field lost focus")
-                                console.log("Trip would be " + applicationData.calcTrip(kmField.text, tripField.text))
                                 tripField.text = applicationData.calcTrip(kmField.text, tripField.text)
                             }
                         }
