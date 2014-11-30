@@ -35,6 +35,7 @@ public:
         VOLUME,
         CONSUMPTION,
         PRICE,
+        FUELTYPE,
         PRICEPERTRIP,
         PRICEPERLITRE,
         CO2EMISSION,

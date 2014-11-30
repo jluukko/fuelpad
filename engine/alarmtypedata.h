@@ -53,6 +53,12 @@ public:
     void setLastKm(double km);
     double getLastKm(void);
 
+    double getNextKm(void);
+    QString getNextDate(void);
+
+    bool getKmExpired(double currentKm);
+    bool getDateExpired(void);
+
 private:
     qlonglong id;
     qlonglong carId;

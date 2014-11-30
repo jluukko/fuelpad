@@ -76,6 +76,7 @@ bool DatabaseSqlite::create_database(void)
                "fill REAL,"
                "consum REAL,"
                "price REAL,"
+               "fueltype INTEGER,"
                "priceperlitre REAL,"
                "pricepertrip REAL,"
                "service REAL,"
@@ -198,6 +199,21 @@ bool DatabaseSqlite::add_location_fields(void)
     return !failure;
 }
 
+bool DatabaseSqlite::add_fueltype_field(void)
+{
+    bool failure = false;
+
+    QSqlQuery query;
+
+    query.exec(
+                "ALTER TABLE record "
+                "ADD COLUMN fueltype INTEGER;"
+               );
+    failure = query.lastError().type() != QSqlError::NoError;
+
+    return !failure;
+}
+
 bool DatabaseSqlite::prepare_queries(void)
 {
     bool retVal;
@@ -206,6 +222,8 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtRecords = new QSqlQuery;
     ppStmtOneRecord = new QSqlQuery;
     ppStmtOneCar = new QSqlQuery;
+    ppStmtLastRefill = new QSqlQuery;
+    ppStmtLastKm = new QSqlQuery;
     ppStmtMonthlyData = new QSqlQuery;
     ppStmtCar = new QSqlQuery;
     ppStmtOneDriver = new QSqlQuery;
@@ -238,12 +256,12 @@ bool DatabaseSqlite::prepare_queries(void)
     ppStmtDeleteEventwithRecordid = new QSqlQuery;
     ppStmtDeleteEvent = new QSqlQuery;
     ppStmtGetOneEvent = new QSqlQuery;
+    ppStmtGetReport = new QSqlQuery;
 
     // Statements without a ready implementation
     ppStmtCurCar = new QSqlQuery;
     ppStmtExport = new QSqlQuery;
     ppStmtExportCar = new QSqlQuery;
-    ppStmtGetReport = new QSqlQuery;
     ppStmtGetOneAlarmtype = new QSqlQuery;
     ppStmtUpdateAlarmtype = new QSqlQuery;
 
@@ -267,7 +285,7 @@ bool DatabaseSqlite::prepare_queries(void)
     //--------------------------------------------------------------------------
     // Bind with query.bindValue(":carid", 1001);
     retVal = retVal |
-            ppStmtRecords->prepare( "SELECT day,km,trip,fill,consum,price,"
+            ppStmtRecords->prepare( "SELECT day,km,trip,fill,consum,price,fueltype,"
                            "priceperlitre,pricepertrip,service,oil,tires,lat,lon,place,notes,"
                            "id FROM record WHERE carid=:carid ORDER BY km;");
 
@@ -277,7 +295,7 @@ bool DatabaseSqlite::prepare_queries(void)
     //--------------------------------------------------------------------------
     retVal = retVal |
             ppStmtOneRecord->prepare(
-                "SELECT day,km,trip,fill,consum,price,"
+                "SELECT day,km,trip,fill,consum,price,fueltype,"
                 "priceperlitre,pricepertrip,service,oil,tires,lat,lon,place,notes,"
                 "id FROM record WHERE id=:id;");
 
@@ -286,6 +304,18 @@ bool DatabaseSqlite::prepare_queries(void)
     //--------------------------------------------------------------------------
     retVal = retVal |
             ppStmtOneCar->prepare("SELECT mark,model,year,register,notes,fueltype FROM car where id=:carid;");
+
+    //--------------------------------------------------------------------------
+    // Query last refill
+    //--------------------------------------------------------------------------
+    retVal = retVal |
+            ppStmtLastRefill->prepare("SELECT km FROM record WHERE carid=:carid AND trip>0 AND km<:km ORDER BY km DESC LIMIT 1;");
+
+    //--------------------------------------------------------------------------
+    // Query last km = maximum km
+    //--------------------------------------------------------------------------
+    retVal = retVal |
+            ppStmtLastKm->prepare("SELECT max(km) FROM record WHERE carid=:carid;");
 
     //--------------------------------------------------------------------------
     // Query monthly statistics
@@ -323,7 +353,7 @@ bool DatabaseSqlite::prepare_queries(void)
     // Consumption is marked as nonzero for full records
     //--------------------------------------------------------------------------
     retVal = retVal |
-            ppStmtNextFull->prepare("SELECT day,km,trip,fill,consum,price,"
+            ppStmtNextFull->prepare("SELECT day,km,trip,fill,consum,price,fueltype,"
                                     "priceperlitre,pricepertrip,service,oil,tires,notes,"
                                     "id FROM record WHERE carid=:carid AND km>:km AND fill>0 AND consum>0 ORDER BY km LIMIT 1;");
 
@@ -473,6 +503,29 @@ bool DatabaseSqlite::prepare_queries(void)
     retVal = retVal |
             ppStmtGetOneEvent->prepare("SELECT day,km,recordid FROM alarmevent WHERE id=:id;");
 
+    //--------------------------------------------------------------------------
+    // Reporting
+    //--------------------------------------------------------------------------
+    retVal = retVal |
+            ppStmtGetReport->prepare("SELECT STRFTIME('%Y',day),MIN(km),MAX(km),MAX(km)-MIN(km),"
+/*                                     "SUM(fill),SUM(price),SUM(fill)/SUM(trip)*100,"            */
+                                     "SUM(fill),SUM(price),SUM(trip),"
+                                     "SUM(price)/SUM(fill),SUM(price)/SUM(trip),SUM(oil),"
+                                     "SUM(oil)/(MAX(km)-MIN(km)),SUM(service),"
+                                     "SUM(service)/(MAX(km)-MIN(km)),SUM(tires),"
+                                     "SUM(tires)/(MAX(km)-MIN(km)) FROM record "
+                                     "WHERE carid=:carid AND km NOT IN (0) "
+                                     "GROUP BY STRFTIME('%Y',DATE(day)) "
+                                     "UNION "
+                                     "SELECT 'Total',MIN(km),MAX(km),MAX(km)-MIN(km),"
+/*                                     "SUM(fill),SUM(price),SUM(fill)/SUM(trip)*100,"            */
+                                     "SUM(fill),SUM(price),SUM(trip),"
+                                     "SUM(price)/SUM(fill),SUM(price)/SUM(trip),SUM(oil),"
+                                     "SUM(oil)/(MAX(km)-MIN(km)),SUM(service),"
+                                     "SUM(service)/(MAX(km)-MIN(km)),SUM(tires),"
+                                     "SUM(tires)/(MAX(km)-MIN(km)) FROM record "
+                                     "WHERE carid=:carid2 AND km NOT IN (0);");
+
     return retVal;
 }
 
@@ -481,6 +534,8 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtRecords;
     delete ppStmtOneRecord;
     delete ppStmtOneCar;
+    delete ppStmtLastRefill;
+    delete ppStmtLastKm;
     delete ppStmtMonthlyData;
     delete ppStmtCar;
     delete ppStmtOneDriver;
@@ -511,11 +566,11 @@ bool DatabaseSqlite::unprepare_queries(void)
     delete ppStmtAddAlarmtype;
     delete ppStmtGetNumOfRecordEvents;
     delete ppStmtDeleteEventwithRecordid;
+    delete ppStmtGetReport;
 
     delete ppStmtCurCar;
     delete ppStmtExport;
     delete ppStmtExportCar;
-    delete ppStmtGetReport;
     delete ppStmtGetOneAlarmtype;
     delete ppStmtUpdateAlarmtype;
     delete ppStmtGetOneEvent;
@@ -619,6 +674,22 @@ bool DatabaseSqlite::openConnection(void)
                             qDebug("Added location fields");
                         }
                 }
+
+                // Check if the new fuel entry fueltype field exists
+                // (GTK Fuelpad's did not)
+                query.exec("SELECT fueltype FROM record LIMIT 1;");
+                query.first();
+
+                if (query.lastError().type() != QSqlError::NoError) {
+                        // We'll need to add the location fields
+                        if (!add_fueltype_field()) {
+                            qDebug("Adding fueltype field failed");
+                        }
+                        else {
+                            qDebug("Added fueltype field");
+                            // @todo Set the fueltype field of all existing records
+                        }
+                }
             }
 
             if (!prepare_queries()) {
@@ -713,15 +784,46 @@ Fuelrecord *DatabaseSqlite::getValuesRecordQuery(UnitSystem unit)
     record->setAllValues(ppStmtRecords->value(0).toString(), ppStmtRecords->value(1).toDouble(),
                             ppStmtRecords->value(2).toDouble(), ppStmtRecords->value(3).toDouble(),
                             ppStmtRecords->value(4).toDouble(), ppStmtRecords->value(5).toDouble(),
-                            ppStmtRecords->value(6).toDouble(), ppStmtRecords->value(7).toDouble(),
+                            ppStmtRecords->value(6).toInt(), ppStmtRecords->value(7).toDouble(),
                             ppStmtRecords->value(8).toDouble(), ppStmtRecords->value(9).toDouble(),
                             ppStmtRecords->value(10).toDouble(), ppStmtRecords->value(11).toDouble(),
-                            ppStmtRecords->value(12).toDouble(), ppStmtRecords->value(13).toString(),
-                            ppStmtRecords->value(14).toString(), ppStmtRecords->value(15).toLongLong());
+                            ppStmtRecords->value(12).toDouble(), ppStmtRecords->value(13).toDouble(),
+                            ppStmtRecords->value(14).toString(), ppStmtRecords->value(15).toString(),
+                            ppStmtRecords->value(16).toLongLong());
 
     return record;
 }
 
+//--------------------------------------------------------------------------
+// Query current car's fuel record data and return it as a vector
+//--------------------------------------------------------------------------
+vector<Fuelrecord> DatabaseSqlite::getRecordData(UnitSystem unit)
+{
+    vector<Fuelrecord> data;
+    // QSqlQuery.bindValue is void, we'll have to assume it worked
+
+    ppStmtRecords->bindValue(":carid",getCurrentCar().getId());
+
+    if (ppStmtRecords->exec()) {
+        while (ppStmtRecords->next()) {
+            Fuelrecord fuelRecord(unit);
+
+            fuelRecord.setAllValues(ppStmtRecords->value(0).toString(), ppStmtRecords->value(1).toDouble(),
+                                    ppStmtRecords->value(2).toDouble(), ppStmtRecords->value(3).toDouble(),
+                                    ppStmtRecords->value(4).toDouble(), ppStmtRecords->value(5).toDouble(),
+                                    ppStmtRecords->value(6).toInt(), ppStmtRecords->value(7).toDouble(),
+                                    ppStmtRecords->value(8).toDouble(), ppStmtRecords->value(9).toDouble(),
+                                    ppStmtRecords->value(10).toDouble(), ppStmtRecords->value(11).toDouble(),
+                                    ppStmtRecords->value(12).toDouble(), ppStmtRecords->value(13).toDouble(),
+                                    ppStmtRecords->value(14).toString(), ppStmtRecords->value(15).toString(),
+                                    ppStmtRecords->value(16).toLongLong());
+            // Store to vector
+            data.push_back(fuelRecord);
+        }
+    }
+
+    return data;
+}
 
 //--------------------------------------------------------------------------
 // Query one record
@@ -735,17 +837,48 @@ Fuelrecord *DatabaseSqlite::queryOneRecord(qlonglong id, UnitSystem unit)
         record->setAllValues(ppStmtOneRecord->value(0).toString(), ppStmtOneRecord->value(1).toDouble(),
                                 ppStmtOneRecord->value(2).toDouble(), ppStmtOneRecord->value(3).toDouble(),
                                 ppStmtOneRecord->value(4).toDouble(), ppStmtOneRecord->value(5).toDouble(),
-                                ppStmtOneRecord->value(6).toDouble(), ppStmtOneRecord->value(7).toDouble(),
+                                ppStmtOneRecord->value(6).toInt(), ppStmtOneRecord->value(7).toDouble(),
                                 ppStmtOneRecord->value(8).toDouble(), ppStmtOneRecord->value(9).toDouble(),
                                 ppStmtOneRecord->value(10).toDouble(), ppStmtOneRecord->value(11).toDouble(),
-                                ppStmtOneRecord->value(12).toDouble(), ppStmtOneRecord->value(13).toString(),
-                                ppStmtOneRecord->value(14).toString(), ppStmtOneRecord->value(15).toLongLong());
+                                ppStmtOneRecord->value(12).toDouble(), ppStmtOneRecord->value(13).toDouble(),
+                                ppStmtOneRecord->value(14).toString(), ppStmtOneRecord->value(15).toString(),
+                             ppStmtOneRecord->value(16).toLongLong());
 
     }
 
     return record;
 }
 
+//--------------------------------------------------------------------------
+// Query last refill
+//--------------------------------------------------------------------------
+float DatabaseSqlite::getLastRefill(float newkm)
+{
+    float lastRefill = 0.0;
+
+    ppStmtLastRefill->bindValue(":carid",getCurrentCar().getId());
+    ppStmtLastRefill->bindValue(":km",newkm);
+    if (ppStmtLastRefill->exec() && ppStmtLastRefill->next()) {
+        lastRefill = ppStmtLastRefill->value(0).toFloat();
+    }
+
+    return lastRefill;
+}
+
+//--------------------------------------------------------------------------
+// Query last km = maximum km
+//--------------------------------------------------------------------------
+float DatabaseSqlite::getLastKm(void)
+{
+    float lastKm = 0.0;
+
+    ppStmtLastKm->bindValue(":carid",getCurrentCar().getId());
+    if (ppStmtLastKm->exec() && ppStmtLastKm->next()) {
+        lastKm = ppStmtLastKm->value(0).toFloat();
+    }
+
+    return lastKm;
+}
 
 //--------------------------------------------------------------------------
 // Adding and deleting record related methods
@@ -981,11 +1114,12 @@ bool DatabaseSqlite::getNextFullFill(float km, Fuelrecord &record)
         record.setAllValues(ppStmtNextFull->value(0).toString(), ppStmtNextFull->value(1).toDouble(),
                                 ppStmtNextFull->value(2).toDouble(), ppStmtNextFull->value(3).toDouble(),
                                 ppStmtNextFull->value(4).toDouble(), ppStmtNextFull->value(5).toDouble(),
-                                ppStmtNextFull->value(6).toDouble(), ppStmtNextFull->value(7).toDouble(),
+                                ppStmtNextFull->value(6).toInt(), ppStmtNextFull->value(7).toDouble(),
                                 ppStmtNextFull->value(8).toDouble(), ppStmtNextFull->value(9).toDouble(),
                                 ppStmtNextFull->value(10).toDouble(), ppStmtNextFull->value(11).toDouble(),
-                                ppStmtNextFull->value(12).toDouble(), ppStmtNextFull->value(13).toString(),
-                                ppStmtNextFull->value(14).toString(), ppStmtNextFull->value(15).toLongLong());
+                                ppStmtNextFull->value(12).toDouble(), ppStmtNextFull->value(13).toDouble(),
+                                ppStmtNextFull->value(14).toString(), ppStmtNextFull->value(15).toString(),
+                            ppStmtNextFull->value(16).toLongLong());
         retVal = true;
     }
 
@@ -1810,7 +1944,7 @@ qlonglong DatabaseSqlite::addNewAlarmEvent(AlarmeventData &event, UnitSystem uni
     double tires = event.getTires();
     QString notes = event.getNotes();
 
-    record->setAllValuesUserUnit(date, km, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    record->setAllValuesUserUnit(date, km, 0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0,
                                  service, oil, tires,
                                  0.0, 0.0, "", /* @todo Add geographical location */
                                  notes,
@@ -1851,7 +1985,7 @@ qlonglong DatabaseSqlite::updateAlarmEvent(AlarmeventData &event, UnitSystem uni
     double tires = event.getTires();
     QString notes = event.getNotes();
 
-    record->setAllValuesUserUnit(date, km, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    record->setAllValuesUserUnit(date, km, 0.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0,
                                  service, oil, tires,
                                  0.0, 0.0, "", /* @todo Add geographical location */
                                  notes,
@@ -1927,4 +2061,36 @@ bool DatabaseSqlite::deleteEvent(qlonglong id, bool deleteFuelRecord)
     }
 
     return success;
+}
+
+//--------------------------------------------------------------------------
+// Query all car data and return in as a vector
+//--------------------------------------------------------------------------
+vector<CarStatistics> DatabaseSqlite::getCarStatistics(UnitSystem unit)
+{
+    vector<CarStatistics> data;
+
+    ppStmtGetReport->bindValue(":carid",getCurrentCar().getId());
+    ppStmtGetReport->bindValue(":carid2",getCurrentCar().getId());
+
+    if (ppStmtGetReport->exec()) {
+        while (ppStmtGetReport->next()) {
+            CarStatistics carStatistics(unit);
+
+            carStatistics.setYear(ppStmtGetReport->value(0).toString());
+            carStatistics.setMinKm(ppStmtGetReport->value(1).toDouble());
+            carStatistics.setMaxKm(ppStmtGetReport->value(2).toDouble());
+            carStatistics.setTotalFill(ppStmtGetReport->value(4).toDouble());
+            carStatistics.setTotalPrice(ppStmtGetReport->value(5).toDouble());
+            carStatistics.setTotalTrip(ppStmtGetReport->value(6).toDouble());
+            carStatistics.setTotalOil(ppStmtGetReport->value(9).toDouble());
+            carStatistics.setTotalService(ppStmtGetReport->value(11).toDouble());
+            carStatistics.setTotalTires(ppStmtGetReport->value(13).toDouble());
+
+            // Store to vector
+            data.push_back(carStatistics);
+        }
+    }
+
+    return data;
 }

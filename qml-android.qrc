@@ -59,6 +59,7 @@
         <file>qml/fuelpad2/MyLabelStyleTitle.qml</file>
         <file>qml/fuelpad2/Plot.qml</file>
         <file>qml/fuelpad2/RemindersPage.qml</file>
+        <file>qml/fuelpad2/ReportPage.qml</file>
         <file>qml/fuelpad2/SelectLocationPage.qml</file>
         <file>qml/fuelpad2/SettingsPage.qml</file>
         <file>qml/fuelpad2/StatisticsPage.qml</file>

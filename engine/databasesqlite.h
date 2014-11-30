@@ -52,7 +52,10 @@ public:
     void resetRecordQuery(void);
     bool stepRecordQuery(void);
     Fuelrecord *getValuesRecordQuery(UnitSystem unit);
+    vector<Fuelrecord> getRecordData(UnitSystem unit);
     Fuelrecord *queryOneRecord(qlonglong id, UnitSystem unit);
+    float getLastRefill(float newkm);
+    float getLastKm(void);
 
     // Adding record
     qlonglong addNewRecord(Fuelrecord &record, bool notFull);
@@ -106,10 +109,14 @@ public:
     bool deleteEventWithRecordId(qlonglong id);
     bool deleteEvent(qlonglong id, bool deleteFuelRecord);
 
+    // Car statistics
+    vector<CarStatistics> getCarStatistics(UnitSystem unit);
+
 private:
     bool create_database(void);
     bool create_drivinglog_tables(void);
     bool add_location_fields(void);
+    bool add_fueltype_field(void);
     bool prepare_queries(void);
     bool unprepare_queries(void);
 
@@ -135,6 +142,8 @@ private:
     QSqlQuery *ppStmtMonthlyData;
     QSqlQuery *ppStmtCar;
     QSqlQuery *ppStmtOneDriver;
+    QSqlQuery *ppStmtLastRefill;
+    QSqlQuery *ppStmtLastKm;
     QSqlQuery *ppStmtDriver;
     QSqlQuery *ppStmtNextFull;
     QSqlQuery *ppStmtPrevFull;
@@ -161,12 +170,12 @@ private:
     QSqlQuery *ppStmtUpdateEvent;
     QSqlQuery *ppStmtAddAlarmtype;
     QSqlQuery *ppStmtGetNumOfRecordEvents;
+    QSqlQuery *ppStmtGetReport;
 
     // Statements without a ready implementation
     QSqlQuery *ppStmtCurCar;
     QSqlQuery *ppStmtExport;
     QSqlQuery *ppStmtExportCar;
-    QSqlQuery *ppStmtGetReport;
     QSqlQuery *ppStmtGetOneAlarmtype;
     QSqlQuery *ppStmtUpdateAlarmtype;
     QSqlQuery *ppStmtGetOneEvent;

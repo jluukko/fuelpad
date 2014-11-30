@@ -74,6 +74,7 @@ struct FuelEntry {
         FillRole,
         NotFullRole,
         ConsumRole,
+        CO2Role,
         PriceRole,
         PptRole,
         PplRole,
@@ -127,6 +128,8 @@ struct AlarmEntry {
         NextDateRole,
         LastKmRole,
         LastDateRole,
+        KmExpiredRole,
+        DateExpiredRole,
         IdRole
     };
 };
@@ -151,6 +154,22 @@ struct StatisticsData {
         yRole
     };
 };
+
+struct CarStatisticsEntry {
+    enum CarStatisticsEntryRoles {
+        YearRole = Qt::UserRole + 1,
+        MinKmRole,
+        MaxKmRole,
+        AverageConsumptionRole,
+        TotalFillRole,
+        TotalPriceRole,
+        TotalTripRole,
+        TotalOilRole,
+        TotalServiceRole,
+        TotalTiresRole
+    };
+};
+
 
 UiWrapper::UiWrapper(Database *db, Geocode *gc)
 {
@@ -189,6 +208,7 @@ UiWrapper::UiWrapper(Database *db, Geocode *gc)
     createAlarmEntryModel();
     createAlarmEventModel();
     createStatisticsModel();
+    createCarStatisticsModel();
 
 }
 
@@ -207,6 +227,7 @@ static void setDataToFuelEntryModel(QStandardItem *it, Fuelrecord *data)
     it->setData(data->getFillUserUnit(), FuelEntry::FillRole);
     it->setData(data->getNotFullFill(), FuelEntry::NotFullRole);
     it->setData(data->getConsumUserUnit(), FuelEntry::ConsumRole);
+    it->setData(data->getCO2EmissionUserUnit(), FuelEntry::CO2Role);
     it->setData(data->getPriceUserUnit(), FuelEntry::PriceRole);
     it->setData(data->getPptUserUnit(), FuelEntry::PptRole);
     it->setData(data->getPplUserUnit(), FuelEntry::PplRole);
@@ -284,22 +305,21 @@ static void setDataToDriverEntryModel(QStandardItem *it, DriverData *data)
     it->setData(id, DriverEntry::IdRole);
 }
 
-static void setDataToAlarmEntryModel(QStandardItem *it, AlarmtypeData *data)
+static void setDataToAlarmEntryModel(QStandardItem *it, AlarmtypeData *data, double currentKm)
 {
     int id = data->getId();
     it->setData(data->getShortDesc(), AlarmEntry::DescrptionRole);
     it->setData(data->getDistance(), AlarmEntry::KmLimitRole);
     it->setData(data->getLongDesc(), AlarmEntry::LongDescriptionRole);
     it->setData(data->getInterval(), AlarmEntry::TimeLimitRole);
-
-    // @todo Calculate next km
-//    it->setData(nextkm, AlarmEntry::NextKmRole);
-
-    // @todo Calculate next date
-//    it->setData(nextdate, AlarmEntry::NextDateRole);
+    it->setData(data->getNextKm(), AlarmEntry::NextKmRole);
+    it->setData(data->getNextDate(), AlarmEntry::NextDateRole);
 
     it->setData(data->getLastKm(), AlarmEntry::LastKmRole);
     it->setData(data->getLastDate(), AlarmEntry::LastDateRole);
+
+    it->setData(data->getKmExpired(currentKm), AlarmEntry::KmExpiredRole);
+    it->setData(data->getDateExpired(), AlarmEntry::DateExpiredRole);
 
     it->setData(id, AlarmEntry::IdRole);
 }
@@ -318,6 +338,7 @@ static void setDataToAlarmEventModel(QStandardItem *it, AlarmeventData *data)
     it->setData(id, AlarmEventEntry::IdRole);
 }
 
+
 static void addRecordToDriverEntryModel(QStandardItemModel *model, DriverData *data)
 {
     QStandardItem* it = new QStandardItem();
@@ -326,10 +347,10 @@ static void addRecordToDriverEntryModel(QStandardItemModel *model, DriverData *d
 //    model->insertRow(0, it);
 }
 
-static void addRecordToAlarmEntryModel(QStandardItemModel *model, AlarmtypeData *data)
+static void addRecordToAlarmEntryModel(QStandardItemModel *model, AlarmtypeData *data, double currentKm)
 {
     QStandardItem* it = new QStandardItem();
-    setDataToAlarmEntryModel(it, data);
+    setDataToAlarmEntryModel(it, data, currentKm);
     model->appendRow(it);
 }
 
@@ -337,6 +358,27 @@ static void addRecordToAlarmEventModel(QStandardItemModel *model, AlarmeventData
 {
     QStandardItem* it = new QStandardItem();
     setDataToAlarmEventModel(it, data);
+    model->appendRow(it);
+}
+
+static void setDataToCarStatisticsModel(QStandardItem *it, CarStatistics *data)
+{
+    it->setData(data->getYear(), CarStatisticsEntry::YearRole);
+    it->setData(data->getMinKm(), CarStatisticsEntry::MinKmRole);
+    it->setData(data->getMaxKm(), CarStatisticsEntry::MaxKmRole);
+    it->setData(data->getAverageConsumption(), CarStatisticsEntry::AverageConsumptionRole);
+    it->setData(data->getTotalFill(), CarStatisticsEntry::TotalFillRole);
+    it->setData(data->getTotalPrice(), CarStatisticsEntry::TotalPriceRole);
+    it->setData(data->getTotalTrip(), CarStatisticsEntry::TotalTripRole);
+    it->setData(data->getTotalOil(), CarStatisticsEntry::TotalOilRole);
+    it->setData(data->getTotalService(), CarStatisticsEntry::TotalServiceRole);
+    it->setData(data->getTotalTires(), CarStatisticsEntry::TotalTiresRole);
+}
+
+static void addRecordToCarStatisticsModel(QStandardItemModel *model, CarStatistics *data)
+{
+    QStandardItem* it = new QStandardItem();
+    setDataToCarStatisticsModel(it, data);
     model->appendRow(it);
 }
 
@@ -401,6 +443,10 @@ void UiWrapper::reReadAllModels(void)
     // Alarm types model
     alarmEntryModel->clear();
     addAllRecordsToAlarmEntryModel(alarmEntryModel);
+
+    // Car statistics model
+    carStatisticsModel->clear();
+    addDataToCarStatisticsModel(carStatisticsModel);
 }
 
 QStandardItem* UiWrapper::findFuelEntry(QString id)
@@ -450,23 +496,16 @@ QStandardItem* UiWrapper::findAlarmEvent(QString id)
 
 void UiWrapper::addAllRecordsToFuelEntryModel(QStandardItemModel *model)
 {
-    Fuelrecord *data;
+    vector<Fuelrecord> fuelData;
 
     if (dataBase->isOpen()) {
 
-        if (dataBase->initRecordQuery()) {
-            while  (dataBase->stepRecordQuery()) {
-                data = dataBase->getValuesRecordQuery(*unitSystem);
+        fuelData = dataBase->getRecordData(*unitSystem);
 
-                addRecordToFuelEntryModel(model, data);
+        for (vector<Fuelrecord>::size_type i=0; i < fuelData.size(); i++) {
+            addRecordToFuelEntryModel(model, &fuelData[i]);
+        }
 
-                delete data;
-            }
-            qDebug("records added to model");
-        }
-        else {
-            qDebug("initRecordQuery() not succesful");
-        }
     }
 }
 
@@ -526,17 +565,15 @@ void UiWrapper::addAllRecordsToDriverEntryModel(QStandardItemModel *model)
 void UiWrapper::addAllRecordsToAlarmEntryModel(QStandardItemModel *model)
 {
     vector<AlarmtypeData> alarmData;
-//    int activeIndex;
+    double currentKm;
 
     if (dataBase->isOpen()) {
 
         alarmData = dataBase->getAlarmTypeData();
+        currentKm = dataBase->getLastKm();
 
         for (vector<AlarmtypeData>::size_type i=0; i < alarmData.size(); i++) {
-            addRecordToAlarmEntryModel(model, &alarmData[i]);
-//            if (alarmData[i].getId() == dataBase->getCurrentCar().getId()) {
-//                activeIndex = i;
-//            }
+            addRecordToAlarmEntryModel(model, &alarmData[i], currentKm);
         }
 
     }
@@ -557,6 +594,21 @@ void UiWrapper::addAllRecordsToAlarmEventModel(qlonglong alarmid)
 //            if (alarmData[i].getId() == dataBase->getCurrentCar().getId()) {
 //                activeIndex = i;
 //            }
+        }
+
+    }
+}
+
+void UiWrapper::addDataToCarStatisticsModel(QStandardItemModel *model)
+{
+    vector<CarStatistics> carStatistics;
+
+    if (dataBase->isOpen()) {
+
+        carStatistics = dataBase->getCarStatistics(*unitSystem);
+
+        for (vector<CarStatistics>::size_type i=0; i < carStatistics.size(); i++) {
+            addRecordToCarStatisticsModel(model, &carStatistics[i]);
         }
 
     }
@@ -632,6 +684,7 @@ void UiWrapper::createFuelEntryModel(void)
     roleNames[FuelEntry::FillRole] =  "fill";
     roleNames[FuelEntry::NotFullRole] =  "notfull";
     roleNames[FuelEntry::ConsumRole] =  "consum";
+    roleNames[FuelEntry::CO2Role] = "co2";
     roleNames[FuelEntry::PriceRole] =  "price";
     roleNames[FuelEntry::PptRole] =  "ppt";
     roleNames[FuelEntry::PplRole] =  "ppl";
@@ -713,6 +766,8 @@ void UiWrapper::createAlarmEntryModel(void)
     roleNames[AlarmEntry::NextDateRole] =  "nextdate";
     roleNames[AlarmEntry::LastKmRole] =  "lastkm";
     roleNames[AlarmEntry::LastDateRole] =  "lastdate";
+    roleNames[AlarmEntry::KmExpiredRole] =  "kmexpired";
+    roleNames[AlarmEntry::DateExpiredRole] =  "dateexpired";
     roleNames[AlarmEntry::IdRole] =  "databaseid";
     RoleItemModel *model = new RoleItemModel(roleNames);
 
@@ -775,6 +830,37 @@ void UiWrapper::createStatisticsModel(void)
 
 }
 
+void UiWrapper::createCarStatisticsModel(void)
+{
+    QHash<int, QByteArray> roleNames;
+    roleNames[CarStatisticsEntry::YearRole] =  "year";
+    roleNames[CarStatisticsEntry::MinKmRole] =  "minkm";
+    roleNames[CarStatisticsEntry::MaxKmRole] =  "maxkm";
+    roleNames[CarStatisticsEntry::AverageConsumptionRole] = "avgconsum";
+    roleNames[CarStatisticsEntry::TotalFillRole] =  "totalfill";
+    roleNames[CarStatisticsEntry::TotalPriceRole] =  "totalprice";
+    roleNames[CarStatisticsEntry::TotalTripRole] =  "totaltrip";
+    roleNames[CarStatisticsEntry::TotalOilRole] =  "totaloil";
+    roleNames[CarStatisticsEntry::TotalServiceRole] =  "totalservice";
+    roleNames[CarStatisticsEntry::TotalTiresRole] =  "totaltires";
+    RoleItemModel *model = new RoleItemModel(roleNames);
+
+    carStatisticsSortModel = new MySortFilterProxyModel(this, roleNames);
+
+    addDataToCarStatisticsModel(model);
+
+    carStatisticsModel = model;
+
+    carStatisticsSortModel->setSourceModel(carStatisticsModel);
+    carStatisticsSortModel->sort(0, Qt::AscendingOrder);
+    carStatisticsSortModel->setDynamicSortFilter(true);
+    carStatisticsSortModel->beginResetModel();
+    carStatisticsSortModel->setSortRole(CarStatisticsEntry::YearRole);
+    carStatisticsSortModel->endResetModel();
+    carStatisticsSortModel->invalidate();
+
+}
+
 
 MySortFilterProxyModel *UiWrapper::getFuelEntryModel(void)
 {
@@ -800,6 +886,11 @@ MySortFilterProxyModel *UiWrapper::getAlarmEntryModel(void)
 MySortFilterProxyModel *UiWrapper::getAlarmEventModel(void)
 {
     return alarmEventSortModel;
+}
+
+MySortFilterProxyModel *UiWrapper::getCarStatisticsModel(void)
+{
+    return carStatisticsSortModel;
 }
 
 PlotDataModel* UiWrapper::getStatisticsModel(void)
@@ -845,6 +936,7 @@ void UiWrapper::addFuelEntry(int carid, QString date, double km, double trip, do
                                  fill,
                                  0.0 /* consumption is calculated in database add method */,
                                  price,
+                                 dataBase->getCurrentCar().getFuelType(), // @todo Get fueltype from UI
                                  0.0 /* price/litre is calculated in database add method */,
                                  0.0 /* price/trip is calculated in database add method */,
                                  service,
@@ -935,6 +1027,7 @@ void UiWrapper::updateFuelEntry(int carid, QString id, QString date, double km, 
                                  (fill < 0.0)  ? oldRecord->getFill().toDouble() : fill,
                                  0.0 /* consumption is calculated in database add method */,
                                  (price < 0.0) ? oldRecord->getPrice().toDouble() : price,
+                                 dataBase->getCurrentCar().getFuelType(), // @todo Get fueltype from UI
                                  0.0 /* price/litre is calculated in database add method */,
                                  0.0 /* price/trip is calculated in database add method */,
                                  (service < 0.0) ? oldRecord->getService().toDouble() : service,
@@ -1005,6 +1098,28 @@ void UiWrapper::updateFuelEntry(int carid, QString id, QString date, double km, 
     // Notify Qml side somehow that the model has changed
     updateAllModels();
 
+    delete record;
+
+}
+
+float UiWrapper::calcTrip(double newkm, double trip)
+{
+    Datafield *distance = new Datafield(*unitSystem);
+    float lastkm;
+    float calculatedTrip=trip;
+
+    if (trip<0.1 && newkm>0) {
+      lastkm=dataBase->getLastRefill(newkm);
+      if (lastkm<0.1) {
+        lastkm=dataBase->getLastKm();
+      }
+      distance->setValueUserUnit(newkm-lastkm, Datafield::LENGTH);
+      calculatedTrip = distance->getValueUserUnit().toFloat();
+    }
+
+    delete distance;
+
+    return calculatedTrip;
 }
 
 void UiWrapper::deleteRecord(QString id)
@@ -1391,7 +1506,7 @@ void UiWrapper::addAlarmType(qlonglong carId, QString shortDesc, quint32 interva
 
     dataBase->addAlarmType(*alarmtype);
 
-    addRecordToAlarmEntryModel(alarmEntryModel, alarmtype);
+    addRecordToAlarmEntryModel(alarmEntryModel, alarmtype, dataBase->getLastKm());
 
     delete alarmtype;
 

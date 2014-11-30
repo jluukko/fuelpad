@@ -48,6 +48,7 @@ OTHER_FILES += qml/fuelpad2/AboutDialog.qml \
     qml/fuelpad2/PageHeader.qml \
     qml/fuelpad2/Plot.qml \
     qml/fuelpad2/RemindersPage.qml \
+    qml/fuelpad2/ReportPage.qml \
     qml/fuelpad2/SelectLocationPage.qml \
     qml/fuelpad2/SettingsPage.qml \
     qml/fuelpad2/StatisticsPage.qml \

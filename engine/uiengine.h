@@ -39,6 +39,7 @@ public:
     RoleItemModel *getDriverEntryModel(void);
     MySortFilterProxyModel *getAlarmEntryModel(void);
     MySortFilterProxyModel *getAlarmEventModel(void);
+    MySortFilterProxyModel* getCarStatisticsModel(void);
     PlotDataModel *getStatisticsModel(void);
 
 private:
@@ -53,6 +54,7 @@ private:
     RoleItemModel *driverEntryModel;
     MySortFilterProxyModel *alarmEntryModel;
     MySortFilterProxyModel *alarmEventModel;
+    MySortFilterProxyModel *carStatisticsModel;
     PlotDataModel *statisticsModel;
 
 };

@@ -15,7 +15,8 @@ SOURCES += \
     $$PWD/geocode.cpp \
     $$PWD/geocodenominatim.cpp \
     $$PWD/plotdatamodel.cpp \
-    $$PWD/uiengine.cpp
+    $$PWD/uiengine.cpp \
+    $$PWD/carstatistics.cpp
 HEADERS += \
     $$PWD/database.h \
     $$PWD/databasesqlite.h \
@@ -33,7 +34,8 @@ HEADERS += \
     $$PWD/geocode.h \
     $$PWD/geocodenominatim.h \
     $$PWD/plotdatamodel.h \
-    $$PWD/uiengine.h
+    $$PWD/uiengine.h \
+    $$PWD/carstatistics.h
 QT += \
     sql \
     network \

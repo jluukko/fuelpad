@@ -23,12 +23,12 @@ import Sailfish.Silica 1.0
 
 PullDownMenu {
     property variant visualParent
-    property alias items: menuModel.children
+    property alias items: repeater.model
 
     Item { id: menuModel }
 
     Repeater {
-        model: menuModel.children
+        id: repeater
         MenuItem {
             text: modelData.text
             onClicked: modelData.clicked()

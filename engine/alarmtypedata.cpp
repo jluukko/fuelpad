@@ -20,6 +20,8 @@
 
 #include "alarmtypedata.h"
 
+#include <QDate>
+
 AlarmtypeData::AlarmtypeData()
 {
 }
@@ -102,4 +104,30 @@ void AlarmtypeData::setLastKm(double km)
 double AlarmtypeData::getLastKm(void)
 {
     return lastKm;
+}
+
+double AlarmtypeData::getNextKm(void)
+{
+    // @todo Add estimation of next km based on interval
+    return lastKm+distance;
+}
+
+QString AlarmtypeData::getNextDate(void)
+{
+    QDate nextDate(QDate::fromString(lastDate, "yyyy-MM-dd"));
+
+    // @todo Add estimation of next date based on recent driving
+    return nextDate.addMonths(interval).toString("yyyy-MM-dd");
+}
+
+bool AlarmtypeData::getKmExpired(double currentKm)
+{
+    return getNextKm() < currentKm;
+}
+
+bool AlarmtypeData::getDateExpired(void)
+{
+    QDate today = QDate::currentDate();
+
+    return QDate(QDate::fromString(getNextDate(), "yyyy-MM-dd")) < today;
 }

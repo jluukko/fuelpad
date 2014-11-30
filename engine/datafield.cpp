@@ -61,6 +61,9 @@ void Datafield::setValueUserUnit(QVariant val, enum fieldtype t)
     case PRICE:
         value.setValue(val);
         break;
+    case FUELTYPE:
+        value.setValue(val);
+        break;
     case PRICEPERTRIP:
         value.setValue(val.toDouble()/unit.getLengthConversionFactor());
         break;
@@ -68,7 +71,12 @@ void Datafield::setValueUserUnit(QVariant val, enum fieldtype t)
         value.setValue(val.toDouble()/unit.getVolumeConversionFactor());
         break;
     case CO2EMISSION:
-        value.setValue(val); // @todo Still missing the right conversion
+        if (unit.getConsumeUnit() == UnitSystem::SI) {
+            value.setValue(val); // @todo Still missing the right conversion
+        }
+        else {
+            value.setValue(val); // @todo Still missing the right conversion
+        }
         break;
     case LATITUDE:
     case LONGITUDE:
@@ -107,6 +115,9 @@ QVariant Datafield::getValueUserUnit(void)
     case PRICE:
         retVal = value;
         break;
+    case FUELTYPE:
+        retVal = value;
+        break;
     case PRICEPERTRIP:
         retVal= value;
         retVal.setValue(retVal.toDouble()*unit.getLengthConversionFactor());
@@ -117,7 +128,17 @@ QVariant Datafield::getValueUserUnit(void)
         break;
         // todo: not finished
     case CO2EMISSION:
-        retVal = value; // @todo Calculation missing
+        retVal = value;
+
+        if (unit.getLengthUnit() != UnitSystem::SI) {
+            // mass unit/miles
+            retVal.setValue(retVal.toDouble()*unit.getLengthConversionFactor());
+        }
+
+        if (unit.getMassUnit() != UnitSystem::SI) {
+            // pounds/100 length units
+            retVal.setValue(100.0*retVal.toDouble()/unit.getMassConversionFactor());
+        }
         break;
     case LONGITUDE:
     case LATITUDE:
