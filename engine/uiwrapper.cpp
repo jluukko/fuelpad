@@ -936,7 +936,7 @@ void UiWrapper::addFuelEntry(int carid, QString date, double km, double trip, do
                                  fill,
                                  0.0 /* consumption is calculated in database add method */,
                                  price,
-                                 carData->getFuelType(), // @todo Get fueltype from UI
+                                 dataBase->getCurrentCar().getFuelType(), // @todo Get fueltype from UI
                                  0.0 /* price/litre is calculated in database add method */,
                                  0.0 /* price/trip is calculated in database add method */,
                                  service,
@@ -1027,7 +1027,7 @@ void UiWrapper::updateFuelEntry(int carid, QString id, QString date, double km, 
                                  (fill < 0.0)  ? oldRecord->getFill().toDouble() : fill,
                                  0.0 /* consumption is calculated in database add method */,
                                  (price < 0.0) ? oldRecord->getPrice().toDouble() : price,
-                                 carData->getFuelType(), // @todo Get fueltype from UI
+                                 dataBase->getCurrentCar().getFuelType(), // @todo Get fueltype from UI
                                  0.0 /* price/litre is calculated in database add method */,
                                  0.0 /* price/trip is calculated in database add method */,
                                  (service < 0.0) ? oldRecord->getService().toDouble() : service,
