@@ -1,7 +1,7 @@
 /*
  * This file is part of Fuelpad.
  *
- * Copyright (C) 2007-2012 Julius Luukko <julle.luukko@quicknet.inet.fi>
+ * Copyright (C) 2007-2012, 2014-2015 Julius Luukko <julle.luukko@quicknet.inet.fi>
  *
  * Fuelpad is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -402,6 +402,11 @@ void UiWrapper::saveConfig(void)
     userConfig.settings.setValue("ConsumeUnit", (int)unitSystem->getConsumeUnit());
     userConfig.settings.setValue("MassUnit", (int)unitSystem->getMassUnit());
     userConfig.settings.endGroup();
+}
+
+int UiWrapper::getFuelSortColumn(void)
+{
+    return sortModel->sortRole()-FuelEntry::DateRole;
 }
 
 void UiWrapper::setSearchExpression(QString searchExp)
@@ -1594,10 +1599,17 @@ void UiWrapper::deleteEvent(QString id)
 }
 
 
-void UiWrapper::setSortColumn(int col, Qt::SortOrder order = Qt::DescendingOrder)
+void UiWrapper::setSortColumn(int col, int order)
 {
+    Qt::SortOrder so = Qt::AscendingOrder;
+
+    if (order == 1) {
+        so = Qt::DescendingOrder;
+    }
+
     sortModel->beginResetModel();
-    sortModel->sort(col, order);
+    sortModel->sort(col, so);
+    sortModel->setSortRole(FuelEntry::DateRole+col);
     sortModel->endResetModel();
 }
 

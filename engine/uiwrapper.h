@@ -59,6 +59,8 @@ public:
 
     Q_INVOKABLE void saveConfig(void);
 
+    Q_INVOKABLE int getFuelSortColumn(void);
+
     Q_INVOKABLE void setSearchExpression(QString searchExp);
 
     Q_INVOKABLE QString getSearchExpression(void);
@@ -121,7 +123,7 @@ public:
 
     Q_INVOKABLE void deleteEvent(QString id);
 
-    Q_INVOKABLE void setSortColumn(int col, Qt::SortOrder order);
+    Q_INVOKABLE void setSortColumn(int col, int order);
 
     Q_INVOKABLE void setCurrentCar(int carid);
 
