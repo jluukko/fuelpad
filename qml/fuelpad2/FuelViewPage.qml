@@ -45,6 +45,11 @@ FPPage {
         pageStack.push(Funcs.loadComponent("ReportPage.qml",fuelViewPage, {}));
     }
 
+    function loadSortSelectPage() {
+        console.log("Trying to open sort dialog")
+        pageStack.push(Funcs.loadComponent("SelectFuelSortDialog.qml",fuelViewPage, {}));
+    }
+
     function updateSearchExp(searchExp) {
         applicationData.setSearchExpression(searchExp)
     }
@@ -82,6 +87,10 @@ FPPage {
         FPMenuAction {
             text: qsTr("Report")
             onClicked: loadReportPage()
+        },
+        FPMenuAction {
+            text: qsTr("Set sort column and order")
+            onClicked: loadSortSelectPage()
         }
     ]
 
